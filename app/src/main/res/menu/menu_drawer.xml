@@ -21,26 +21,27 @@
                 android:icon="@drawable/ic_nav_news"
                 android:title="@string/title_nav_news" />
         </group>
-        <item
-            android:id="@+id/nav_featured"
-            android:icon="@drawable/ic_nav_featured"
-            android:title="@string/title_nav_featured" />
-        <item
-            android:id="@+id/nav_tour"
-            android:icon="@drawable/ic_nav_tour"
-            android:title="@string/title_nav_tour" />
 
-
+        <item
+            android:id="@+id/nav_ownplaces"
+            android:icon="@drawable/ic_nav_all"
+            android:title="@string/title_nav_ownplaces" />
+        <item
+            android:id="@+id/nav_calesthenics"
+            android:icon="@drawable/ic_nav_all"
+            android:title="@string/title_nav_calesthenics" />
+        <item
+            android:id="@+id/nav_parcouring"
+            android:icon="@drawable/ic_nav_all"
+            android:title="@string/title_nav_parcouring" />
+        <item
+            android:id="@+id/nav_outdoor"
+            android:icon="@drawable/ic_nav_all"
+            android:title="@string/title_nav_outdoor" />
+        <item
+            android:id="@+id/nav_outdoorGyms"
+            android:icon="@drawable/ic_nav_all"
+            android:title="@string/title_nav_outdoorGyms" />
     </group>
-    <!--Tourist Destination-->
-    <!--Food & Drink-->
-    <!--Hotels-->
-    <!--Entertainment-->
-    <!--Sport-->
-    <!--Shopping-->
-    <!--Transportation-->
-    <!--Religion-->
-    <!--Public Services-->
-    <!--Money-->
 
 </menu>

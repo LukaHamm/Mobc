@@ -13,48 +13,32 @@
                 android:title="@string/title_nav_all"
                 app:showAsAction="never" />
             <item
-                android:id="@+id/nav_featured"
-                android:title="@string/title_nav_featured"
+                android:id="@+id/nav_favorites"
+                android:title="@string/title_nav_fav"
                 app:showAsAction="never"/>
             <item
-                android:id="@+id/nav_tour"
-                android:title="@string/title_nav_tour"
+                android:id="@+id/nav_news"
+                android:title="@string/title_nav_news"
                 app:showAsAction="never" />
             <item
-                android:id="@+id/nav_food"
-                android:title="@string/title_nav_food"
+                android:id="@+id/nav_ownplaces"
+                android:title="@string/title_nav_ownplaces"
                 app:showAsAction="never" />
             <item
-                android:id="@+id/nav_hotels"
-                android:title="@string/title_nav_hotels"
+                android:id="@+id/nav_calesthenics"
+                android:title="@string/title_nav_calesthenics"
                 app:showAsAction="never" />
             <item
-                android:id="@+id/nav_ent"
-                android:title="@string/title_nav_ent"
+                android:id="@+id/nav_parcouring"
+                android:title="@string/title_nav_parcouring"
                 app:showAsAction="never" />
             <item
-                android:id="@+id/nav_sport"
-                android:title="@string/title_nav_sport"
+                android:id="@+id/nav_outdoor"
+                android:title="@string/title_nav_outdoor"
                 app:showAsAction="never" />
             <item
-                android:id="@+id/nav_shop"
-                android:title="@string/title_nav_shop"
-                app:showAsAction="never" />
-            <item
-                android:id="@+id/nav_transport"
-                android:title="@string/title_nav_transport"
-                app:showAsAction="never" />
-            <item
-                android:id="@+id/nav_religion"
-                android:title="@string/title_nav_religion"
-                app:showAsAction="never" />
-            <item
-                android:id="@+id/nav_public"
-                android:title="@string/title_nav_public"
-                app:showAsAction="never" />
-            <item
-                android:id="@+id/nav_money"
-                android:title="@string/title_nav_money"
+                android:id="@+id/nav_outdoorGyms"
+                android:title="@string/title_nav_outdoorGyms"
                 app:showAsAction="never" />
         </menu>
 

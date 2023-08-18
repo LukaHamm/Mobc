@@ -55,6 +55,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 /*
+       BEARBEITET
      Android-Aktivität (Activity), die die Details zu einem bestimmten Ort anzeigt
  */
 
@@ -64,27 +65,29 @@ public class ActivityPlaceDetail extends AppCompatActivity {
     private static final String EXTRA_NOTIF_FLAG = "key.EXTRA_NOTIF_FLAG";
 
     /*
-      Eine statische Methode zum Navigieren zur ActivityPlaceDetail von einer anderen Aktivität aus.
-      Sie akzeptiert die Startaktivität (activity), eine freigegebene Ansicht (sharedView) für die
-      Aktivitätstransition und ein Place-Objekt (p), das die Details des Ortes enthält.
+      Eine statische Methode zum Navigieren zur ActivityPlaceDetail (Detailsansicht des Standortes)
+      von einer anderen Aktivität aus. Sie akzeptiert die Startaktivität (activity),
+      eine freigegebene Ansicht (sharedView) für die Aktivitätstransition und ein Place-Objekt (p),
+      das die Details des Ortes enthält.
      */
-    public static void navigate(AppCompatActivity activity, View sharedView, Place p) {
-        Intent intent = new Intent(activity, ActivityPlaceDetail.class);
-        intent.putExtra(EXTRA_OBJ, p);
+    public static void navigate(AppCompatActivity activity, View sharedView, Place place) {
+        // intentNavigation  = Startet Aktivit Place Details
+        Intent intentNavigation = new Intent(activity, ActivityPlaceDetail.class);
+        intentNavigation.putExtra(EXTRA_OBJ, place); //putExtra fügt zusätzliche Daten ans Intent
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, sharedView, EXTRA_OBJ);
-        ActivityCompat.startActivity(activity, intent, options.toBundle());
+        ActivityCompat.startActivity(activity, intentNavigation, options.toBundle());
     }
 
     /*
-      Eine statische Methode zum Erstellen des Absichtsobjekts zum Navigieren zur ActivityPlaceDetail.
-      Sie akzeptiert das Kontextobjekt, das Place-Objekt (obj) und einen booleschen Wert (from_notif),
-      der angibt, ob die Aktivität von einer Benachrichtigung gestartet wurde
+    Die statische Methode "navigateBase" erstellt ein Intent-Objekt zur Navigation von einer
+    Quell-Aktivität zur Ziel-Aktivität und fügt ein "Place"-Objekt sowie eine Flagge hinzu,
+    die angibt, ob der Standort über eine Benachrichtigung aufgerufen wurde.
      */
     public static Intent navigateBase(Context context, Place obj, Boolean from_notif) {
-        Intent i = new Intent(context, ActivityPlaceDetail.class);
-        i.putExtra(EXTRA_OBJ, obj);
-        i.putExtra(EXTRA_NOTIF_FLAG, from_notif);
-        return i;
+        Intent navigation_from_notifi = new Intent(context, ActivityPlaceDetail.class);
+        navigation_from_notifi.putExtra(EXTRA_OBJ, obj);
+        navigation_from_notifi.putExtra(EXTRA_NOTIF_FLAG, from_notif);
+        return navigation_from_notifi;
     }
 
     private Place place = null;
@@ -106,45 +109,52 @@ public class ActivityPlaceDetail extends AppCompatActivity {
     // Initialisiert die Ansicht, die Toolbar und die Google Map.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //Hier wird die Methode onCreate der übergeordneten Klasse aufgerufen, um die Standardinitialisierungen für die Aktivität durch zuführen.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_details);
         parent_view = findViewById(android.R.id.content);
 
         db = new DatabaseHandler(this);
-        // animation transition
+        // animation transition --> App Bas layout siehe Place Details in App
         ViewCompat.setTransitionName(findViewById(R.id.app_bar_layout), EXTRA_OBJ);
 
+        // Hier wird der Place aus dem übergebenden Intent (vorherige Activity) extrahiert
         place = (Place) getIntent().getSerializableExtra(EXTRA_OBJ);
         isFromNotif = getIntent().getBooleanExtra(EXTRA_NOTIF_FLAG, false);
 
+        // Initialisierung von Views
         fab = (FloatingActionButton) findViewById(R.id.fab);
         lyt_progress = findViewById(R.id.lyt_progress);
         lyt_distance = findViewById(R.id.lyt_distance);
-        if (place.image != null) {
-            Tools.displayImage(this, (ImageView) findViewById(R.id.image), Constant.getURLimgPlace(place.image));
-        }
+            if (place.image != null) {
+                Tools.displayImage(this, (ImageView) findViewById(R.id.image), Constant.getURLimgPlace(place.image));
+            }
 
-        fabToggle();
+        // Methode zum Steuern des Favoriten-Buttons
+        favAktualisieren();
+
+        // Konfiguration der Toolbar und Initialisierung der Google Map
         setupToolbar(place.name == null ? "" : place.name);
         initMap();
 
 
-        // handle when favorite button clicked
+        // Abfolge wenn FavouriteButton geklickt wird
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Überprüfen, ob der aktuelle Ort in den Favoriten existiert + Nachricht
+                // ThisApplication... =  Analyse-Tracking "FAVORITES" Aktionstyp (Hinzufügen oder Entfernen) und der Name des Ortes als Parameter übergeben werden
                 if (db.isFavoritesExist(place.place_id)) {
                     db.deleteFavorites(place.place_id);
                     Snackbar.make(parent_view, place.name + " " + getString(R.string.remove_favorite), Snackbar.LENGTH_SHORT).show();
-                    // analytics tracking
                     ThisApplication.getInstance().trackEvent(Constant.Event.FAVORITES.name(), "REMOVE", place.name);
                 } else {
                     db.addFavorites(place.place_id);
                     Snackbar.make(parent_view, place.name + " " + getString(R.string.add_favorite), Snackbar.LENGTH_SHORT).show();
-                    // analytics tracking
                     ThisApplication.getInstance().trackEvent(Constant.Event.FAVORITES.name(), "ADD", place.name);
                 }
-                fabToggle();
+                // Aktualisiere das Symbol des FloatingActionButton (fab) basierend auf den Favoritenstatus
+                favAktualisieren();
             }
         });
 
@@ -162,14 +172,18 @@ public class ActivityPlaceDetail extends AppCompatActivity {
       Website, Beschreibung und Bildergalerie.
      */
     private void displayData(Place p) {
-
+        // Konfiguriere die Toolbar mit dem Ortsnamen
         setupToolbar(place.name);
+
+        // Zeige das Bild des Ortes in einem ImageView an
         Tools.displayImage(this, (ImageView) findViewById(R.id.image), Constant.getURLimgPlace(place.image));
 
+        // Setze die Adresse, Telefonnummer und Website des Ortes in den entsprechenden TextViews
         ((TextView) findViewById(R.id.address)).setText(p.address);
         ((TextView) findViewById(R.id.phone)).setText(p.phone.equals("-") || p.phone.trim().equals("") ? getString(R.string.no_phone_number) : p.phone);
         ((TextView) findViewById(R.id.website)).setText(p.website.equals("-") || p.website.trim().equals("") ? getString(R.string.no_website) : p.website);
 
+        // Zeige die Beschreibung des Ortes in einer WebView an
         description = (WebView) findViewById(R.id.description);
         String html_data = "<style>img{max-width:100%;height:auto;} iframe{width:100%;}</style> ";
         html_data += p.description;
@@ -182,15 +196,16 @@ public class ActivityPlaceDetail extends AppCompatActivity {
             description.loadData(html_data, "text/html; charset=UTF-8", null);
         }
         description.getSettings().setJavaScriptEnabled(true);
-        // disable scroll on touch
+
+        // Deaktiviere das Scrollen in der Beschreibungsansicht durch Berührung
         description.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
                 return (event.getAction() == MotionEvent.ACTION_MOVE);
             }
         });
 
+        // Setze die Entfernungsinformation des Ortes in den TextView für die Entfernung
         distance = place.distance;
-
         if (distance == -1) {
             lyt_distance.setVisibility(View.GONE);
         } else {
@@ -198,6 +213,7 @@ public class ActivityPlaceDetail extends AppCompatActivity {
             ((TextView) findViewById(R.id.distance)).setText(Tools.getFormatedDistance(distance));
         }
 
+        // Zeige die Bildergalerie des Ortes anhand der Bilder in der Datenbank
         setImageGallery(db.getListImageByPlaceId(p.place_id));
     }
 
@@ -266,17 +282,17 @@ public class ActivityPlaceDetail extends AppCompatActivity {
 
     // Öffnet die Bildergalerie mit dem angegebenen Startbild.
     private void openImageGallery(int position) {
-        Intent i = new Intent(ActivityPlaceDetail.this, ActivityFullScreenImage.class);
-        i.putExtra(ActivityFullScreenImage.EXTRA_POS, position);
-        i.putStringArrayListExtra(ActivityFullScreenImage.EXTRA_IMGS, new_images_str);
-        startActivity(i);
+        Intent openImageIntent = new Intent(ActivityPlaceDetail.this, ActivityFullScreenImage.class);
+        openImageIntent.putExtra(ActivityFullScreenImage.EXTRA_POS, position);
+        openImageIntent.putStringArrayListExtra(ActivityFullScreenImage.EXTRA_IMGS, new_images_str);
+        startActivity(openImageIntent);
     }
 
     /*
       Ändert das Symbol des FloatingActionButton (fab) basierend auf dem Vorhandensein
       des Orts in der Favoritenliste.
      */
-    private void fabToggle() {
+    private void favAktualisieren() {
         if (db.isFavoritesExist(place.place_id)) {
             fab.setImageResource(R.drawable.ic_nav_favorites);
         } else {
@@ -285,37 +301,52 @@ public class ActivityPlaceDetail extends AppCompatActivity {
     }
 
     // Konfiguriert die Toolbar und CollapsingToolbarLayout und zeigt den Namen des Ortes an.
-
     private void setupToolbar(String name) {
+        // Finde die Toolbar-View mit der ID "toolbar" und setze sie als Support-Actionbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // Erhalte eine Referenz zur Support-Actionbar und zeige den Zurück-Pfeil an
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+
+        // Setze den Titel der Actionbar auf leer, um den Standardtitel zu verbergen
         actionBar.setTitle("");
 
+        // Setze den Namen des Ortes als Text im Titel der Toolbar
         ((TextView) findViewById(R.id.toolbar_title)).setText(name);
 
-        final CollapsingToolbarLayout collapsing_toolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        // Finde das CollapsingToolbarLayout und setze die Farbe für den Hintergrund
+        CollapsingToolbarLayout collapsing_toolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsing_toolbar.setContentScrimColor(new SharedPref(this).getThemeColorInt());
+
+        // Füge einen OnOffsetChangedListener zur AppBarLayout hinzu
         ((AppBarLayout) findViewById(R.id.app_bar_layout)).addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                // Überprüfe, ob die Höhe des CollapsingToolbarLayouts minus der vertikalen Verschiebung kleiner als das Doppelte der minimalen Höhe des CollapsingToolbarLayouts ist
                 if (collapsing_toolbar.getHeight() + verticalOffset < 2 * ViewCompat.getMinimumHeight(collapsing_toolbar)) {
+                    // Zeige den FloatingActionButton, wenn der Bedingung erfüllt ist
                     fab.show();
                 } else {
+                    // Verberge den FloatingActionButton, wenn der Bedingung nicht erfüllt ist
                     fab.hide();
                 }
             }
         });
 
+        // Füge einen OnClickListener zum ImageView mit der ID "image" hinzu
         (findViewById(R.id.image)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Überprüfe, ob es Bilder in der Bildergalerie gibt
                 if (new_images_str == null || new_images_str.size() <= 0) return;
+                // Öffne die Bildergalerie mit dem ersten Bild (Position 0)
                 openImageGallery(0);
             }
         });
     }
+
 
     // Erstellt das Optionsmenü in der Aktionsleiste.
     @Override
@@ -324,7 +355,7 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         return true;
     }
 
-    // Reagiert auf Klicks auf die Menüelemente, z. B. das Teilen des Ortes.
+    // Reagiert auf Klicks auf die Menüelemente,  das Teilen des Ortes oder zurücktaste.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -381,9 +412,9 @@ public class ActivityPlaceDetail extends AppCompatActivity {
 
     // Öffnet den ausgewählten Ort in der Google Maps-Anwendung.
     private void openPlaceInMap() {
-        Intent intent = new Intent(ActivityPlaceDetail.this, ActivityMaps.class);
-        intent.putExtra(ActivityMaps.EXTRA_OBJ, place);
-        startActivity(intent);
+        Intent openPlaceMap = new Intent(this, ActivityMaps.class);
+        openPlaceMap.putExtra(ActivityMaps.EXTRA_OBJ, place);
+        startActivity(openPlaceMap);
     }
 
     /*
@@ -421,8 +452,8 @@ public class ActivityPlaceDetail extends AppCompatActivity {
      */
     private void backAction() {
         if (isFromNotif) {
-            Intent i = new Intent(this, ActivityMain.class);
-            startActivity(i);
+            Intent openMainAcitvity = new Intent(this, ActivityMain.class);
+            startActivity(openMainAcitvity);
         }
         finish();
     }
@@ -444,41 +475,54 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         }
     }
 
-    // Ruft die Detaildaten des Ortes von der API ab.
+    // Methode zum Abrufen der Detaildaten eines Ortes von der API.
     private void requestDetailsPlace(int place_id) {
+        // Überprüfung, ob bereits ein Prozess läuft
         if (onProcess) {
             Snackbar.make(parent_view, R.string.task_running, Snackbar.LENGTH_SHORT).show();
             return;
         }
+        // Setze den Prozessstatus auf aktiv
         onProcess = true;
+        // Zeige den Fortschrittsbalken an
         showProgressbar(true);
+
+        // Erstelle einen API-Aufruf für die Detaildaten des Ortes
         callback = RestAdapter.createAPI().getPlaceDetails(place_id);
+        // Führe den API-Aufruf aus
         callback.enqueue(new retrofit2.Callback<CallbackPlaceDetails>() {
             @Override
             public void onResponse(Call<CallbackPlaceDetails> call, Response<CallbackPlaceDetails> response) {
+                // Verarbeite die Antwort des API-Aufrufs
                 CallbackPlaceDetails resp = response.body();
                 if (resp != null) {
+                    // Aktualisiere die Ortsdaten in der Datenbank und zeige die Daten verzögert an
                     place = db.updatePlace(resp.place);
                     displayDataWithDelay(place);
                 } else {
+                    // Zeige eine Fehlermeldung an, wenn die Antwort leer ist
                     onFailureRetry(getString(R.string.failed_load_details));
                 }
-
             }
 
             @Override
             public void onFailure(Call<CallbackPlaceDetails> call, Throwable t) {
+                // Behandlung bei einem API-Aufruf-Fehler
                 if (call != null && !call.isCanceled()) {
+                    // Überprüfe die Internetverbindung
                     boolean conn = Tools.cekConnection(ActivityPlaceDetail.this);
                     if (conn) {
+                        // Zeige eine Fehlermeldung an, wenn der API-Aufruf fehlgeschlagen ist
                         onFailureRetry(getString(R.string.failed_load_details));
                     } else {
+                        // Zeige eine Fehlermeldung bei fehlender Internetverbindung
                         onFailureRetry(getString(R.string.no_internet));
                     }
                 }
             }
         });
     }
+
 
     /*
       Zeigt die Daten des Ortes mit einer leichten Verzögerung an,

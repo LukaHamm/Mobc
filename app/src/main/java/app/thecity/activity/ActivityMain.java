@@ -38,7 +38,7 @@ public class ActivityMain extends AppCompatActivity {
 
     public ActionBar actionBar;
     public Toolbar toolbar;
-    private int[] cat;
+    private int[] categories;
     private FloatingActionButton fab;
     private NavigationView navigationView;
     private DatabaseHandler db;
@@ -57,91 +57,122 @@ public class ActivityMain extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Setze das Layout der Hauptaktivität
         setContentView(R.layout.activity_main);
+        // Weise die Hauptaktivität dieser Variable zu
         activityMain = this;
 
+        // Initialisiere die Schwebende Aktionsschaltfläche (Floating Action Button) HerzButton
         fab = (FloatingActionButton) findViewById(R.id.fab);
+        // Initialisiere die Datenbank-Handler-Klasse
         db = new DatabaseHandler(this);
+        // Initialisiere die gemeinsamen Einstellungen
         sharedPref = new SharedPref(this);
 
-
+        // Initialisiere die Toolbar
         initToolbar();
+        // Initialisiere das Navigationsmenü im Seitenmenü
         initDrawerMenu();
-        cat = getResources().getIntArray(R.array.id_category);
+        // Lade die Kategorien-IDs aus den Ressourcen
+        categories = getResources().getIntArray(R.array.id_category);
 
-        // first drawer view
+        // Wähle standardmäßig das erste Element im Seitenmenü aus
         onItemSelected(R.id.nav_all, getString(R.string.title_nav_all));
 
+        // Füge einen Klicklistener zur Schwebenden Aktionsschaltfläche hinzu
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(ActivityMain.this, ActivitySearch.class);
-                startActivity(i);
+                // Öffne die Aktivität für die Suche
+                Intent searchIntent = new Intent(ActivityMain.this, ActivitySearch.class);
+                startActivity(searchIntent);
             }
         });
 
-        // Permission Notification
+        // Überprüfe und beantrage gegebenenfalls Berechtigungen für Benachrichtigungen
         PermissionUtil.checkAndRequestNotification(this);
 
-        // for system bar in lollipop
+        // Konfiguriere die Systemleiste für Lollipop
         Tools.systemBarLolipop(this);
+
+        // Konfiguriere die Rechts-nach-links-Schriftartunterstützung
         Tools.RTLMode(getWindow());
     }
 
-
+    // Initialisiere die Toolbar
     private void initToolbar() {
+        // Finde die Toolbar in der Layout-Datei und setze sie als Aktionsleiste
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        // Erhalte eine Referenz zur Aktionsleiste
         actionBar = getSupportActionBar();
+        // Zeige den Zurück-Pfeil in der Aktionsleiste an
         actionBar.setDisplayHomeAsUpEnabled(true);
+        // Aktiviere die Home-Button-Funktionalität der Aktionsleiste
         actionBar.setHomeButtonEnabled(true);
+        // Setze die Farbe der Aktionsleiste
         Tools.setActionBarColor(this, actionBar);
     }
 
+
     /*
-      n dieser Methode wird das Navigationsmenü (Drawer) initialisiert. Es werden Menüoptionen
+      In dieser Methode wird das Navigationsmenü (Drawer) initialisiert. Es werden Menüoptionen
       festgelegt und die Klickaktionen für verschiedene Menüpunkte werden definiert. Außerdem wird
       die Navigation Header-View angepasst und Klickaktionen für die Menüelemente "Einstellungen"
       und "Karte" festgelegt.
        */
     private void initDrawerMenu() {
+        // Finde die Schublade (DrawerLayout) in der Layout-Datei
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        // Erstelle einen Toggle-Listener für die Schublade, um den Schubladenstatus zu überwachen
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
             public void onDrawerOpened(View drawerView) {
+                // Aktualisiere die Anzahl der Favoriten im Navigationselement, wenn die Schublade geöffnet wird
                 updateFavoritesCounter(navigationView, R.id.nav_favorites, db.getFavoritesSize());
                 super.onDrawerOpened(drawerView);
             }
         };
+        // Setze den Toggle-Listener für die Schublade
         drawer.setDrawerListener(toggle);
+        // Synchronisiere den Schubladenstatus mit dem Toggle-Status (z. B. zeige/hide den Hamburger-Button)
         toggle.syncState();
 
+        // Finde das Navigationselement in der Layout-Datei und setze einen Listener für Navigationselement-Auswahlereignisse
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
+                // Verarbeite das ausgewählte Navigationselement
                 return onItemSelected(item.getItemId(), item.getTitle().toString());
             }
         });
+
+        // Entferne das Navigationsmenüelement "News Info", wenn es deaktiviert ist
         if (!AppConfig.general.enable_news_info) navigationView.getMenu().removeItem(R.id.nav_news);
 
-        // navigation header
+        // Setze das Aussehen des Navigationskopfbereichs
         View nav_header = navigationView.getHeaderView(0);
         nav_header_lyt = (RelativeLayout) nav_header.findViewById(R.id.nav_header_lyt);
         nav_header_lyt.setBackgroundColor(Tools.colorBrighter(sharedPref.getThemeColorInt()));
+
+        // Klick Listener Menükopf Einstellungen
         (nav_header.findViewById(R.id.menu_nav_setting)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), ActivitySetting.class);
-                startActivity(i);
+                // Starte die Einstellungsaktivität bei Klick auf das Einstellungen-Element im Navigationskopf
+                Intent openSettingsIntent = new Intent(getApplicationContext(), ActivitySetting.class);
+                startActivity(openSettingsIntent);
             }
         });
 
+        // Klick Listener Menükopf Karte
         (nav_header.findViewById(R.id.menu_nav_map)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(), ActivityMaps.class);
-                startActivity(i);
+                // Starte die Kartenaktivität bei Klick auf das Karten-Element im Navigationskopf
+                Intent openMapIntent = new Intent(getApplicationContext(), ActivityMaps.class);
+                startActivity(openMapIntent);
             }
         });
     }
@@ -152,6 +183,8 @@ public class ActivityMain extends AppCompatActivity {
      */
     @Override
     public void onBackPressed() {
+        // Zuerst wird versucht, das Schubladensystem (DrawerLayout) in der Layout-Datei zu finden
+        // draweelayout entspricht der navigationsleiste rechts mit den 3 balken
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (!drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.openDrawer(GravityCompat.START);
@@ -175,12 +208,8 @@ public class ActivityMain extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            Intent i = new Intent(getApplicationContext(), ActivitySetting.class);
-            startActivity(i);
-        } else if (id == R.id.action_more) {
-            Tools.rateAction(ActivityMain.this);
-        } else if (id == R.id.action_rate) {
-            Tools.rateAction(ActivityMain.this);
+            Intent openSettingsIntentSideBar = new Intent(getApplicationContext(), ActivitySetting.class);
+            startActivity(openSettingsIntentSideBar);
         } else if (id == R.id.action_about) {
             Tools.aboutAction(ActivityMain.this);
         }
@@ -200,61 +229,38 @@ public class ActivityMain extends AppCompatActivity {
         /* IMPORTANT : cat[index_array], index is start from 0
          */
         if (id == R.id.nav_all) {
+            //All Places
             fragment = new FragmentCategory();
             bundle.putInt(FragmentCategory.TAG_CATEGORY, -1);
             actionBar.setTitle(title);
-            // favorites
         } else if (id == R.id.nav_favorites) {
+            //Favourites
             fragment = new FragmentCategory();
             bundle.putInt(FragmentCategory.TAG_CATEGORY, -2);
             actionBar.setTitle(title);
-            // news info
         } else if (id == R.id.nav_news) {
-            Intent i = new Intent(this, ActivityNewsInfo.class);
-            startActivity(i);
-        } else if (id == R.id.nav_featured) {
+            // News Info
+            Intent openNewsInfosIntent = new Intent(this, ActivityNewsInfo.class);
+            startActivity(openNewsInfosIntent);
+        } else if (id == R.id.nav_ownplaces) {
             fragment = new FragmentCategory();
-            bundle.putInt(FragmentCategory.TAG_CATEGORY, cat[10]);
+            bundle.putInt(FragmentCategory.TAG_CATEGORY, categories[10]);
             actionBar.setTitle(title);
-        } else if (id == R.id.nav_tour) {
+        } else if (id == R.id.nav_calesthenics) {
             fragment = new FragmentCategory();
-            bundle.putInt(FragmentCategory.TAG_CATEGORY, cat[0]);
+            bundle.putInt(FragmentCategory.TAG_CATEGORY, categories[0]);
             actionBar.setTitle(title);
-        } else if (id == R.id.nav_food) {
+        } else if (id == R.id.nav_parcouring) {
             fragment = new FragmentCategory();
-            bundle.putInt(FragmentCategory.TAG_CATEGORY, cat[1]);
+            bundle.putInt(FragmentCategory.TAG_CATEGORY, categories[1]);
             actionBar.setTitle(title);
-        } else if (id == R.id.nav_hotels) {
+        } else if (id == R.id.nav_outdoor) {
             fragment = new FragmentCategory();
-            bundle.putInt(FragmentCategory.TAG_CATEGORY, cat[2]);
+            bundle.putInt(FragmentCategory.TAG_CATEGORY, categories[2]);
             actionBar.setTitle(title);
-        } else if (id == R.id.nav_ent) {
+        } else if (id == R.id.nav_outdoorGyms) {
             fragment = new FragmentCategory();
-            bundle.putInt(FragmentCategory.TAG_CATEGORY, cat[3]);
-            actionBar.setTitle(title);
-        } else if (id == R.id.nav_sport) {
-            fragment = new FragmentCategory();
-            bundle.putInt(FragmentCategory.TAG_CATEGORY, cat[4]);
-            actionBar.setTitle(title);
-        } else if (id == R.id.nav_shop) {
-            fragment = new FragmentCategory();
-            bundle.putInt(FragmentCategory.TAG_CATEGORY, cat[5]);
-            actionBar.setTitle(title);
-        } else if (id == R.id.nav_transport) {
-            fragment = new FragmentCategory();
-            bundle.putInt(FragmentCategory.TAG_CATEGORY, cat[6]);
-            actionBar.setTitle(title);
-        } else if (id == R.id.nav_religion) {
-            fragment = new FragmentCategory();
-            bundle.putInt(FragmentCategory.TAG_CATEGORY, cat[7]);
-            actionBar.setTitle(title);
-        } else if (id == R.id.nav_public) {
-            fragment = new FragmentCategory();
-            bundle.putInt(FragmentCategory.TAG_CATEGORY, cat[8]);
-            actionBar.setTitle(title);
-        } else if (id == R.id.nav_money) {
-            fragment = new FragmentCategory();
-            bundle.putInt(FragmentCategory.TAG_CATEGORY, cat[9]);
+            bundle.putInt(FragmentCategory.TAG_CATEGORY, categories[3]);
             actionBar.setTitle(title);
         }
 

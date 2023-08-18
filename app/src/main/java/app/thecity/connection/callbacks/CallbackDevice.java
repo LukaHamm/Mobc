@@ -7,6 +7,6 @@ import java.io.Serializable;
  * Sie enthält Informationen über den Status und eine Nachricht.
  */
 public class CallbackDevice implements Serializable {
-    public String status = ""; // Der Status der Antwort (z.B. "success" oder "error")
-    public String message = ""; // Die Nachricht, die in der Antwort enthalten ist (z.B. Erfolgsmeldung oder Fehlermeldung)
+    public String status = "Error"; // Der Status der Antwort (z.B. "success" oder "error")
+    public String message = "ERROR"; // Die Nachricht, die in der Antwort enthalten ist (z.B. Erfolgsmeldung oder Fehlermeldung)
 }

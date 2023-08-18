@@ -12,18 +12,12 @@
     <string name="title_nav_all">All Places</string>
     <string name="title_nav_fav">Favorites</string>
     <string name="title_nav_news">News Info</string>
+    <string name="title_nav_ownplaces">Eigene Orte</string>
+    <string name="title_nav_calesthenics">Calesthenics</string>
+    <string name="title_nav_parcouring">Parcouring</string>
+    <string name="title_nav_outdoor">Outdoor</string>
+    <string name="title_nav_outdoorGyms">Outdoor Gyms</string>
 
-    <string name="title_nav_featured">Featured Places</string>
-    <string name="title_nav_tour">Tourist Destination</string>
-    <string name="title_nav_food">Food \u0026 Drink</string>
-    <string name="title_nav_hotels">Hotels</string>
-    <string name="title_nav_ent">Entertainment</string>
-    <string name="title_nav_sport">Sport</string>
-    <string name="title_nav_shop">Shopping</string>
-    <string name="title_nav_transport">Transportation</string>
-    <string name="title_nav_religion">Religion</string>
-    <string name="title_nav_public">Public Services</string>
-    <string name="title_nav_money">Money</string>
 
     <!--=== activity FullScreenImage =========================================================== -->
     <string name="image_of">%1$d of %2$d</string>
@@ -39,8 +33,8 @@
     <string name="activity_title_maps">@string/title_nav_all</string>
 
     <!--=== activity PlaceDetails ============================================================== -->
-    <string name="add_favorite">added to favorites</string>
-    <string name="remove_favorite">remove from favorites</string>
+    <string name="add_favorite">Hinzugefügt zu Favouriten!</string>
+    <string name="remove_favorite">Entfernt von Favouriten!</string>
     <string name="no_phone_number">do not have a phone</string>
     <string name="no_website">do not have a website</string>
     <string name="fail_dial_number">Cannot dial phone number</string>

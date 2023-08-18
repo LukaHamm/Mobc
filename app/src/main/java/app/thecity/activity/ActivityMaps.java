@@ -300,28 +300,16 @@ public class ActivityMaps extends AppCompatActivity implements OnMapReadyCallbac
                 int itemId = item.getItemId();
                 if (itemId == R.id.nav_all) {
                     cat_id = -1;
-                } else if (itemId == R.id.nav_featured) {
+                } else if (itemId == R.id.nav_ownplaces) {
                     cat_id = cat[10];
-                } else if (itemId == R.id.nav_tour) {
+                } else if (itemId == R.id.nav_calesthenics) {
                     cat_id = cat[0];
-                } else if (itemId == R.id.nav_food) {
+                } else if (itemId == R.id.nav_parcouring) {
                     cat_id = cat[1];
-                } else if (itemId == R.id.nav_hotels) {
+                } else if (itemId == R.id.nav_outdoor) {
                     cat_id = cat[2];
-                } else if (itemId == R.id.nav_ent) {
+                } else if (itemId == R.id.nav_outdoorGyms) {
                     cat_id = cat[3];
-                } else if (itemId == R.id.nav_sport) {
-                    cat_id = cat[4];
-                } else if (itemId == R.id.nav_shop) {
-                    cat_id = cat[5];
-                } else if (itemId == R.id.nav_transport) {
-                    cat_id = cat[6];
-                } else if (itemId == R.id.nav_religion) {
-                    cat_id = cat[7];
-                } else if (itemId == R.id.nav_public) {
-                    cat_id = cat[8];
-                } else if (itemId == R.id.nav_money) {
-                    cat_id = cat[9];
                 }
 
                 clearViewPager();

@@ -13,7 +13,9 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Hilfsklasse "RestAdapter" zum Erstellen von Retrofit-Instanzen für die API-Kommunikation.
+ * Klasse RestAdapter dient dazu, eine Verbindung zur API herzustellen, über die Inhalte für die App
+ * geladen werden können. Hier wird Retrofit verwendet, um HTTP-Anfragen an die API zu senden und die
+ * Antwort zu verarbeite
  */
 public class RestAdapter {
 
