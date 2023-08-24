@@ -28,6 +28,8 @@ public class AppConfig extends AppConfigExt implements Serializable {
         /* Bearbeiten Sie WEB_URL mit Ihrer URL. Stellen Sie sicher, dass am Ende der URL ein Schrägstrich ('/') vorhanden ist. */
         public String web_url = "https://demo.dream-space.web.id/the_city/";
 
+        public String web_url_Mobc = "https://grumpy-calf-jacket.cyclic.cloud/";
+
         /* Standard-Zoomstufe für die Karte */
         public double city_lat = -6.9174639;
         public double city_lng = 107.6191228;

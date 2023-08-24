@@ -46,6 +46,27 @@ public class RestAdapter {
         return retrofit.create(API.class);
     }
 
+    public static API createMobcApi (){
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(BuildConfig.DEBUG ? Level.BODY : Level.NONE);
+
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .addInterceptor(logging)
+                .cache(null)
+                .build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(AppConfig.general.web_url_Mobc)
+                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create()))
+                .client(okHttpClient)
+                .build();
+
+        return retrofit.create(API.class);
+    }
+
     /**
      * Erstellt eine spezielle kürzere Retrofit-Instanz für die GCM-Registrierung.
      * Verwendet eine kürzere Verbindungstimeout-Dauer, um schneller eine Registrierung durchzuführen.

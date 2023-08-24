@@ -97,6 +97,9 @@ public class ActivityMain extends AppCompatActivity {
 
         // Konfiguriere die Rechts-nach-links-Schriftartunterstützung
         Tools.RTLMode(getWindow());
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 
     // Initialisiere die Toolbar

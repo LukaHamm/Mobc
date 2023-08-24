@@ -4,7 +4,10 @@ import app.thecity.connection.callbacks.CallbackDevice;
 import app.thecity.connection.callbacks.CallbackListNewsInfo;
 import app.thecity.connection.callbacks.CallbackListPlace;
 import app.thecity.connection.callbacks.CallbackPlaceDetails;
+import app.thecity.connection.callbacks.CallbackUser;
 import app.thecity.model.DeviceInfo;
+import app.thecity.model.User;
+import app.thecity.model.UserInfo;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -20,6 +23,8 @@ public interface API {
 
     String CACHE = "Cache-Control: max-age=0";
     String AGENT = "User-Agent: Place";
+
+    String CONTENT_TYPE_JSON = "Content-Type: application/json";
 
     /* Place API transaction ------------------------------- */
 
@@ -37,6 +42,18 @@ public interface API {
     @GET("app/services/getPlaceDetails")
     Call<CallbackPlaceDetails> getPlaceDetails(
             @Query("place_id") int place_id
+    );
+
+    @Headers({CONTENT_TYPE_JSON})
+    @POST("api/user/login")
+        Call<CallbackUser> login(
+            @Body UserInfo userInfo
+            );
+
+    @Headers({CONTENT_TYPE_JSON})
+    @POST("api/user/register")
+    Call<String> register(
+            @Body User user
     );
 
     /* News Info API transaction ------------------------------- */
