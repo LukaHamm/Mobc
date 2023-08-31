@@ -24,12 +24,19 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.gson.Gson;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import app.thecity.AppConfig;
 import app.thecity.R;
 import app.thecity.data.DatabaseHandler;
 import app.thecity.data.SharedPref;
 import app.thecity.fragment.FragmentCategory;
+import app.thecity.model.User;
 import app.thecity.utils.PermissionUtil;
 import app.thecity.utils.Tools;
 
@@ -55,6 +62,10 @@ public class ActivityMain extends AppCompatActivity {
      Es wird auch die Benachrichtigungsberechtigung überprüft und die Systemleiste für
      Lollipop-Geräte angepasst
      */
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,8 +110,53 @@ public class ActivityMain extends AppCompatActivity {
         // Konfiguriere die Rechts-nach-links-Schriftartunterstützung
         Tools.RTLMode(getWindow());
 
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
+        InputStream inputStream = this.getClassLoader().getResourceAsStream("/userdata.json");
+
+        if (inputStream != null) {
+            InputStreamReader reader = new InputStreamReader(inputStream);
+            BufferedReader bufferedReader = new BufferedReader(reader);
+            StringBuilder stringBuilder = new StringBuilder();
+            String line;
+
+            while (true) {
+                try {
+                    if (!((line = bufferedReader.readLine()) != null)) break;
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                stringBuilder.append(line);
+            }
+
+            String userString = stringBuilder.toString();
+
+            // Jetzt können Sie den userString verwenden, um die JSON-Daten zu verarbeiten.
+            Gson gson = new Gson();
+            User user = gson.fromJson(userString, User.class);
+
+            if (user == null || user.token == null) {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+            }
+        }
+
+
+       /*
+       InputStream inputStream = this.getClassLoader().getResourceAsStream("/userdata.json");
+        String userString = inputStream.toString();
+        if (inputStream != null){
+            Gson gson = new Gson();
+            User user = gson.fromJson(inputStream,User.class);
+
+            if(user == null || user.token == null){
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+            }
+        }
+        */
+
+
+
+
     }
 
     // Initialisiere die Toolbar

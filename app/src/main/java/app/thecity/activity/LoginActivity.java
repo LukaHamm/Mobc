@@ -2,6 +2,7 @@ package app.thecity.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import app.thecity.R;
@@ -35,4 +36,6 @@ public class LoginActivity extends AppCompatActivity {
                     .commit();
         }
     }
+
+
 }

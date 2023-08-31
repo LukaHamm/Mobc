@@ -1,5 +1,6 @@
 package app.thecity.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.gson.Gson;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import app.thecity.R;
+import app.thecity.activity.ActivityMain;
 import app.thecity.activity.LoginActivity;
 import app.thecity.connection.API;
 import app.thecity.connection.RestAdapter;
@@ -59,6 +67,19 @@ public class LoginFragment extends Fragment {
                         CallbackUser resp = response.body();
                         User user = resp.user;
                         greeting.setText("Hello+ " + user.name + " your token is " + user.token + ", your id is " + user._id);
+                        String path = this.getClass().getClassLoader().getResource("/userdata.json").toString();
+                        File userdata = new File(path);
+                        try {
+                            FileWriter writer = new FileWriter(userdata);
+                            Gson gson = new Gson();
+                            writer.write(gson.toJson(user));
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        Intent intent = new Intent(getActivity(),ActivityMain.class);
+                        startActivity(intent);
+
                     }
 
                     @Override
