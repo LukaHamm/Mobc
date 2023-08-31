@@ -36,6 +36,7 @@ import app.thecity.utils.Tools;
 // Hauptaktivität der App
 public class ActivityMain extends AppCompatActivity {
 
+    //Hallo9
     public ActionBar actionBar;
     public Toolbar toolbar;
     private int[] categories;
