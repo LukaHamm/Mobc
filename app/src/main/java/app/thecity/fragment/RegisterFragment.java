@@ -54,7 +54,7 @@ public class RegisterFragment extends Fragment {
                 passwordEditText.getText().toString().isEmpty() ||  confirmPasswordEditText.getText().toString().isEmpty()){
                     Toast.makeText(getContext(),"Please fill in the blanks", Toast.LENGTH_LONG).show();
                 }
-                else if (!passwordEditText.getText().equals(confirmPasswordEditText.getText())){
+                else if (!passwordEditText.getText().toString().equals(confirmPasswordEditText.getText().toString())){
                     Toast.makeText(getContext(),"Passwords don't match", Toast.LENGTH_LONG).show();
                 }else {
                     User user = new User(nameEditText.getText().toString(),lastnameEditText.getText().toString(),usernameEditText.getText().toString(),emailEditText.getText().toString(),passwordEditText.getText().toString());
