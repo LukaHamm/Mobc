@@ -111,7 +111,7 @@ public class ActivityMain extends AppCompatActivity {
         Tools.RTLMode(getWindow());
 
         InputStream inputStream = this.getClassLoader().getResourceAsStream("/userdata.json");
-
+        User user = null;
         if (inputStream != null) {
             InputStreamReader reader = new InputStreamReader(inputStream);
             BufferedReader bufferedReader = new BufferedReader(reader);
@@ -131,12 +131,13 @@ public class ActivityMain extends AppCompatActivity {
 
             // Jetzt können Sie den userString verwenden, um die JSON-Daten zu verarbeiten.
             Gson gson = new Gson();
-            User user = gson.fromJson(userString, User.class);
+            user = gson.fromJson(userString, User.class);
 
-            if (user == null || user.token == null) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
-            }
+
+        }
+        if (user == null || user.token == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
         }
 
 

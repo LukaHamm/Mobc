@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.gson.Gson;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -67,14 +68,14 @@ public class LoginFragment extends Fragment {
                         CallbackUser resp = response.body();
                         User user = resp.user;
                         greeting.setText("Hello+ " + user.name + " your token is " + user.token + ", your id is " + user._id);
-                        String path = this.getClass().getClassLoader().getResource("/userdata.json").toString();
-                        File userdata = new File(path);
                         try {
-                            FileWriter writer = new FileWriter(userdata);
-                            Gson gson = new Gson();
-                            writer.write(gson.toJson(user));
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
+                            File file = new File(getContext().getFilesDir(), "userdata.json");
+                            FileWriter fileWriter = new FileWriter(file);
+                            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+                            bufferedWriter.write(new Gson().toJson(user));
+                            bufferedWriter.close();
+                        }catch (IOException e){
+                            return;
                         }
 
                         Intent intent = new Intent(getActivity(),ActivityMain.class);
