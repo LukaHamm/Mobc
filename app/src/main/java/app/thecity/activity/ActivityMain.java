@@ -27,6 +27,8 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -110,50 +112,29 @@ public class ActivityMain extends AppCompatActivity {
         // Konfiguriere die Rechts-nach-links-Schriftartunterstützung
         Tools.RTLMode(getWindow());
 
-        InputStream inputStream = this.getClassLoader().getResourceAsStream("/userdata.json");
-        User user = null;
-        if (inputStream != null) {
-            InputStreamReader reader = new InputStreamReader(inputStream);
-            BufferedReader bufferedReader = new BufferedReader(reader);
+        try {
+            File file = new File(getApplicationContext().getFilesDir(), "/userdata.json");
+            FileReader fileReader = new FileReader(file);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
             StringBuilder stringBuilder = new StringBuilder();
-            String line;
-
-            while (true) {
-                try {
-                    if (!((line = bufferedReader.readLine()) != null)) break;
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                stringBuilder.append(line);
+            String line = bufferedReader.readLine();
+            while (line != null) {
+                stringBuilder.append(line).append("\n");
+                line = bufferedReader.readLine();
             }
+            bufferedReader.close();
 
-            String userString = stringBuilder.toString();
-
-            // Jetzt können Sie den userString verwenden, um die JSON-Daten zu verarbeiten.
+            // This responce will have Json Format String
+            String responce = stringBuilder.toString();
             Gson gson = new Gson();
-            user = gson.fromJson(userString, User.class);
-
-
-        }
-        if (user == null || user.token == null) {
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-        }
-
-
-       /*
-       InputStream inputStream = this.getClassLoader().getResourceAsStream("/userdata.json");
-        String userString = inputStream.toString();
-        if (inputStream != null){
-            Gson gson = new Gson();
-            User user = gson.fromJson(inputStream,User.class);
-
-            if(user == null || user.token == null){
+            User user = gson.fromJson(responce, User.class);
+            if (user == null || user.token == null) {
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
             }
+        }catch (IOException e){
+            return;
         }
-        */
 
 
 
