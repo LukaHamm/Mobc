@@ -91,6 +91,7 @@ public class ActivityPlaceDetail extends AppCompatActivity {
     }
 
     private Place place = null;
+
     private FloatingActionButton fab;
     private WebView description = null;
     private View parent_view = null;

@@ -28,9 +28,11 @@ import app.thecity.activity.ActivityPlaceDetail;
 import app.thecity.adapter.AdapterPlaceGrid;
 import app.thecity.connection.RestAdapter;
 import app.thecity.connection.callbacks.CallbackListPlace;
+import app.thecity.connection.callbacks.CallbackUser;
 import app.thecity.data.DatabaseHandler;
 import app.thecity.data.SharedPref;
 import app.thecity.data.ThisApplication;
+import app.thecity.model.Activity;
 import app.thecity.model.Place;
 import app.thecity.utils.Tools;
 import retrofit2.Call;
@@ -58,12 +60,26 @@ public class FragmentCategory extends Fragment {
     private AdapterPlaceGrid adapter;
     private Call<CallbackListPlace> callback;
 
+    private Call<List<Activity>> callActivityList;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Aufblasen des Layouts für das Fragment
         root_view = inflater.inflate(R.layout.fragment_category, null);
+        callActivityList = RestAdapter.createAPI().getActivities();
+        callActivityList.enqueue(new retrofit2.Callback<List<Activity>>() {
+            @Override
+            public void onResponse(Call<List<Activity>> call, Response<List<Activity>> response) {
+                List<Activity> activityList = response.body();
+                System.out.println(activityList.size());
+            }
 
+            @Override
+            public void onFailure(Call<List<Activity>> call, Throwable t) {
+
+            }
+        });
         // Fragment-Menü aktivieren
         setHasOptionsMenu(true);
 
@@ -196,6 +212,7 @@ public class FragmentCategory extends Fragment {
     private void onRefresh(final int page_no) {
         onProcess = true;
         showProgress(onProcess);
+        //hier eigene Orte abfragen
         callback = RestAdapter.createAPI().getPlacesByPage(page_no, AppConfig.general.limit_place_request, (AppConfig.general.lazy_load ? 1 : 0));
         callback.enqueue(new retrofit2.Callback<CallbackListPlace>() {
             @Override

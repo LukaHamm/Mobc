@@ -1,10 +1,13 @@
 package app.thecity.connection;
 
+import java.util.List;
+
 import app.thecity.connection.callbacks.CallbackDevice;
 import app.thecity.connection.callbacks.CallbackListNewsInfo;
 import app.thecity.connection.callbacks.CallbackListPlace;
 import app.thecity.connection.callbacks.CallbackPlaceDetails;
 import app.thecity.connection.callbacks.CallbackUser;
+import app.thecity.model.Activity;
 import app.thecity.model.DeviceInfo;
 import app.thecity.model.User;
 import app.thecity.model.UserInfo;
@@ -54,6 +57,11 @@ public interface API {
     @POST("api/user/register")
     Call<String> register(
             @Body User user
+    );
+
+    @Headers({CONTENT_TYPE_JSON})
+    @GET("/api/activities/")
+    Call<List<Activity>> getActivities(
     );
 
     /* News Info API transaction ------------------------------- */
