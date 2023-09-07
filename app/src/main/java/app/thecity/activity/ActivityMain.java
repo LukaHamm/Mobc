@@ -133,7 +133,8 @@ public class ActivityMain extends AppCompatActivity {
                 startActivity(intent);
             }
         }catch (IOException e){
-            return;
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
         }
 
 
