@@ -3,7 +3,6 @@ package app.thecity;
 import java.io.Serializable;
 
 import app.thecity.utils.AppConfigExt;
-import dreamspace.ads.sdk.data.AdNetworkType;
 
 /**
  * Diese Datei enthält Konfigurationsdaten für die App. Sie können Werbung, Benachrichtigungen und allgemeine Daten in dieser Datei konfigurieren.

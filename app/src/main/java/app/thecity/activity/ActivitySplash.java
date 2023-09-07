@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+
 
 import app.thecity.AppConfig;
 import app.thecity.R;
@@ -76,18 +76,7 @@ public class ActivitySplash extends AppCompatActivity {
             return;
         }
         Log.d("REMOTE_CONFIG", "requestRemoteConfig");
-        FirebaseRemoteConfig firebaseRemoteConfig = ThisApplication.getInstance().getFirebaseRemoteConfig();
-        firebaseRemoteConfig.fetchAndActivate().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Log.d("REMOTE_CONFIG", "SUCCESS");
-                AppConfig.setFromRemoteConfig(firebaseRemoteConfig);
-                startActivityMainDelay(true);
-            } else {
-                Log.d("REMOTE_CONFIG", "FAILED");
-                AppConfig.setFromSharedPreference();
-                startActivityMainDelay(true);
-            }
-        });
+
     }
 
     /*

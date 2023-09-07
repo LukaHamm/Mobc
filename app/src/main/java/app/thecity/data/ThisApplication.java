@@ -6,11 +6,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import app.thecity.AppConfig;
 import app.thecity.connection.API;
@@ -25,8 +20,8 @@ public class ThisApplication extends Application {
 
     private Call<CallbackDevice> callback = null;
     private static ThisApplication mInstance;
-    private FirebaseAnalytics firebaseAnalytics;
-    private FirebaseRemoteConfig firebaseRemoteConfig;
+
+
     private Location location = null;
     private SharedPref sharedPref;
     private int fcm_count = 0;
@@ -67,9 +62,7 @@ public class ThisApplication extends Application {
         params.putString("label", label);
     }
 
-    public FirebaseRemoteConfig getFirebaseRemoteConfig() {
-        return firebaseRemoteConfig;
-    }
+
 
     public Location getLocation() {
         return location;

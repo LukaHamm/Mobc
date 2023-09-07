@@ -4,19 +4,19 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+
 import com.google.gson.Gson;
 
 import app.thecity.AppConfig;
 import app.thecity.data.ThisApplication;
-import dreamspace.ads.sdk.data.AdNetworkType;
+
 
 public class AppConfigExt {
 
     // Definiere statische Variable für die allgemeine App-Konfiguration
     public static AppConfig.General general = new AppConfig.General();
 
-
+/*
     // Setze Daten aus dem Remote Config
     public static void setFromRemoteConfig(FirebaseRemoteConfig remote) {
         // Allgemeine Konfiguration
@@ -46,7 +46,7 @@ public class AppConfigExt {
 
         saveToSharedPreference(); // Speichere die Konfiguration in den Shared Preferences
     }
-
+*/
     // Setze Daten aus den Shared Preferences
     public static void setFromSharedPreference() {
         Context context = ThisApplication.getInstance();
