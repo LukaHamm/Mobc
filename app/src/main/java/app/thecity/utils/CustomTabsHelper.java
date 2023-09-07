@@ -40,7 +40,7 @@ public class CustomTabsHelper {
      * @param activity         Die Host-Aktivität.
      * @param customTabsIntent ein CustomTabsIntent, das verwendet werden soll, wenn Custom Tabs verfügbar sind.
      * @param uri              die Uri, die geöffnet werden soll.
-     * @param fallback         ein CustomTabFallback, das verwendet wird, wenn Custom Tabs nicht verfügbar sind.
+     *      * @param fallback         ein CustomTabFallback, das verwendet wird, wenn Custom Tabs nicht verfügbar sind.
      */
     public static void openCustomTab(Activity activity, CustomTabsIntent customTabsIntent, Uri uri, CustomTabFallback fallback) {
         String packageName = getPackageNameToUse(activity);

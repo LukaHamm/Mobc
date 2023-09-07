@@ -3,7 +3,7 @@
 
     <string name="city_name">Bandung</string>
     <string name="city_address">Jawa Barat, Indonesia</string>
-    <string name="about_text">App display Interesting spot at City</string>
+    <string name="about_text">Diese App wurde von Niklas Tarkel und Lukas Hammer entwickelt. Wir sind Studenten des Fachs Mobile Computing und haben diese Anwendung erstellt, um Ihnen eine großartige Erfahrung zu bieten. Vielen Dank, dass Sie unsere App verwenden! </string>
 
 
     <!--=== Nav Drawer Menu Items ============================================================== -->

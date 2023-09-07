@@ -147,11 +147,11 @@ public class ActivityPlaceDetail extends AppCompatActivity {
                 if (db.isFavoritesExist(place.place_id)) {
                     db.deleteFavorites(place.place_id);
                     Snackbar.make(parent_view, place.name + " " + getString(R.string.remove_favorite), Snackbar.LENGTH_SHORT).show();
-                    ThisApplication.getInstance().trackEvent(Constant.Event.FAVORITES.name(), "REMOVE", place.name);
+                    //ThisApplication.getInstance().trackEvent(Constant.Event.FAVORITES.name(), "REMOVE", place.name);
                 } else {
                     db.addFavorites(place.place_id);
                     Snackbar.make(parent_view, place.name + " " + getString(R.string.add_favorite), Snackbar.LENGTH_SHORT).show();
-                    ThisApplication.getInstance().trackEvent(Constant.Event.FAVORITES.name(), "ADD", place.name);
+                    //ThisApplication.getInstance().trackEvent(Constant.Event.FAVORITES.name(), "ADD", place.name);
                 }
                 // Aktualisiere das Symbol des FloatingActionButton (fab) basierend auf den Favoritenstatus
                 favAktualisieren();

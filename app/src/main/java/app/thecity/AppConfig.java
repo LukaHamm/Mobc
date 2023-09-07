@@ -66,29 +66,8 @@ public class AppConfig extends AppConfigExt implements Serializable {
         public int limit_loadmore = 40;
         public int limit_news_request = 40;
 
-        /* Die folgenden 2 Links werden auf der Einstellungsseite verwendet */
+
     }
 
-    /* Dummy-Klasse für Ads, um Fehler zu vermeiden und andere Klassen nicht zu beeinflussen */
-    public static class Ads implements Serializable {
-        // Leere Funktionen für Werbung, um Fehler zu vermeiden
-        public boolean ad_enable = false;
-        public AdNetworkType ad_network = AdNetworkType.ADMOB;
-        public boolean ad_enable_gdpr = false;
-        public boolean ad_main_banner = false;
-        public boolean ad_main_interstitial = false;
-        public boolean ad_place_details_banner = false;
-        public boolean ad_news_details_banner = false;
-        public int ad_inters_interval = 0;
-        public String ad_fan_banner_unit_id = "";
-        public String ad_fan_interstitial_unit_id = "";
-        public String ad_ironsource_app_key = "";
-        public String ad_ironsource_banner_unit_id = "";
-        public String ad_ironsource_interstitial_unit_id = "";
-        public String ad_unity_game_id = "";
-        public String ad_unity_banner_unit_id = "";
-        public String ad_unity_interstitial_unit_id = "";
-        public String ad_applovin_banner_unit_id = "";
-        public String ad_applovin_interstitial_unit_id = "";
-    }
+
 }

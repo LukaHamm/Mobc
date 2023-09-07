@@ -20,11 +20,4 @@ public class Constant {
     // Konstante für das Tag von Suchprotokollen (Logging)
     public static final String LOG_TAG = "CITY_LOG";
 
-    // Aufzählung für Google Analytics Ereignis Kategorien
-    public enum Event {
-        FAVORITES,    // Favoriten
-        THEME,        // Thema (Design)
-        NOTIFICATION, // Benachrichtigung
-        REFRESH       // Aktualisieren
-    }
 }

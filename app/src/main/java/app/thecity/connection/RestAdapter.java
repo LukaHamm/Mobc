@@ -24,6 +24,7 @@ public class RestAdapter {
      * Verwendet eine längere Verbindungstimeout-Dauer und protokolliert HTTP-Anfragen und -Antworten für Debugging-Zwecke.
      * @return Eine API-Instanz, um API-Anfragen zu erstellen.
      */
+
     public static API createAPI() {
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();

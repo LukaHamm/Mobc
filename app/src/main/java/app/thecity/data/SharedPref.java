@@ -29,19 +29,6 @@ public class SharedPref {
         prefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-    // FCM-Registrierungs-ID speichern und abrufen
-    public void setFcmRegId(String gcmRegId) {
-        sharedPreferences.edit().putString(FCM_PREF_KEY, gcmRegId).apply();
-    }
-
-    public String getFcmRegId() {
-        return sharedPreferences.getString(FCM_PREF_KEY, null);
-    }
-
-    public boolean isFcmRegIdEmpty() {
-        return TextUtils.isEmpty(getFcmRegId());
-    }
-
     // Registrierungsstatus für den Server speichern und abrufen
     public void setRegisteredOnServer(boolean registered) {
         sharedPreferences.edit().putBoolean(SERVER_FLAG_KEY, registered).apply();
@@ -49,11 +36,6 @@ public class SharedPref {
 
     public boolean isRegisteredOnServer() {
         return sharedPreferences.getBoolean(SERVER_FLAG_KEY, false);
-    }
-
-    // Überprüfen, ob eine erneute FCM-Registrierung erforderlich ist
-    public boolean isNeedRegisterFcm() {
-        return (isFcmRegIdEmpty() || !isRegisteredOnServer());
     }
 
     // Einstellungen für Benachrichtigungen abrufen

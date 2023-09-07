@@ -547,7 +547,6 @@ public class Tools {
         deviceInfo.setDevice(Tools.getDeviceName());
         deviceInfo.setEmail(phoneID);
         deviceInfo.setVersion(Tools.getAndroidVersion());
-        deviceInfo.setRegid(new SharedPref(context).getFcmRegId());
         deviceInfo.setDate_create(System.currentTimeMillis());
 
         return deviceInfo;
@@ -566,17 +565,6 @@ public class Tools {
     public static String getFormattedDate(Long dateTime) {
         SimpleDateFormat newFormat = new SimpleDateFormat("MMMM dd, yyyy hh:mm");
         return newFormat.format(new Date(dateTime));
-    }
-
-    /*
-         Dies ist eine Schnittstelle, die zwei Methoden deklariert: onSuccess(DeviceInfo result)
-         und onError(). Diese Schnittstelle wird wahrscheinlich verwendet, um Rückrufe (Callbacks)
-         für die Registrierung von Geräteinformationen zu definieren.
-    */
-    public interface CallbackRegId {
-        void onSuccess(DeviceInfo result);
-
-        void onError();
     }
 
     /*

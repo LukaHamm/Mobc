@@ -1,5 +1,6 @@
 package app.thecity.data;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -422,6 +423,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return list;
     }
 
+    @SuppressLint("Range")
     private Place getPlaceByCursor(Cursor cur){
         Place p       = new Place();
         p.place_id    = cur.getInt(cur.getColumnIndex(KEY_PLACE_ID));
@@ -438,6 +440,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return p;
     }
 
+    @SuppressLint("Range")
     private NewsInfo getNewsInfoByCursor(Cursor cur){
         NewsInfo n      = new NewsInfo();
         n.id            = cur.getInt(cur.getColumnIndex(KEY_NEWS_ID));

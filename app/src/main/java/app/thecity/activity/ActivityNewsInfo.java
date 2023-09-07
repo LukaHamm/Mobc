@@ -285,8 +285,6 @@ public class ActivityNewsInfo extends AppCompatActivity {
         } else if (id == R.id.action_settings) {
             Intent i = new Intent(getApplicationContext(), ActivitySetting.class);
             startActivity(i);
-        } else if (id == R.id.action_rate) {
-            Tools.rateAction(ActivityNewsInfo.this);
         } else if (id == R.id.action_about) {
             Tools.aboutAction(ActivityNewsInfo.this);
         }

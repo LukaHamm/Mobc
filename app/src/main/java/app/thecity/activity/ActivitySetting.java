@@ -102,7 +102,7 @@ public class ActivitySetting extends PreferenceActivity {
         notifPref.setOnPreferenceChangeListener((preference, o) -> {
             boolean flag = (boolean) o;
             // analytics tracking
-            ThisApplication.getInstance().trackEvent(Constant.Event.NOTIFICATION.name(), (flag ? "ENABLE" : "DISABLE"), "-");
+            //ThisApplication.getInstance().trackEvent(Constant.Event.NOTIFICATION.name(), (flag ? "ENABLE" : "DISABLE"), "-");
             PermissionUtil.checkAndRequestNotificationRationale(ActivitySetting.this);
             return true;
         });
@@ -129,7 +129,7 @@ public class ActivitySetting extends PreferenceActivity {
         themePref.setOnPreferenceClickListener(preference -> {
             dialogColorChooser(ActivitySetting.this);
             // analytics tracking
-            ThisApplication.getInstance().trackEvent(Constant.Event.THEME.name(), "CHANGE", "-");
+           //ThisApplication.getInstance().trackEvent(Constant.Event.THEME.name(), "CHANGE", "-");
             return true;
         });
 
