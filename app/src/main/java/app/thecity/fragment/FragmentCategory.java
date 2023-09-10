@@ -67,12 +67,15 @@ public class FragmentCategory extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Aufblasen des Layouts für das Fragment
         root_view = inflater.inflate(R.layout.fragment_category, null);
-        callActivityList = RestAdapter.createAPI().getActivities();
+        callActivityList = RestAdapter.createMobcApi().getActivities();
         callActivityList.enqueue(new retrofit2.Callback<List<Activity>>() {
             @Override
             public void onResponse(Call<List<Activity>> call, Response<List<Activity>> response) {
                 List<Activity> activityList = response.body();
-                System.out.println(activityList.size());
+                if (activityList != null) {
+                    adapter.insertData(activityList);
+                    System.out.println(activityList.size());
+                }
             }
 
             @Override
@@ -97,13 +100,13 @@ public class FragmentCategory extends Fragment {
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(Tools.getGridSpanCount(getActivity()), StaggeredGridLayoutManager.VERTICAL));
 
         // Daten und Adapter für die RecyclerView setzen
-        adapter = new AdapterPlaceGrid(getActivity(), recyclerView, new ArrayList<Place>());
+        adapter = new AdapterPlaceGrid(getActivity(), recyclerView, new ArrayList<Activity>());
         recyclerView.setAdapter(adapter);
 
         // OnClickListener für die Liste festlegen
-        adapter.setOnItemClickListener((v, obj) -> {
+        /*adapter.setOnItemClickListener((v, obj) -> {
             ActivityPlaceDetail.navigate((ActivityMain) getActivity(), v.findViewById(R.id.lyt_content), obj);
-        });
+        });*/
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -116,13 +119,12 @@ public class FragmentCategory extends Fragment {
                 }
             }
         });
-
         // Daten aktualisieren, wenn notwendig, sonst die Adapterdaten setzen
-        if (sharedPref.isRefreshPlaces() || db.getPlacesSize() == 0) {
+        /*if (sharedPref.isRefreshPlaces() || db.getPlacesSize() == 0) {
             actionRefresh(sharedPref.getLastPlacePage());
         } else {
             startLoadMoreAdapter();
-        }
+        }*/
         return root_view;
     }
 
@@ -168,7 +170,7 @@ public class FragmentCategory extends Fragment {
     private void startLoadMoreAdapter() {
         adapter.resetListData();
         List<Place> items = db.getPlacesByPage(category_id, AppConfig.general.limit_loadmore, 0);
-        adapter.insertData(items);
+        //adapter.insertData(items);
         showNoItemView();
         final int item_count = (int) db.getPlacesSize(category_id);
         // Auf Ereignis warten, wenn das Scrollen das Ende erreicht
@@ -186,7 +188,7 @@ public class FragmentCategory extends Fragment {
         adapter.setLoading();
         new Handler().postDelayed(() -> {
             List<Place> items = db.getPlacesByPage(category_id, AppConfig.general.limit_loadmore, (next_page * AppConfig.general.limit_loadmore));
-            adapter.insertData(items);
+            //adapter.insertData(items);
             showNoItemView();
         }, 500);
     }

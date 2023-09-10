@@ -21,6 +21,7 @@ import java.util.List;
 import app.thecity.AppConfig;
 import app.thecity.R;
 import app.thecity.data.Constant;
+import app.thecity.model.Activity;
 import app.thecity.model.Place;
 import app.thecity.utils.Tools;
 
@@ -37,7 +38,7 @@ public class AdapterPlaceGrid extends RecyclerView.Adapter<RecyclerView.ViewHold
     private final int VIEW_PROG = 0;
     private boolean loading;
     private Context ctx;
-    private List<Place> items = new ArrayList<>();
+    private List<Activity> items = new ArrayList<>();
     private OnLoadMoreListener onLoadMoreListener;
     private OnItemClickListener onItemClickListener;
     private int lastPosition = -1;
@@ -49,7 +50,7 @@ public class AdapterPlaceGrid extends RecyclerView.Adapter<RecyclerView.ViewHold
         zum Ort werden übergeben.
      */
     public interface OnItemClickListener {
-        void onItemClick(View view, Place viewModel);
+        void onItemClick(View view, Activity viewModel);
     }
 
     /*
@@ -97,7 +98,7 @@ public class AdapterPlaceGrid extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
-    public AdapterPlaceGrid(Context ctx, RecyclerView view, List<Place> items) {
+    public AdapterPlaceGrid(Context ctx, RecyclerView view, List<Activity> items) {
         this.ctx = ctx;
         this.items = items;
         lastItemViewDetector(view);
@@ -131,17 +132,18 @@ public class AdapterPlaceGrid extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ViewHolder) {
             ViewHolder vItem = (ViewHolder) holder;
-            final Place p = items.get(position);
-            vItem.title.setText(p.name);
-            Tools.displayImageThumb(ctx, vItem.image, Constant.getURLimgPlace(p.image), 0.5f);
+            final Activity p = items.get(position);
+            vItem.title.setText(p.title);
+            Tools.displayImageThumb(ctx, vItem.image, "http://via.placeholder.com/640x360", 0.5f);
 
+            /*
             if (p.distance == -1) {
                 vItem.lyt_distance.setVisibility(View.GONE);
             } else {
                 vItem.lyt_distance.setVisibility(View.VISIBLE);
                 vItem.distance.setText(Tools.getFormatedDistance(p.distance));
             }
-
+               */
             // Here you apply the animation when the view is bound
             setAnimation(vItem.lyt_parent, position);
 
@@ -211,7 +213,7 @@ public class AdapterPlaceGrid extends RecyclerView.Adapter<RecyclerView.ViewHold
         wenn beim endlosen Scrollen neue Elemente geladen werden. Sie aktualisiert die Anzeige,
         um die neuen Elemente in der Rasteransicht anzuzeigen
      */
-    public void insertData(List<Place> items) {
+    public void insertData(List<Activity> items) {
         setLoaded();
         int positionStart = getItemCount();
         int itemCount = items.size();

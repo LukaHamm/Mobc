@@ -85,9 +85,9 @@ public class ActivitySearch extends AppCompatActivity {
         recyclerSuggestion.setLayoutManager(new LinearLayoutManager(this));
 
         //set data and list adapter
-        mAdapter = new AdapterPlaceGrid(this, recyclerView, new ArrayList<Place>());
+        //mAdapter = new AdapterPlaceGrid(this, recyclerView, new ArrayList<Place>());
         recyclerView.setAdapter(mAdapter);
-        mAdapter.setOnItemClickListener((v, obj) -> ActivityPlaceDetail.navigate(ActivitySearch.this, v.findViewById(R.id.lyt_content), obj));
+        //mAdapter.setOnItemClickListener((v, obj) -> ActivityPlaceDetail.navigate(ActivitySearch.this, v.findViewById(R.id.lyt_content), obj));
 
         //set data and list adapter suggestion
         mAdapterSuggestion = new AdapterSuggestionSearch(this);
@@ -224,7 +224,7 @@ public class ActivitySearch extends AppCompatActivity {
         if (!query.equals("")) {
             mAdapterSuggestion.addSearchHistory(query);
             mAdapter.resetListData();
-            mAdapter.insertData(Tools.filterItemsWithDistance(this, db.searchAllPlace(query)));
+            //mAdapter.insertData(Tools.filterItemsWithDistance(this, db.searchAllPlace(query)));
             showNotFoundView();
         } else {
             Toast.makeText(this, R.string.please_fill, Toast.LENGTH_SHORT).show();
