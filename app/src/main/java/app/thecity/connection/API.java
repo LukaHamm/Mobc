@@ -1,5 +1,6 @@
 package app.thecity.connection;
 
+import java.io.InputStream;
 import java.util.List;
 
 import app.thecity.connection.callbacks.CallbackDevice;
@@ -11,12 +12,15 @@ import app.thecity.model.Activity;
 import app.thecity.model.DeviceInfo;
 import app.thecity.model.User;
 import app.thecity.model.UserInfo;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.Streaming;
 
 /**
  * Schnittstellenbeschreibung für die API-Anfragen an den Server.
@@ -29,6 +33,7 @@ public interface API {
 
     String CONTENT_TYPE_JSON = "Content-Type: application/json";
 
+    String CONTENT_TYPE_IMAGE = "Content-Type: image/jpeg";
     /* Place API transaction ------------------------------- */
 
     // Ruft eine Liste von Orten basierend auf der Seitennummer, der Anzahl und dem Status (entwurf oder nicht) ab
@@ -58,6 +63,8 @@ public interface API {
     Call<String> register(
             @Body User user
     );
+    @GET("/api/activities/image/{id}")
+    Call<ResponseBody> fetchImage (@Path("id") String id);
 
     @Headers({CONTENT_TYPE_JSON})
     @GET("/api/activities/")

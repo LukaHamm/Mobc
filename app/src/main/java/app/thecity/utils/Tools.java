@@ -172,6 +172,17 @@ public class Tools {
         }
     }
 
+    public static void displayImageThumb(Context ctx, ImageView img, Bitmap bitmap, float thumb) {
+        try {
+            Glide.with(ctx.getApplicationContext()).load(bitmap)
+                    .transition(withCrossFade())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .thumbnail(thumb)
+                    .into(img);
+        } catch (Exception e) {
+        }
+    }
+
     // Löscht den Bild-Cache im Hintergrund
     public static void clearImageCacheOnBackground(final Context ctx) {
         try {

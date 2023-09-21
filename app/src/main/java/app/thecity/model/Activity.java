@@ -2,17 +2,21 @@ package app.thecity.model;
 
 import java.util.List;
 
+
+
+
 public class Activity {
+
     public String title;
     public String activityType;
     public String uploadDate;
     public String description;
 
-    public List<Image> images;
+    public List<String> images;
 
     public Location location;
 
-    public Activity(String title, String activityType, String uploadDate, String description,List<Image> images,Location location) {
+    public Activity(String title, String activityType, String uploadDate, String description,List<String> images,Location location) {
         this.title = title;
         this.activityType = activityType;
         this.uploadDate = uploadDate;
@@ -37,6 +41,7 @@ public class Activity {
     public String getDescription() {
         return description;
     }
+
 
 
 }

@@ -4,7 +4,7 @@ public class Image {
     public String name;
     public Byte [] data;
 
-    public Image(String name, Byte[] data) {
+    public Image(String name, Byte [] data) {
         this.name = name;
         this.data = data;
     }
@@ -17,11 +17,11 @@ public class Image {
         this.name = name;
     }
 
-    public Byte[] getData() {
+    public Byte [] getData() {
         return data;
     }
 
-    public void setData(Byte[] data) {
+    public void setData(Byte [] data) {
         this.data = data;
     }
 }

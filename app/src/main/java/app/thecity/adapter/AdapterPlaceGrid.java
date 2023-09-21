@@ -3,6 +3,9 @@ package app.thecity.adapter;
 import android.content.Context;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,15 +18,28 @@ import android.widget.TextView;
 
 import com.balysv.materialripple.MaterialRippleLayout;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import app.thecity.AppConfig;
 import app.thecity.R;
+import app.thecity.connection.API;
+import app.thecity.connection.RestAdapter;
 import app.thecity.data.Constant;
 import app.thecity.model.Activity;
+import app.thecity.model.Image;
 import app.thecity.model.Place;
 import app.thecity.utils.Tools;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Response;
 
 /*
     Diese Klasse mit dem Namen "AdapterPlaceGrid" ist ein RecyclerView-Adapter für die Anzeige einer
@@ -134,7 +150,9 @@ public class AdapterPlaceGrid extends RecyclerView.Adapter<RecyclerView.ViewHold
             ViewHolder vItem = (ViewHolder) holder;
             final Activity p = items.get(position);
             vItem.title.setText(p.title);
-            Tools.displayImageThumb(ctx, vItem.image, "http://via.placeholder.com/640x360", 0.5f);
+            if (p.images != null && !p.images.isEmpty()) {
+                Tools.displayImageThumb(ctx, vItem.image, AppConfig.general.web_url_Mobc + "api/activities/image/" + p.images.get(0), 0.5f);
+            }
 
             /*
             if (p.distance == -1) {
@@ -169,6 +187,33 @@ public class AdapterPlaceGrid extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
 
     }
+
+    public void fetchImages(Activity activity, ViewHolder vItem) {
+        API api = RestAdapter.createMobcApi();
+        if (activity.images != null && activity.images.size() > 0) {
+            Call<ResponseBody> callThumbs = api.fetchImage(activity.images.get(0));
+            callThumbs.enqueue(new retrofit2.Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    ResponseBody responseBody = response.body();
+                    InputStream inputStream = responseBody.byteStream();
+                    if (inputStream != null) {
+                        Tools.displayImageThumb(ctx, vItem.image, BitmapFactory.decodeStream(inputStream), 0.5f);
+                        notifyDataSetChanged();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                }
+            });
+        }
+
+    }
+
+
+
 
     /*
         Methode gibt die Anzahl der Elemente in der Liste zurück. Sie wird vom RecyclerView verwendet,

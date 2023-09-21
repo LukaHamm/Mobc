@@ -68,6 +68,16 @@ public class RestAdapter {
         return retrofit.create(API.class);
     }
 
+    public static API createImageApi(){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(AppConfig.general.web_url_Mobc)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        return retrofit.create(API.class);
+    }
+
+
+
     /**
      * Erstellt eine spezielle kürzere Retrofit-Instanz für die GCM-Registrierung.
      * Verwendet eine kürzere Verbindungstimeout-Dauer, um schneller eine Registrierung durchzuführen.
