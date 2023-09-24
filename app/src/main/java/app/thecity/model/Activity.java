@@ -1,11 +1,18 @@
 package app.thecity.model;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.clustering.ClusterItem;
+
+import java.io.Serializable;
 import java.util.List;
 
 
 
 
-public class Activity {
+public class Activity implements Serializable, ClusterItem {
 
     public String title;
     public String activityType;
@@ -15,6 +22,8 @@ public class Activity {
     public List<String> images;
 
     public Location location;
+
+    public float distance = -1;
 
     public Activity(String title, String activityType, String uploadDate, String description,List<String> images,Location location) {
         this.title = title;
@@ -26,8 +35,21 @@ public class Activity {
 
     }
 
+    @NonNull
+    @Override
+    public LatLng getPosition() {
+        return new LatLng(location.latitude,location.longitude);
+    }
+    @Nullable
+    @Override
     public String getTitle() {
         return title;
+    }
+
+    @Nullable
+    @Override
+    public String getSnippet() {
+        return null;
     }
 
     public String getActivityType() {

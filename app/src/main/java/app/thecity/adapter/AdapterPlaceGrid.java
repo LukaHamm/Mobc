@@ -148,20 +148,20 @@ public class AdapterPlaceGrid extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ViewHolder) {
             ViewHolder vItem = (ViewHolder) holder;
-            final Activity p = items.get(position);
-            vItem.title.setText(p.title);
-            if (p.images != null && !p.images.isEmpty()) {
-                Tools.displayImageThumb(ctx, vItem.image, AppConfig.general.web_url_Mobc + "api/activities/image/" + p.images.get(0), 0.5f);
+            final Activity activity = items.get(position);
+            vItem.title.setText(activity.title);
+            if (activity.images != null && !activity.images.isEmpty()) {
+                Tools.displayImageThumb(ctx, vItem.image, AppConfig.general.web_url_Mobc + "api/activities/image/" + activity.images.get(0), 0.5f);
             }
 
-            /*
-            if (p.distance == -1) {
+
+            if (activity.distance == -1) {
                 vItem.lyt_distance.setVisibility(View.GONE);
             } else {
                 vItem.lyt_distance.setVisibility(View.VISIBLE);
-                vItem.distance.setText(Tools.getFormatedDistance(p.distance));
+                vItem.distance.setText(Tools.getFormatedDistance(activity.distance));
             }
-               */
+
             // Here you apply the animation when the view is bound
             setAnimation(vItem.lyt_parent, position);
 
@@ -170,7 +170,7 @@ public class AdapterPlaceGrid extends RecyclerView.Adapter<RecyclerView.ViewHold
                 public void onClick(final View v) {
                     if (!clicked && onItemClickListener != null) {
                         clicked = true;
-                        onItemClickListener.onItemClick(v, p);
+                        onItemClickListener.onItemClick(v, activity);
                     }
                 }
             });
@@ -184,30 +184,6 @@ public class AdapterPlaceGrid extends RecyclerView.Adapter<RecyclerView.ViewHold
         } else {
             StaggeredGridLayoutManager.LayoutParams layoutParams = (StaggeredGridLayoutManager.LayoutParams) holder.itemView.getLayoutParams();
             layoutParams.setFullSpan(false);
-        }
-
-    }
-
-    public void fetchImages(Activity activity, ViewHolder vItem) {
-        API api = RestAdapter.createMobcApi();
-        if (activity.images != null && activity.images.size() > 0) {
-            Call<ResponseBody> callThumbs = api.fetchImage(activity.images.get(0));
-            callThumbs.enqueue(new retrofit2.Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    ResponseBody responseBody = response.body();
-                    InputStream inputStream = responseBody.byteStream();
-                    if (inputStream != null) {
-                        Tools.displayImageThumb(ctx, vItem.image, BitmapFactory.decodeStream(inputStream), 0.5f);
-                        notifyDataSetChanged();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-                }
-            });
         }
 
     }

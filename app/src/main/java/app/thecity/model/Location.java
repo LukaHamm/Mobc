@@ -1,8 +1,8 @@
 package app.thecity.model;
 
 public class Location {
-    public int latitude;
-    public int longitude;
+    public double latitude;
+    public double longitude;
 
     public String locationname;
 
@@ -12,19 +12,19 @@ public class Location {
         this.locationname = locationname;
     }
 
-    public int getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(int latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
-    public int getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(int longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 

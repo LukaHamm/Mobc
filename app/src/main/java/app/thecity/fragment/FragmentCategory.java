@@ -86,6 +86,11 @@ public class FragmentCategory extends Fragment {
             @Override
             public void onResponse(Call<List<Activity>> call, Response<List<Activity>> response) {
                 List<Activity> activityList = response.body();
+                for (Activity activity:activityList){
+                    if (activity.location != null){
+                        activity.distance = Tools.getDistanceToCurrentLocation(getContext(),activity.getPosition());
+                    }
+                }
                 if (activityList != null) {
                     adapter.insertData(activityList);
                     System.out.println(activityList.size());
