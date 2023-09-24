@@ -2,6 +2,7 @@ package app.thecity.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +26,6 @@ import app.thecity.activity.ActivityMain;
 import app.thecity.activity.LoginActivity;
 import app.thecity.connection.API;
 import app.thecity.connection.RestAdapter;
-import app.thecity.connection.callbacks.CallbackDevice;
 import app.thecity.connection.callbacks.CallbackUser;
 import app.thecity.model.User;
 import app.thecity.model.UserInfo;
@@ -68,6 +68,7 @@ public class LoginFragment extends Fragment {
                         CallbackUser resp = response.body();
                         User user = resp.user;
                         greeting.setText("Hello+ " + user.name + " your token is " + user.token + ", your id is " + user._id);
+                        Log.d("MeineActivity", "Benutzername: " + user.name);
                         try {
                             File file = new File(getContext().getFilesDir(), "userdata.json");
                             FileWriter fileWriter = new FileWriter(file);
@@ -88,6 +89,7 @@ public class LoginFragment extends Fragment {
                     }
                 });
             }
+
         });
 
         return rootView;

@@ -39,5 +39,11 @@
         <item name="mrl_rippleColor">#8096989A</item>
     </style>
 
+    <style name="schriftart">
+        <item name="android:textSize">16sp</item> <!-- Hier die gewünschte Textgröße festlegen -->
+        <item name="android:textColor">@android:color/black</item> <!-- Hier die gewünschte Textfarbe festlegen -->
+        <item name="android:fontFamily">sans-serif</item> <!-- Hier die gewünschte Schriftart festlegen -->
+    </style>
+
 
 </resources>

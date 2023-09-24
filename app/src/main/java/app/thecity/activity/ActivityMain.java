@@ -24,14 +24,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.gson.Gson;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 import app.thecity.AppConfig;
 import app.thecity.R;
@@ -50,9 +42,11 @@ public class ActivityMain extends AppCompatActivity {
     public Toolbar toolbar;
     private int[] categories;
     private FloatingActionButton fab;
+    private FloatingActionButton newPlace;
     private NavigationView navigationView;
     private DatabaseHandler db;
     private SharedPref sharedPref;
+    private TextView usernameNav ;
     private RelativeLayout nav_header_lyt;
 
     static ActivityMain activityMain;
@@ -71,13 +65,18 @@ public class ActivityMain extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         // Setze das Layout der Hauptaktivität
         setContentView(R.layout.activity_main);
         // Weise die Hauptaktivität dieser Variable zu
         activityMain = this;
 
-        // Initialisiere die Schwebende Aktionsschaltfläche (Floating Action Button) HerzButton
+        // Initialisiere die Schwebende FavouritenButton (Floating Action Button)
         fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        // Initialisiere die Schwebende NewPlace (Floating Action Button)
+        newPlace = (FloatingActionButton) findViewById(R.id.newPlace);
+
         // Initialisiere die Datenbank-Handler-Klasse
         db = new DatabaseHandler(this);
         // Initialisiere die gemeinsamen Einstellungen
@@ -87,19 +86,31 @@ public class ActivityMain extends AppCompatActivity {
         initToolbar();
         // Initialisiere das Navigationsmenü im Seitenmenü
         initDrawerMenu();
+
+
         // Lade die Kategorien-IDs aus den Ressourcen
         categories = getResources().getIntArray(R.array.id_category);
 
         // Wähle standardmäßig das erste Element im Seitenmenü aus
         onItemSelected(R.id.nav_all, getString(R.string.title_nav_all));
 
-        // Füge einen Klicklistener zur Schwebenden Aktionsschaltfläche hinzu
+        // Füge einen Klicklistener zur Schwebenden Suchbutton hinzu
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Öffne die Aktivität für die Suche
                 Intent searchIntent = new Intent(ActivityMain.this, ActivitySearch.class);
                 startActivity(searchIntent);
+            }
+        });
+
+        // Füge einen Klicklistener zur Schwebenden Create_Place Button hinzu
+        newPlace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Öffne die Aktivität für die Suche
+                Intent newPlaceIntent = new Intent(ActivityMain.this, ActivityNewPlace.class);
+                startActivity(newPlaceIntent);
             }
         });
 
@@ -112,30 +123,13 @@ public class ActivityMain extends AppCompatActivity {
         // Konfiguriere die Rechts-nach-links-Schriftartunterstützung
         Tools.RTLMode(getWindow());
 
-        try {
-            File file = new File(getApplicationContext().getFilesDir(), "/userdata.json");
-            FileReader fileReader = new FileReader(file);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            StringBuilder stringBuilder = new StringBuilder();
-            String line = bufferedReader.readLine();
-            while (line != null) {
-                stringBuilder.append(line).append("\n");
-                line = bufferedReader.readLine();
-            }
-            bufferedReader.close();
+            User user = Tools.readuser(getApplicationContext());
 
-            // This responce will have Json Format String
-            String responce = stringBuilder.toString();
-            Gson gson = new Gson();
-            User user = gson.fromJson(responce, User.class);
             if (user == null || user.token == null) {
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
             }
-        }catch (IOException e){
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-        }
+
 
 
 
@@ -156,7 +150,6 @@ public class ActivityMain extends AppCompatActivity {
         // Setze die Farbe der Aktionsleiste
         Tools.setActionBarColor(this, actionBar);
     }
-
 
     /*
       In dieser Methode wird das Navigationsmenü (Drawer) initialisiert. Es werden Menüoptionen
@@ -271,7 +264,10 @@ public class ActivityMain extends AppCompatActivity {
         //sub menu
         /* IMPORTANT : cat[index_array], index is start from 0
          */
-        if (id == R.id.nav_all) {
+        if (id == R.id.profile) {
+            Intent openNewsInfosIntent = new Intent(this, ProfileActivity.class);
+            startActivity(openNewsInfosIntent);
+        }else if (id == R.id.nav_all) {
             //All Places
             fragment = new FragmentCategory();
             bundle.putInt(FragmentCategory.TAG_CATEGORY, -1);

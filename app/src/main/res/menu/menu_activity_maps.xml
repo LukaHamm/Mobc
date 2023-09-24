@@ -2,12 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/menu_category"
-        android:icon="@drawable/ic_menu_category"
-        android:title="Category"
-        app:showAsAction="always">
-        <menu>
+    <group android:checkableBehavior="single">
+
             <item
                 android:id="@+id/nav_all"
                 android:title="@string/title_nav_all"
@@ -16,10 +12,6 @@
                 android:id="@+id/nav_favorites"
                 android:title="@string/title_nav_fav"
                 app:showAsAction="never"/>
-            <item
-                android:id="@+id/nav_news"
-                android:title="@string/title_nav_news"
-                app:showAsAction="never" />
             <item
                 android:id="@+id/nav_ownplaces"
                 android:title="@string/title_nav_ownplaces"
@@ -40,7 +32,7 @@
                 android:id="@+id/nav_outdoorGyms"
                 android:title="@string/title_nav_outdoorGyms"
                 app:showAsAction="never" />
-        </menu>
-
-    </item>
+    </group>
 </menu>
+
+

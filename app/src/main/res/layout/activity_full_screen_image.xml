@@ -6,11 +6,8 @@
     android:background="@android:color/black"
     android:fitsSystemWindows="false">
 
-
-
-
     <TextView
-        android:id="@+id/text_page"
+        android:id="@+id/text_intro_MOBC_App"
         android:background="@drawable/shape_overlay"
         android:layout_width="match_parent"
         android:minHeight="@dimen/spacing_xxlarge"

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_header_lyt"
     android:layout_width="@dimen/drawer_menu_width"
     android:layout_height="wrap_content"
@@ -42,7 +43,7 @@
                     android:padding="@dimen/spacing_middle"
                     android:layout_marginRight="@dimen/spacing_large"
                     android:src="@drawable/ic_nav_map"
-                    android:tint="@android:color/white" />
+                    app:tint="@android:color/white" />
 
                 <ImageView
                     android:id="@+id/menu_nav_setting"
@@ -75,21 +76,13 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/usernameNavTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/spacing_small"
-                        android:text="@string/city_name"
                         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                         android:textColor="@android:color/white"
                         android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/textView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/city_address"
-                        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
-                        android:textColor="@android:color/white" />
                 </LinearLayout>
             </LinearLayout>
 

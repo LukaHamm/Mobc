@@ -63,32 +63,27 @@ public class ActivityMaps extends AppCompatActivity implements OnMapReadyCallbac
     private View parent_view;
     private int cat[];
     private PlaceMarkerRenderer placeMarkerRenderer;
-
-    // für einzel Platz
     private Place ext_place = null;
     private boolean isSinglePlace;
     HashMap<String, Place> hashMapPlaces = new HashMap<>();
     private HashMap<String, Marker> markerPlaces = new HashMap<>();
     private HashMap<String, Integer> placesPosition = new HashMap<>();
     private List<Place> items = new ArrayList<>();
-
-    // id category
     private int cat_id = -1;
-
     private Category cur_category;
-
-    // view benutzerdefinierter Marker
     private ImageView icon, marker_bg;
     private View marker_view;
-
     private boolean showSlider = true;
     private ViewPager viewPager;
     private MyViewPagerAdapter myViewPagerAdapter;
 
-    /*
-    Initialisiert die Ansicht, die Karte und ruft einige Hilfsmethoden auf, um die ClusterManager-
-    und ViewPager-Funktionen zu initialisieren
+
+    /**
+     * Initialisiert die Ansicht, die Karte und ruft einige Hilfsmethoden auf,
+     * um die ClusterManager-und ViewPager-Funktionen zu initialisieren
+     *
      */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,10 +110,10 @@ public class ActivityMaps extends AppCompatActivity implements OnMapReadyCallbac
         Tools.RTLMode(getWindow());
     }
 
-    /*
-      Diese Methode wird aufgerufen, wenn die Google Maps-Karte bereit ist. Sie initialisiert die
-      Karte, lädt Orte (Places) entweder für die gesamte Stadt oder nur für eine bestimmte Kategorie
-      und initialisiert den ClusterManager für die Marker-Cluster-Funktionalität.
+    /**
+     * Diese Methode wird aufgerufen, wenn die Google Maps-Karte bereit ist. Sie initialisiert die
+     * Karte, lädt Orte (Places) entweder für die gesamte Stadt oder nur für eine bestimmte Kategorie
+     * und initialisiert den ClusterManager für die Marker-Cluster-Funktionalität.
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -161,9 +156,9 @@ public class ActivityMaps extends AppCompatActivity implements OnMapReadyCallbac
         initViewPager();
     }
 
-    /*
-      Initialisiert den ClusterManager, um bei Klick auf ein Cluster-Element das entsprechende
-      ViewPager-Element anzuzeigen.
+    /**
+     * Initialisiert den ClusterManager, um bei Klick auf ein Cluster-Element das entsprechende
+     * ViewPager-Element anzuzeigen.
      */
     private void initClusterWithSlider() {
         mClusterManager.setOnClusterItemClickListener(item -> {
@@ -295,7 +290,7 @@ public class ActivityMaps extends AppCompatActivity implements OnMapReadyCallbac
             return true;
         } else {
             String category_text;
-            if (item.getItemId() != R.id.menu_category) {
+            if (item.getItemId() != R.id.menu_nav_map) {
                 category_text = item.getTitle().toString();
                 int itemId = item.getItemId();
                 if (itemId == R.id.nav_all) {

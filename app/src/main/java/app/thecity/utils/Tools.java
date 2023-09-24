@@ -51,7 +51,12 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -69,6 +74,7 @@ import app.thecity.data.ThisApplication;
 import app.thecity.model.DeviceInfo;
 import app.thecity.model.NewsInfo;
 import app.thecity.model.Place;
+import app.thecity.model.User;
 
 
 public class Tools {
@@ -100,6 +106,30 @@ public class Tools {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(Tools.colorDarker(new SharedPref(act).getThemeColorInt()));
         }
+    }
+
+    public static User readuser(Context context){
+       User user = null;
+        try {
+           File file = new File(context.getFilesDir(), "/userdata.json");
+           FileReader fileReader = new FileReader(file);
+           BufferedReader bufferedReader = new BufferedReader(fileReader);
+           StringBuilder stringBuilder = new StringBuilder();
+           String line = bufferedReader.readLine();
+           while (line != null) {
+               stringBuilder.append(line).append("\n");
+               line = bufferedReader.readLine();
+           }
+           bufferedReader.close();
+
+           // This responce will have Json Format String
+           String responce = stringBuilder.toString();
+           Gson gson = new Gson();
+           user = gson.fromJson(responce, User.class);
+       }catch(IOException e){
+           
+        }
+        return user;
     }
 
     // Überprüft die Internetverbindung

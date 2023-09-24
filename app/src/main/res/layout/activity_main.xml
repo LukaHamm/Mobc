@@ -40,7 +40,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/appbar"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+
+            </FrameLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -59,6 +61,16 @@
                 android:tint="@android:color/white"
                 app:layout_anchor="@id/frame_content"
                 app:layout_anchorGravity="end|bottom" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/newPlace"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|bottom"
+                android:layout_margin="@dimen/spacing_large"
+                android:clickable="true"
+                android:src="@drawable/ic_marker"
+                android:tint="@android:color/white" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
