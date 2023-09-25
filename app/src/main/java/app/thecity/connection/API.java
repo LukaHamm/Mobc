@@ -69,6 +69,7 @@ public interface API {
     @Headers({CONTENT_TYPE_JSON})
     @GET("/api/activities/")
     Call<List<Activity>> getActivities(
+            @Query("category") String category
     );
 
     /* News Info API transaction ------------------------------- */
