@@ -444,6 +444,7 @@ public class ActivityMaps extends AppCompatActivity implements OnMapReadyCallbac
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
+
             layoutInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             Place place = items.get(position);
             View view = layoutInflater.inflate(R.layout.item_place_slider, container, false);

@@ -3,6 +3,9 @@ package app.thecity.adapter;
 import android.content.Context;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,14 +18,28 @@ import android.widget.TextView;
 
 import com.balysv.materialripple.MaterialRippleLayout;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import app.thecity.AppConfig;
 import app.thecity.R;
+import app.thecity.connection.API;
+import app.thecity.connection.RestAdapter;
 import app.thecity.data.Constant;
+import app.thecity.model.Activity;
+import app.thecity.model.Image;
 import app.thecity.model.Place;
 import app.thecity.utils.Tools;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Response;
 
 /*
     Diese Klasse mit dem Namen "AdapterPlaceGrid" ist ein RecyclerView-Adapter für die Anzeige einer
@@ -37,7 +54,7 @@ public class AdapterPlaceGrid extends RecyclerView.Adapter<RecyclerView.ViewHold
     private final int VIEW_PROG = 0;
     private boolean loading;
     private Context ctx;
-    private List<Place> items = new ArrayList<>();
+    private List<Activity> items = new ArrayList<>();
     private OnLoadMoreListener onLoadMoreListener;
     private OnItemClickListener onItemClickListener;
     private int lastPosition = -1;
@@ -49,7 +66,7 @@ public class AdapterPlaceGrid extends RecyclerView.Adapter<RecyclerView.ViewHold
         zum Ort werden übergeben.
      */
     public interface OnItemClickListener {
-        void onItemClick(View view, Place viewModel);
+        void onItemClick(View view, Activity viewModel);
     }
 
     /*
@@ -97,7 +114,7 @@ public class AdapterPlaceGrid extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
-    public AdapterPlaceGrid(Context ctx, RecyclerView view, List<Place> items) {
+    public AdapterPlaceGrid(Context ctx, RecyclerView view, List<Activity> items) {
         this.ctx = ctx;
         this.items = items;
         lastItemViewDetector(view);
@@ -131,15 +148,18 @@ public class AdapterPlaceGrid extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ViewHolder) {
             ViewHolder vItem = (ViewHolder) holder;
-            final Place p = items.get(position);
-            vItem.title.setText(p.name);
-            Tools.displayImageThumb(ctx, vItem.image, Constant.getURLimgPlace(p.image), 0.5f);
+            final Activity activity = items.get(position);
+            vItem.title.setText(activity.title);
+            if (activity.images != null && !activity.images.isEmpty()) {
+                Tools.displayImageThumb(ctx, vItem.image, AppConfig.general.web_url_Mobc + "api/activities/image/" + activity.images.get(0), 0.5f);
+            }
 
-            if (p.distance == -1) {
+
+            if (activity.distance == -1) {
                 vItem.lyt_distance.setVisibility(View.GONE);
             } else {
                 vItem.lyt_distance.setVisibility(View.VISIBLE);
-                vItem.distance.setText(Tools.getFormatedDistance(p.distance));
+                vItem.distance.setText(Tools.getFormatedDistance(activity.distance));
             }
 
             // Here you apply the animation when the view is bound
@@ -150,7 +170,7 @@ public class AdapterPlaceGrid extends RecyclerView.Adapter<RecyclerView.ViewHold
                 public void onClick(final View v) {
                     if (!clicked && onItemClickListener != null) {
                         clicked = true;
-                        onItemClickListener.onItemClick(v, p);
+                        onItemClickListener.onItemClick(v, activity);
                     }
                 }
             });
@@ -167,6 +187,9 @@ public class AdapterPlaceGrid extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
 
     }
+
+
+
 
     /*
         Methode gibt die Anzahl der Elemente in der Liste zurück. Sie wird vom RecyclerView verwendet,
@@ -211,7 +234,7 @@ public class AdapterPlaceGrid extends RecyclerView.Adapter<RecyclerView.ViewHold
         wenn beim endlosen Scrollen neue Elemente geladen werden. Sie aktualisiert die Anzeige,
         um die neuen Elemente in der Rasteransicht anzuzeigen
      */
-    public void insertData(List<Place> items) {
+    public void insertData(List<Activity> items) {
         setLoaded();
         int positionStart = getItemCount();
         int itemCount = items.size();

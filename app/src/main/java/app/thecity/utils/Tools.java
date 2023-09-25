@@ -172,6 +172,7 @@ public class Tools {
         }
     }
 
+
     // Löscht den Bild-Cache im Hintergrund
     public static void clearImageCacheOnBackground(final Context ctx) {
         try {
@@ -482,6 +483,20 @@ public class Tools {
         return null;
     }
 
+    public void updateDistanceLocationFound (){
+
+    }
+
+    public static float getDistanceToCurrentLocation(Context context, LatLng destination){
+        LatLng curLocation = getCurLocation(context);
+        if(curLocation != null) {
+            return Tools.calculateDistance(curLocation, destination);
+        }else {
+            return -1f;
+        }
+
+    }
+
     // Erhält die zuletzt bekannte Position
     @SuppressLint("MissingPermission")
     public static Location getLastKnownLocation(Context ctx) {
@@ -546,6 +561,7 @@ public class Tools {
         final LocationRequest locationRequest = new LocationRequest()
                 .setInterval(500).setFastestInterval(500)
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
         locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(LocationResult locationResult) {
