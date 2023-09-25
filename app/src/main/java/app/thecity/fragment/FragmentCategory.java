@@ -45,6 +45,7 @@ import app.thecity.data.SharedPref;
 import app.thecity.data.ThisApplication;
 import app.thecity.model.Activity;
 import app.thecity.model.Place;
+import app.thecity.model.User;
 import app.thecity.utils.ActivityType;
 import app.thecity.utils.Tools;
 import okhttp3.OkHttpClient;
@@ -116,13 +117,21 @@ public class FragmentCategory extends Fragment {
                 }
             }
         });
-        fetchActivities();
+        fetch();
         return root_view;
     }
-
-    private void fetchActivities(){
+    private void fetch() {
         ActivityType activityType = ActivityType.getbyCategoryId(category_id);
-        if (activityType != null) {
+        if (activityType == null) {
+            showNoItemView();
+        } else if (activityType.equals(ActivityType.own)) {
+            fetchOwnActivities();
+        }else {
+            fetchActivities(activityType);
+        }
+    }
+
+    private void fetchActivities(ActivityType activityType){
             callActivityList = RestAdapter.createMobcApi().getActivities(activityType.name());
             callActivityList.enqueue(new retrofit2.Callback<List<Activity>>() {
                 @Override
@@ -147,8 +156,38 @@ public class FragmentCategory extends Fragment {
                     }
                 }
             });
-        }
+
     }
+
+    private void fetchOwnActivities(){
+        User user = Tools.readuser(getContext());
+        String header = "bearer " + user.token;
+        callActivityList = RestAdapter.createMobcApi().getOwnActivities(header);
+        callActivityList.enqueue(new retrofit2.Callback<List<Activity>>() {
+            @Override
+            public void onResponse(Call<List<Activity>> call, Response<List<Activity>> response) {
+                List<Activity> activityList = response.body();
+                for (Activity activity : activityList) {
+                    if (activity.location != null) {
+                        activity.distance = Tools.getDistanceToCurrentLocation(getContext(), activity.getPosition());
+                    }
+                }
+                if (activityList != null) {
+                    adapter.insertData(activityList);
+                    System.out.println(activityList.size());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Activity>> call, Throwable t) {
+                if (call != null && !call.isCanceled()) {
+                    showNoItemView();
+                    Log.e("onFailure", t.getMessage());
+                }
+            }
+        });
+    }
+
 
 
     // Aufräumen und Callbacks aufheben, wenn die Ansicht zerstört wird
@@ -181,7 +220,7 @@ public class FragmentCategory extends Fragment {
             ThisApplication.getInstance().setLocation(null);
             text_progress.setText("");
             adapter.resetListData();
-            fetchActivities();
+            fetch();
         }
         return super.onOptionsItemSelected(item);
     }

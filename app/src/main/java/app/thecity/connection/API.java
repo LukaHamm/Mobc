@@ -16,6 +16,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -70,6 +71,12 @@ public interface API {
     @GET("/api/activities/")
     Call<List<Activity>> getActivities(
             @Query("category") String category
+    );
+
+    @Headers({CONTENT_TYPE_JSON})
+    @GET("/api/activities/userId")
+    Call<List<Activity>> getOwnActivities(
+        @Header("token") String token
     );
 
     /* News Info API transaction ------------------------------- */
