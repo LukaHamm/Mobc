@@ -8,8 +8,8 @@ import app.thecity.AppConfig;
 public class Constant {
 
     // URL für Bilder von Orten
-    public static String getURLimgPlace(String file_name) {
-        return AppConfig.general.web_url + "uploads/place/" + file_name;
+    public static String getURLimgActivity(String file_name) {
+        return AppConfig.general.web_url_Mobc + "api/activities/image/" + file_name;
     }
 
     // URL für Bilder von NewsInfo

@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -74,7 +75,7 @@ public class FragmentCategory extends Fragment {
 
     private AdapterPlaceGrid adapter;
 
-
+    private List<Activity> activityList;
     private Call<List<Activity>> callActivityList;
 
     @Nullable
@@ -102,9 +103,9 @@ public class FragmentCategory extends Fragment {
         recyclerView.setAdapter(adapter);
 
         // OnClickListener für die Liste festlegen
-        /*adapter.setOnItemClickListener((v, obj) -> {
+        adapter.setOnItemClickListener((v, obj) -> {
             ActivityPlaceDetail.navigate((ActivityMain) getActivity(), v.findViewById(R.id.lyt_content), obj);
-        });*/
+        });
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -136,7 +137,7 @@ public class FragmentCategory extends Fragment {
             callActivityList.enqueue(new retrofit2.Callback<List<Activity>>() {
                 @Override
                 public void onResponse(Call<List<Activity>> call, Response<List<Activity>> response) {
-                    List<Activity> activityList = response.body();
+                    activityList = response.body();
                     for (Activity activity : activityList) {
                         if (activity.location != null) {
                             activity.distance = Tools.getDistanceToCurrentLocation(getContext(), activity.getPosition());
@@ -235,4 +236,7 @@ public class FragmentCategory extends Fragment {
         }
     }
 
+    public List<Activity> getActivityList() {
+        return activityList;
+    }
 }

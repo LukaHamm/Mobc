@@ -1,6 +1,8 @@
 package app.thecity.model;
 
-public class Location {
+import java.io.Serializable;
+
+public class Location implements Serializable {
     public double latitude;
     public double longitude;
 

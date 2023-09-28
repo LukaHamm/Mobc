@@ -151,7 +151,7 @@ public class AdapterPlaceGrid extends RecyclerView.Adapter<RecyclerView.ViewHold
             final Activity activity = items.get(position);
             vItem.title.setText(activity.title);
             if (activity.images != null && !activity.images.isEmpty()) {
-                Tools.displayImageThumb(ctx, vItem.image, AppConfig.general.web_url_Mobc + "api/activities/image/" + activity.images.get(0), 0.5f);
+                Tools.displayImageThumb(ctx, vItem.image, Constant.getURLimgActivity(activity.images.get(0)), 0.5f);
             }
 
 

@@ -3,6 +3,7 @@ package app.thecity.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,11 +26,16 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import app.thecity.AppConfig;
 import app.thecity.R;
 import app.thecity.data.DatabaseHandler;
 import app.thecity.data.SharedPref;
 import app.thecity.fragment.FragmentCategory;
+import app.thecity.model.Activity;
 import app.thecity.model.User;
 import app.thecity.utils.PermissionUtil;
 import app.thecity.utils.Tools;
@@ -50,6 +56,7 @@ public class ActivityMain extends AppCompatActivity {
     private RelativeLayout nav_header_lyt;
 
     static ActivityMain activityMain;
+    Fragment fragment;
 
     /*
      In dieser Methode wird die Aktivität initialisiert. Es werden die Toolbar, das Navigationsmenü
@@ -208,6 +215,10 @@ public class ActivityMain extends AppCompatActivity {
             public void onClick(View view) {
                 // Starte die Kartenaktivität bei Klick auf das Karten-Element im Navigationskopf
                 Intent openMapIntent = new Intent(getApplicationContext(), ActivityMaps.class);
+                if (fragment != null){
+                    List<Activity> activities = ((FragmentCategory) fragment).getActivityList();
+                    openMapIntent.putExtra("activityList",(Serializable) activities);
+                }
                 startActivity(openMapIntent);
             }
         });
@@ -259,7 +270,7 @@ public class ActivityMain extends AppCompatActivity {
        */
     public boolean onItemSelected(int id, String title) {
         // Handle navigation view item clicks here.
-        Fragment fragment = null;
+        fragment = null;
         Bundle bundle = new Bundle();
         //sub menu
         /* IMPORTANT : cat[index_array], index is start from 0
