@@ -12,7 +12,7 @@ import java.util.List;
 
 
 
-public class Activity implements Serializable, ClusterItem {
+public class Activity implements Serializable, ClusterItem  {
 
     public String title;
     public String activityType;
@@ -64,6 +64,8 @@ public class Activity implements Serializable, ClusterItem {
         return description;
     }
 
-
+    public boolean isDraft() {
+        return (title.equals("") && description.equals("")  && description.equals(""));
+    }
 
 }
