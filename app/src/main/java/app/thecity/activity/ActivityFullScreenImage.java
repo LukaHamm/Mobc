@@ -2,6 +2,8 @@ package app.thecity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -47,6 +49,7 @@ public class ActivityFullScreenImage extends AppCompatActivity {
         setContentView(R.layout.activity_full_screen_image);
 
 
+        viewPager = (ViewPager) findViewById(R.id.view_pager);
         text_page = (TextView) findViewById(R.id.text_intro_MOBC_App);
 
         ArrayList<String> items = new ArrayList<>();
@@ -58,7 +61,8 @@ public class ActivityFullScreenImage extends AppCompatActivity {
         viewPager.setAdapter(adapter);
 
         text_page.setText(String.format(getString(R.string.image_of), (position + 1), total));
-
+        ImageView arrowLeft = findViewById(R.id.arrow_left);
+        ImageView arrowRight = findViewById(R.id.arrow_right);
         // ausgewaehltes Bild zuerst anzeigen
         viewPager.setCurrentItem(position);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -77,6 +81,26 @@ public class ActivityFullScreenImage extends AppCompatActivity {
 
             }
         });
+        arrowLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int currentItem = viewPager.getCurrentItem();
+                if (currentItem > 0) {
+                    viewPager.setCurrentItem(currentItem - 1);
+                }
+            }
+        });
+
+        arrowRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int currentItem = viewPager.getCurrentItem();
+                if (currentItem < viewPager.getAdapter().getCount() - 1) {
+                    viewPager.setCurrentItem(currentItem + 1);
+                }
+            }
+        });
+
 
 
 
