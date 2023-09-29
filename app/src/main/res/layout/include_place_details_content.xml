@@ -78,61 +78,8 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/lyt_phone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:gravity="center_vertical"
-                android:minHeight="@dimen/spacing_xxlarge"
-                android:onClick="clickLayout"
-                android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="@dimen/spacing_mlarge"
-                    android:layout_height="@dimen/spacing_mlarge"
-                    android:layout_margin="@dimen/spacing_middle"
-                    android:src="@drawable/ic_info_phone"
-                    app:tint="@color/grey_hard" />
 
-                <TextView
-                    android:id="@+id/phone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/spacing_medium"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textColor="@color/material_grey_800" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/lyt_website"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:gravity="center_vertical"
-                android:minHeight="@dimen/spacing_xxlarge"
-                android:onClick="clickLayout"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="@dimen/spacing_mlarge"
-                    android:layout_height="@dimen/spacing_mlarge"
-                    android:layout_margin="@dimen/spacing_middle"
-                    android:src="@drawable/ic_info_web"
-                    app:tint="@color/grey_hard" />
-
-                <TextView
-                    android:id="@+id/website"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/spacing_medium"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                    android:textColor="@color/material_grey_800" />
-
-            </LinearLayout>
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -291,6 +238,22 @@
             </LinearLayout>
 
         </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/spacing_large"
+        android:layout_marginLeft="@dimen/spacing_middle"
+        android:layout_marginRight="@dimen/spacing_middle"
+        android:layout_marginTop="@dimen/spacing_medium"
+        app:cardCornerRadius="@dimen/card_corner_radius"
+        app:cardElevation="@dimen/elevation_card">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/comments"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </androidx.recyclerview.widget.RecyclerView>
 
     </androidx.cardview.widget.CardView>
 

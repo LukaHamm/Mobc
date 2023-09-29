@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -39,6 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.thecity.R;
+import app.thecity.adapter.AdapterComments;
 import app.thecity.adapter.AdapterImageList;
 
 import app.thecity.connection.RestAdapter;
@@ -48,6 +50,7 @@ import app.thecity.data.DatabaseHandler;
 import app.thecity.data.SharedPref;
 import app.thecity.data.ThisApplication;
 import app.thecity.model.Activity;
+import app.thecity.model.Evaluation;
 import app.thecity.model.Images;
 import app.thecity.model.Place;
 import app.thecity.utils.Tools;
@@ -107,6 +110,10 @@ public class ActivityPlaceDetail extends AppCompatActivity {
     private Snackbar snackbar;
     private ArrayList<String> new_images_str = new ArrayList<>();
 
+    private RecyclerView recyclerView;
+
+    private AdapterComments adapterComments;
+
     // Initialisiert die Ansicht, die Toolbar und die Google Map.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +121,10 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_details);
         parent_view = findViewById(android.R.id.content);
-
+        recyclerView = (RecyclerView) findViewById(R.id.comments);
+        adapterComments = new AdapterComments(getApplicationContext(),new ArrayList<>());
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapterComments);
         db = new DatabaseHandler(this);
         // animation transition --> App Bas layout siehe Place Details in App
         ViewCompat.setTransitionName(findViewById(R.id.app_bar_layout), EXTRA_OBJ);
@@ -127,7 +137,7 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         fab = (FloatingActionButton) findViewById(R.id.fab);
         lyt_progress = findViewById(R.id.lyt_progress);
         lyt_distance = findViewById(R.id.lyt_distance);
-            if (activityModel.images != null && activityModel.images.isEmpty()) {
+            if (activityModel.images != null && !activityModel.images.isEmpty()) {
                 Tools.displayImage(this, (ImageView) findViewById(R.id.image), Constant.getURLimgActivity(activityModel.images.get(0)));
             }
 
@@ -146,6 +156,26 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         // analytics tracking
         ThisApplication.getInstance().trackScreenView("View place : " + (activityModel.title == null ? "name" : activityModel.title));
         displayDataWithDelay(activityModel);
+        fetchComments();
+    }
+
+
+    private void fetchComments (){
+        Call<List<Evaluation>> evaluationCall = RestAdapter.createMobcApi().getComments(activityModel._id);
+        evaluationCall.enqueue(new retrofit2.Callback<List<Evaluation>>() {
+            @Override
+            public void onResponse(Call<List<Evaluation>> call, Response<List<Evaluation>> response) {
+                List<Evaluation> evaluationList = response.body();
+                if (evaluationList != null){
+                    adapterComments.insertData(evaluationList);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Evaluation>> call, Throwable t) {
+                Log.e("onFailure", t.getMessage());
+            }
+        });
     }
 
 
@@ -158,7 +188,9 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         setupToolbar(activityModel.title);
 
         // Zeige das Bild des Ortes in einem ImageView an
-        Tools.displayImage(this, (ImageView) findViewById(R.id.image), Constant.getURLimgActivity(activityModel.images.get(0)));
+        if (activityModel.images != null && !activityModel.images.isEmpty()) {
+            Tools.displayImage(this, (ImageView) findViewById(R.id.image), Constant.getURLimgActivity(activityModel.images.get(0)));
+        }
 
         // Setze die Adresse, Telefonnummer und Website des Ortes in den entsprechenden TextViews
         /*((TextView) findViewById(R.id.address)).setText(activity.address);

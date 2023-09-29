@@ -10,6 +10,7 @@ import app.thecity.connection.callbacks.CallbackPlaceDetails;
 import app.thecity.connection.callbacks.CallbackUser;
 import app.thecity.model.Activity;
 import app.thecity.model.DeviceInfo;
+import app.thecity.model.Evaluation;
 import app.thecity.model.User;
 import app.thecity.model.UserInfo;
 import okhttp3.ResponseBody;
@@ -78,6 +79,13 @@ public interface API {
     Call<List<Activity>> getOwnActivities(
         @Header("token") String token
     );
+
+    @Headers({CONTENT_TYPE_JSON})
+    @GET("/api/comments//activity/{id}")
+    Call<List<Evaluation>> getComments(
+            @Path("id") String id
+    );
+
 
     /* News Info API transaction ------------------------------- */
 
