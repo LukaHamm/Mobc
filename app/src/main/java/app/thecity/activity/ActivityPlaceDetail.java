@@ -15,6 +15,7 @@ import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -53,7 +54,9 @@ import app.thecity.model.Activity;
 import app.thecity.model.Evaluation;
 import app.thecity.model.Images;
 import app.thecity.model.Place;
+import app.thecity.model.User;
 import app.thecity.utils.Tools;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -112,6 +115,10 @@ public class ActivityPlaceDetail extends AppCompatActivity {
 
     private RecyclerView recyclerView;
 
+    private EditText editText;
+
+    private Button button;
+
     private AdapterComments adapterComments;
 
     // Initialisiert die Ansicht, die Toolbar und die Google Map.
@@ -124,6 +131,14 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.comments);
         adapterComments = new AdapterComments(getApplicationContext(),new ArrayList<>());
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        editText = findViewById(R.id.commentbody);
+        button = findViewById(R.id.commenpostButton);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                postComment();
+            }
+        });
         recyclerView.setAdapter(adapterComments);
         db = new DatabaseHandler(this);
         // animation transition --> App Bas layout siehe Place Details in App
@@ -178,6 +193,29 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         });
     }
 
+    private void postComment (){
+        String text = editText.getText().toString();
+        editText.setText("");
+        editText.clearFocus();
+        User user = Tools.readuser(getApplicationContext());
+        String header = "bearer " + user.token;
+        if (text != null && !text.isEmpty()){
+            Evaluation evaluation= new Evaluation(text,"",0,null,"");
+            Call<ResponseBody> callPostComment = RestAdapter.createMobcApi().postCommentsToActivity(header,activityModel._id,evaluation);
+            callPostComment.enqueue(new retrofit2.Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    fetchComments();
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Log.e("onFailure", t.getMessage());
+                }
+            });
+        }
+    }
+
 
     /*
       Zeigt die Daten des angegebenen Place-Objekts an, einschließlich Name, Adresse, Telefon,
@@ -193,10 +231,8 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         }
 
         // Setze die Adresse, Telefonnummer und Website des Ortes in den entsprechenden TextViews
-        /*((TextView) findViewById(R.id.address)).setText(activity.address);
-        ((TextView) findViewById(R.id.phone)).setText(activity.phone.equals("-") || activity.phone.trim().equals("") ? getString(R.string.no_phone_number) : activity.phone);
-        ((TextView) findViewById(R.id.website)).setText(activity.website.equals("-") || activity.website.trim().equals("") ? getString(R.string.no_website) : activity.website);
-        */
+        ((TextView) findViewById(R.id.address)).setText(activity.address);
+
         // Zeige die Beschreibung des Ortes in einer WebView an
         description = (WebView) findViewById(R.id.description);
         String html_data = "<style>img{max-width:100%;height:auto;} iframe{width:100%;}</style> ";
