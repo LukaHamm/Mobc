@@ -28,7 +28,6 @@ import com.google.android.material.navigation.NavigationView;
 
 import app.thecity.AppConfig;
 import app.thecity.R;
-import app.thecity.data.DatabaseHandler;
 import app.thecity.data.SharedPref;
 import app.thecity.fragment.FragmentCategory;
 import app.thecity.model.Activity;
@@ -81,7 +80,6 @@ public class ActivityMain extends AppCompatActivity {
         newPlace = (FloatingActionButton) findViewById(R.id.newPlace);
 
         // Initialisiere die Datenbank-Handler-Klasse
-        db = new DatabaseHandler(this);
         // Initialisiere die gemeinsamen Einstellungen
         sharedPref = new SharedPref(this);
 
@@ -160,7 +158,6 @@ public class ActivityMain extends AppCompatActivity {
             @Override
             public void onDrawerOpened(View drawerView) {
                 // Aktualisiere die Anzahl der Favoriten im Navigationselement, wenn die Schublade geöffnet wird
-                updateFavoritesCounter(navigationView, R.id.nav_favorites, db.getFavoritesSize());
                 super.onDrawerOpened(drawerView);
             }
         };
@@ -179,8 +176,6 @@ public class ActivityMain extends AppCompatActivity {
             }
         });
 
-        // Entferne das Navigationsmenüelement "News Info", wenn es deaktiviert ist
-        if (!AppConfig.general.enable_news_info) navigationView.getMenu().removeItem(R.id.nav_news);
 
         // Setze das Aussehen des Navigationskopfbereichs plus die Farbe die in Settings ausgewählt
         View nav_header = navigationView.getHeaderView(0);

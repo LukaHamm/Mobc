@@ -47,7 +47,6 @@ import app.thecity.adapter.AdapterImageList;
 import app.thecity.connection.RestAdapter;
 import app.thecity.connection.callbacks.CallbackPlaceDetails;
 import app.thecity.data.Constant;
-import app.thecity.data.DatabaseHandler;
 import app.thecity.data.SharedPref;
 import app.thecity.data.ThisApplication;
 import app.thecity.model.Activity;
@@ -102,7 +101,6 @@ public class ActivityPlaceDetail extends AppCompatActivity {
     private WebView description = null;
     private View parent_view = null;
     private GoogleMap googleMap;
-    private DatabaseHandler db;
 
     private boolean onProcess = false;
     private boolean isFromNotif = false;
@@ -140,7 +138,6 @@ public class ActivityPlaceDetail extends AppCompatActivity {
             }
         });
         recyclerView.setAdapter(adapterComments);
-        db = new DatabaseHandler(this);
         // animation transition --> App Bas layout siehe Place Details in App
         ViewCompat.setTransitionName(findViewById(R.id.app_bar_layout), EXTRA_OBJ);
 
@@ -376,11 +373,12 @@ public class ActivityPlaceDetail extends AppCompatActivity {
 
 
     // Erstellt das Optionsmenü in der Aktionsleiste.
+    /*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_activity_details, menu);
         return true;
-    }
+    }*/
 
     // Reagiert auf Klicks auf die Menüelemente,  das Teilen des Ortes oder zurücktaste.
     @Override
@@ -389,10 +387,6 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         if (id == android.R.id.home) {
             backAction();
             return true;
-        } else if (id == R.id.action_share) {
-            if (!activityModel.isDraft()) {
-                Tools.methodShare(ActivityPlaceDetail.this, activityModel);
-            }
         }
         return super.onOptionsItemSelected(item);
     }

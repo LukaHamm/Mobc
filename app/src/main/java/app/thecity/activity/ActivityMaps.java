@@ -48,7 +48,6 @@ import app.thecity.AppConfig;
 import app.thecity.R;
 import app.thecity.connection.RestAdapter;
 import app.thecity.data.Constant;
-import app.thecity.data.DatabaseHandler;
 import app.thecity.model.Activity;
 import app.thecity.model.Category;
 import app.thecity.model.Place;
@@ -328,7 +327,7 @@ public class ActivityMaps extends AppCompatActivity implements OnMapReadyCallbac
             return true;
         } else {
             String category_text;
-            if (item.getItemId() != R.id.menu_nav_map) {
+
                 category_text = item.getTitle().toString();
                 int itemId = item.getItemId();
                 if (itemId == R.id.nav_all) {
@@ -393,7 +392,7 @@ public class ActivityMaps extends AppCompatActivity implements OnMapReadyCallbac
 
                 }
             }
-        }
+
         return super.onOptionsItemSelected(item);
     }
 

@@ -41,7 +41,6 @@ import app.thecity.connection.API;
 import app.thecity.connection.RestAdapter;
 import app.thecity.connection.callbacks.CallbackListPlace;
 import app.thecity.connection.callbacks.CallbackUser;
-import app.thecity.data.DatabaseHandler;
 import app.thecity.data.SharedPref;
 import app.thecity.data.ThisApplication;
 import app.thecity.model.Activity;
