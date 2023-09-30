@@ -53,6 +53,11 @@
     <string name="map_title">Karte</string>
     <string name="map_view">ANSICHT</string>
     <string name="map_navigate">NAVIGIEREN</string>
+    <string name="comment_title">Bewertung</string>
+    <string name="post_comment">Kommentare hinzufügen</string>
+    <string name="button_comment_post">Kommentar hinzufügen</string>
+    <string name="hint_Comment">Kommentar hier eingeben</string>
+
 
     <!--=== Search Activity Strings ============================================================ -->
     <string name="hint_search">Ort suchen...</string>

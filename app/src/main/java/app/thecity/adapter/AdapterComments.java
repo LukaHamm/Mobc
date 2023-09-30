@@ -55,9 +55,8 @@ public class AdapterComments extends RecyclerView.Adapter<AdapterComments.Evalua
 
 
     public void insertData(List<Evaluation> evaluationList){
-        int positionStart = getItemCount();
-        int itemCount = evaluationList.size();
-        this.evaluationList.addAll(evaluationList);
-        notifyItemRangeInserted(positionStart,itemCount);
+        this.evaluationList = evaluationList;
+        notifyDataSetChanged();
+
     }
 }
