@@ -110,6 +110,7 @@
 
             <include layout="@layout/include_place_details_content" />
 
+
         </androidx.core.widget.NestedScrollView>
 
         <include

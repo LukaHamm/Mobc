@@ -1,6 +1,10 @@
 package app.thecity.fragment;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,18 +19,38 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.google.android.gms.common.api.Api;
+import com.google.android.material.snackbar.Snackbar;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import app.thecity.AppConfig;
 import app.thecity.R;
 import app.thecity.activity.ActivityMain;
+import app.thecity.activity.ActivityPlaceDetail;
 import app.thecity.adapter.AdapterPlaceGrid;
+import app.thecity.connection.API;
 import app.thecity.connection.RestAdapter;
+import app.thecity.connection.callbacks.CallbackListPlace;
+import app.thecity.connection.callbacks.CallbackUser;
+import app.thecity.data.SharedPref;
 import app.thecity.data.ThisApplication;
 import app.thecity.model.Activity;
+import app.thecity.model.Place;
 import app.thecity.model.User;
 import app.thecity.utils.ActivityType;
 import app.thecity.utils.Tools;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -50,7 +74,7 @@ public class FragmentCategory extends Fragment {
 
     private AdapterPlaceGrid adapter;
 
-
+    private List<Activity> activityList;
     private Call<List<Activity>> callActivityList;
 
     @Nullable
@@ -77,10 +101,10 @@ public class FragmentCategory extends Fragment {
         adapter = new AdapterPlaceGrid(getActivity(), recyclerView, new ArrayList<Activity>());
         recyclerView.setAdapter(adapter);
 
-        // OnClickListener für die Liste festlegen Klick für detailanbsicht
-        /*adapter.setOnItemClickListener((v, obj) -> {
+        // OnClickListener für die Liste festlegen
+        adapter.setOnItemClickListener((v, obj) -> {
             ActivityPlaceDetail.navigate((ActivityMain) getActivity(), v.findViewById(R.id.lyt_content), obj);
-        });*/
+        });
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -112,7 +136,7 @@ public class FragmentCategory extends Fragment {
             callActivityList.enqueue(new retrofit2.Callback<List<Activity>>() {
                 @Override
                 public void onResponse(Call<List<Activity>> call, Response<List<Activity>> response) {
-                    List<Activity> activityList = response.body();
+                    activityList = response.body();
                     for (Activity activity : activityList) {
                         if (activity.location != null) {
                             activity.distance = Tools.getDistanceToCurrentLocation(getContext(), activity.getPosition());
@@ -211,4 +235,7 @@ public class FragmentCategory extends Fragment {
         }
     }
 
+    public List<Activity> getActivityList() {
+        return activityList;
+    }
 }

@@ -3,6 +3,7 @@ package app.thecity.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.IdRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,9 +26,11 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
+import app.thecity.AppConfig;
 import app.thecity.R;
 import app.thecity.data.SharedPref;
 import app.thecity.fragment.FragmentCategory;
+import app.thecity.model.Activity;
 import app.thecity.model.User;
 import app.thecity.utils.PermissionUtil;
 import app.thecity.utils.Tools;
@@ -47,6 +51,7 @@ public class ActivityMain extends AppCompatActivity {
     private RelativeLayout nav_header_lyt;
 
     static ActivityMain activityMain;
+    Fragment fragment;
 
     /*
      In dieser Methode wird die Aktivität initialisiert. Es werden die Toolbar, das Navigationsmenü
@@ -74,6 +79,7 @@ public class ActivityMain extends AppCompatActivity {
         // Initialisiere die Schwebende NewPlace (Floating Action Button)
         newPlace = (FloatingActionButton) findViewById(R.id.newPlace);
 
+        // Initialisiere die Datenbank-Handler-Klasse
         // Initialisiere die gemeinsamen Einstellungen
         sharedPref = new SharedPref(this);
 
@@ -151,6 +157,7 @@ public class ActivityMain extends AppCompatActivity {
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
             public void onDrawerOpened(View drawerView) {
+                // Aktualisiere die Anzahl der Favoriten im Navigationselement, wenn die Schublade geöffnet wird
                 super.onDrawerOpened(drawerView);
             }
         };
@@ -221,7 +228,7 @@ public class ActivityMain extends AppCompatActivity {
        */
     public boolean onItemSelected(int id, String title) {
         // Handle navigation view item clicks here.
-        Fragment fragment = null;
+        fragment = null;
         Bundle bundle = new Bundle();
         //sub menu
         /* IMPORTANT : cat[index_array], index is start from 0

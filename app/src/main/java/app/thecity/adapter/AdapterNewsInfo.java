@@ -124,7 +124,6 @@ public class AdapterNewsInfo extends RecyclerView.Adapter<RecyclerView.ViewHolde
             OriginalViewHolder vItem = (OriginalViewHolder) holder;
             vItem.title.setText(o.title);
             vItem.brief_content.setText(o.brief_content);
-            Tools.displayImageThumb(ctx, vItem.image, Constant.getURLimgNews(o.image), 0.5f);
             vItem.lyt_parent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

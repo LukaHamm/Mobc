@@ -12,12 +12,16 @@ import java.util.List;
 
 
 
-public class Activity implements Serializable, ClusterItem {
+public class Activity implements Serializable, ClusterItem  {
 
     public String title;
+
+    public String _id;
     public String activityType;
     public String uploadDate;
     public String description;
+
+    public String address;
 
     public List<String> images;
 
@@ -25,13 +29,16 @@ public class Activity implements Serializable, ClusterItem {
 
     public float distance = -1;
 
-    public Activity(String title, String activityType, String uploadDate, String description,List<String> images,Location location) {
+    public Activity(String title, String activityType, String uploadDate, String description,List<String> images,Location location,String address, String id) {
         this.title = title;
         this.activityType = activityType;
         this.uploadDate = uploadDate;
         this.description = description;
         this.images=images;
         this.location=location;
+        this.address= address;
+        this._id = id;
+
 
     }
 
@@ -64,6 +71,8 @@ public class Activity implements Serializable, ClusterItem {
         return description;
     }
 
-
+    public boolean isDraft() {
+        return (title.equals("") && description.equals("")  && description.equals(""));
+    }
 
 }

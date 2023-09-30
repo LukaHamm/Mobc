@@ -25,7 +25,7 @@ import app.thecity.utils.Tools;
  */
 public class AdapterImageList extends RecyclerView.Adapter<AdapterImageList.ViewHolder> {
 
-    private List<Images> items = new ArrayList<>();
+    private List<String> items = new ArrayList<>();
     private OnItemClickListener onItemClickListener;
 
     private int lastPosition = -1;
@@ -56,7 +56,7 @@ public class AdapterImageList extends RecyclerView.Adapter<AdapterImageList.View
         Konstruktor dieses Adapters wird verwendet, um eine Instanz des Adapters zu erstellen
         und die erforderlichen Daten zu übergeben
      */
-    public AdapterImageList(Context ctx, List<Images> items) {
+    public AdapterImageList(Context ctx, List<String> items) {
         this.ctx = ctx;
         this.items = items;
     }
@@ -80,8 +80,8 @@ public class AdapterImageList extends RecyclerView.Adapter<AdapterImageList.View
      */
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        final String p = items.get(position).getImageUrl();
-        Tools.displayImage(ctx, holder.image, Constant.getURLimgPlace(p));
+        final String p = items.get(position);
+        Tools.displayImage(ctx, holder.image, Constant.getURLimgActivity(p));
         holder.lyt_parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {

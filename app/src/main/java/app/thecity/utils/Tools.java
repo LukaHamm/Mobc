@@ -214,7 +214,7 @@ public class Tools {
 
 
     // Konfiguriert die statische Karte in Google Maps für eine gegebene Place-Instanz
-    public static GoogleMap configStaticMap(Activity act, GoogleMap googleMap, Place place) {
+    public static GoogleMap configStaticMap(Activity act, GoogleMap googleMap, app.thecity.model.Activity activity) {
         // set map type
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         // Enable / Disable zooming controls
@@ -237,8 +237,8 @@ public class Tools {
         View marker_view = inflater.inflate(R.layout.maps_marker, null);
         ((ImageView) marker_view.findViewById(R.id.marker_bg)).setColorFilter(act.getResources().getColor(R.color.marker_secondary));
 
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(place.getPosition()).zoom(12).build();
-        MarkerOptions markerOptions = new MarkerOptions().position(place.getPosition());
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(activity.getPosition()).zoom(12).build();
+        MarkerOptions markerOptions = new MarkerOptions().position(activity.getPosition());
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(Tools.createBitmapFromView(act, marker_view)));
         googleMap.addMarker(markerOptions);
         googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
@@ -313,11 +313,12 @@ public class Tools {
     }
 
     // Teilt den aktuellen Ort in einer Place-Instanz
-    public static void methodShare(Activity act, Place p) {
+    public static void methodShare(Activity act, app.thecity.model.Activity p) {
 
         // string to share
-        String shareBody = "View good place \'" + p.name + "\'"
-                + "\n" + "located at : " + p.address + "\n\n"
+        //FIXME Adresse?
+        String shareBody = "View good place \'" + p.title + "\'"
+                + "\n" + "located at : " + "placeholder" + "\n\n"
                 + "Using app : " + getPlayStoreUrl(act);
 
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);

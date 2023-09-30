@@ -7,11 +7,15 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -37,14 +41,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.thecity.R;
+import app.thecity.adapter.AdapterComments;
 import app.thecity.adapter.AdapterImageList;
+
+import app.thecity.connection.RestAdapter;
 import app.thecity.connection.callbacks.CallbackPlaceDetails;
 import app.thecity.data.Constant;
 import app.thecity.data.SharedPref;
 import app.thecity.data.ThisApplication;
+import app.thecity.model.Activity;
+import app.thecity.model.Evaluation;
 import app.thecity.model.Images;
 import app.thecity.model.Place;
+import app.thecity.model.User;
 import app.thecity.utils.Tools;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -64,10 +75,10 @@ public class ActivityPlaceDetail extends AppCompatActivity {
       eine freigegebene Ansicht (sharedView) für die Aktivitätstransition und ein Place-Objekt (p),
       das die Details des Ortes enthält.
      */
-    public static void navigate(AppCompatActivity activity, View sharedView, Place place) {
+    public static void navigate(AppCompatActivity activity, View sharedView, Activity activityModel) {
         // intentNavigation  = Startet Aktivit Place Details
         Intent intentNavigation = new Intent(activity, ActivityPlaceDetail.class);
-        intentNavigation.putExtra(EXTRA_OBJ, place); //putExtra fügt zusätzliche Daten ans Intent
+        intentNavigation.putExtra(EXTRA_OBJ, activityModel); //putExtra fügt zusätzliche Daten ans Intent
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, sharedView, EXTRA_OBJ);
         ActivityCompat.startActivity(activity, intentNavigation, options.toBundle());
     }
@@ -84,13 +95,12 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         return navigation_from_notifi;
     }
 
-    private Place place = null;
+    private Activity activityModel = null;
 
     private FloatingActionButton fab;
     private WebView description = null;
     private View parent_view = null;
     private GoogleMap googleMap;
-
 
     private boolean onProcess = false;
     private boolean isFromNotif = false;
@@ -101,6 +111,14 @@ public class ActivityPlaceDetail extends AppCompatActivity {
     private Snackbar snackbar;
     private ArrayList<String> new_images_str = new ArrayList<>();
 
+    private RecyclerView recyclerView;
+
+    private EditText editText;
+
+    private Button button;
+
+    private AdapterComments adapterComments;
+
     // Initialisiert die Ansicht, die Toolbar und die Google Map.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,29 +126,39 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_details);
         parent_view = findViewById(android.R.id.content);
-
+        recyclerView = (RecyclerView) findViewById(R.id.comments);
+        adapterComments = new AdapterComments(getApplicationContext(),new ArrayList<>());
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        editText = findViewById(R.id.commentbody);
+        button = findViewById(R.id.commenpostButton);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                postComment();
+            }
+        });
+        recyclerView.setAdapter(adapterComments);
         // animation transition --> App Bas layout siehe Place Details in App
         ViewCompat.setTransitionName(findViewById(R.id.app_bar_layout), EXTRA_OBJ);
 
         // Hier wird der Place aus dem übergebenden Intent (vorherige Activity) extrahiert
-        place = (Place) getIntent().getSerializableExtra(EXTRA_OBJ);
+        activityModel = (Activity) getIntent().getSerializableExtra(EXTRA_OBJ);
         isFromNotif = getIntent().getBooleanExtra(EXTRA_NOTIF_FLAG, false);
 
         // Initialisierung von Views
         fab = (FloatingActionButton) findViewById(R.id.fab);
         lyt_progress = findViewById(R.id.lyt_progress);
         lyt_distance = findViewById(R.id.lyt_distance);
-            if (place.image != null) {
-                Tools.displayImage(this, (ImageView) findViewById(R.id.image), Constant.getURLimgPlace(place.image));
+            if (activityModel.images != null && !activityModel.images.isEmpty()) {
+                Tools.displayImage(this, (ImageView) findViewById(R.id.image), Constant.getURLimgActivity(activityModel.images.get(0)));
             }
 
-
+        // Methode zum Steuern des Favoriten-Buttons
+        //favAktualisieren();
 
         // Konfiguration der Toolbar und Initialisierung der Google Map
-        setupToolbar(place.name == null ? "" : place.name);
+        setupToolbar(activityModel.title == null ? "" : activityModel.title);
         initMap();
-
-
 
 
         // for system bar in lollipop
@@ -138,7 +166,51 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         Tools.RTLMode(getWindow());
 
         // analytics tracking
-        ThisApplication.getInstance().trackScreenView("View place : " + (place.name == null ? "name" : place.name));
+        ThisApplication.getInstance().trackScreenView("View place : " + (activityModel.title == null ? "name" : activityModel.title));
+        displayDataWithDelay(activityModel);
+        fetchComments();
+    }
+
+
+    private void fetchComments (){
+        Call<List<Evaluation>> evaluationCall = RestAdapter.createMobcApi().getComments(activityModel._id);
+        evaluationCall.enqueue(new retrofit2.Callback<List<Evaluation>>() {
+            @Override
+            public void onResponse(Call<List<Evaluation>> call, Response<List<Evaluation>> response) {
+                List<Evaluation> evaluationList = response.body();
+                if (evaluationList != null){
+                    adapterComments.insertData(evaluationList);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Evaluation>> call, Throwable t) {
+                Log.e("onFailure", t.getMessage());
+            }
+        });
+    }
+
+    private void postComment (){
+        String text = editText.getText().toString();
+        editText.setText("");
+        editText.clearFocus();
+        User user = Tools.readuser(getApplicationContext());
+        String header = "bearer " + user.token;
+        if (text != null && !text.isEmpty()){
+            Evaluation evaluation= new Evaluation(text,"",0,null,"");
+            Call<ResponseBody> callPostComment = RestAdapter.createMobcApi().postCommentsToActivity(header,activityModel._id,evaluation);
+            callPostComment.enqueue(new retrofit2.Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    fetchComments();
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Log.e("onFailure", t.getMessage());
+                }
+            });
+        }
     }
 
 
@@ -146,22 +218,22 @@ public class ActivityPlaceDetail extends AppCompatActivity {
       Zeigt die Daten des angegebenen Place-Objekts an, einschließlich Name, Adresse, Telefon,
       Website, Beschreibung und Bildergalerie.
      */
-    private void displayData(Place p) {
+    private void displayData(Activity activity) {
         // Konfiguriere die Toolbar mit dem Ortsnamen
-        setupToolbar(place.name);
+        setupToolbar(activityModel.title);
 
         // Zeige das Bild des Ortes in einem ImageView an
-        Tools.displayImage(this, (ImageView) findViewById(R.id.image), Constant.getURLimgPlace(place.image));
+        if (activityModel.images != null && !activityModel.images.isEmpty()) {
+            Tools.displayImage(this, (ImageView) findViewById(R.id.image), Constant.getURLimgActivity(activityModel.images.get(0)));
+        }
 
         // Setze die Adresse, Telefonnummer und Website des Ortes in den entsprechenden TextViews
-        ((TextView) findViewById(R.id.address)).setText(p.address);
-        ((TextView) findViewById(R.id.phone)).setText(p.phone.equals("-") || p.phone.trim().equals("") ? getString(R.string.no_phone_number) : p.phone);
-        ((TextView) findViewById(R.id.website)).setText(p.website.equals("-") || p.website.trim().equals("") ? getString(R.string.no_website) : p.website);
+        ((TextView) findViewById(R.id.address)).setText(activity.address);
 
         // Zeige die Beschreibung des Ortes in einer WebView an
         description = (WebView) findViewById(R.id.description);
         String html_data = "<style>img{max-width:100%;height:auto;} iframe{width:100%;}</style> ";
-        html_data += p.description;
+        html_data += activity.description;
         description.getSettings().setBuiltInZoomControls(true);
         description.setBackgroundColor(Color.TRANSPARENT);
         description.setWebChromeClient(new WebChromeClient());
@@ -180,7 +252,7 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         });
 
         // Setze die Entfernungsinformation des Ortes in den TextView für die Entfernung
-        distance = place.distance;
+        distance = activityModel.distance;
         if (distance == -1) {
             lyt_distance.setVisibility(View.GONE);
         } else {
@@ -188,7 +260,8 @@ public class ActivityPlaceDetail extends AppCompatActivity {
             ((TextView) findViewById(R.id.distance)).setText(Tools.getFormatedDistance(distance));
         }
 
-
+        // Zeige die Bildergalerie des Ortes anhand der Bilder in der Datenbank
+        setImageGallery(activityModel.images);
     }
 
     /*
@@ -208,22 +281,10 @@ public class ActivityPlaceDetail extends AppCompatActivity {
     public void clickLayout(View view) {
         int id = view.getId();
         if (id == R.id.lyt_address) {
-            if (!place.isDraft()) {
-                Uri uri = Uri.parse("http://maps.google.com/maps?q=loc:" + place.lat + "," + place.lng);
+            if (!activityModel.isDraft()) {
+                Uri uri = Uri.parse("http://maps.google.com/maps?q=loc:" + activityModel.location.latitude + "," + activityModel.location.longitude);
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
-            }
-        } else if (id == R.id.lyt_phone) {
-            if (!place.isDraft() && !place.phone.equals("-") && !place.phone.trim().equals("")) {
-                Tools.dialNumber(this, place.phone);
-            } else {
-                Snackbar.make(parent_view, R.string.fail_dial_number, Snackbar.LENGTH_SHORT).show();
-            }
-        } else if (id == R.id.lyt_website) {
-            if (!place.isDraft() && !place.website.equals("-") && !place.website.trim().equals("")) {
-                Tools.directUrl(this, place.website);
-            } else {
-                Snackbar.make(parent_view, R.string.fail_open_website, Snackbar.LENGTH_SHORT).show();
             }
         }
     }
@@ -231,14 +292,14 @@ public class ActivityPlaceDetail extends AppCompatActivity {
     /*
       Zeigt eine Bildergalerie des Ortes an, die aus Bildern besteht, die im Place-Objekt enthalten sind.
      */
-    private void setImageGallery(List<Images> images) {
+    private void setImageGallery(List<String> images) {
         // add optional image into list
-        List<Images> new_images = new ArrayList<>();
-        new_images.add(new Images(place.place_id, place.image));
+        List<String> new_images = new ArrayList<>();
+        //new_images.add(new Images(place.place_id, place.image));
         new_images.addAll(images);
         new_images_str = new ArrayList<>();
-        for (Images img : new_images) {
-            new_images_str.add(Constant.getURLimgPlace(img.name));
+        for (String img : new_images) {
+            new_images_str.add(Constant.getURLimgActivity(img));
         }
 
         RecyclerView galleryRecycler = (RecyclerView) findViewById(R.id.galleryRecycler);
@@ -311,7 +372,24 @@ public class ActivityPlaceDetail extends AppCompatActivity {
     }
 
 
+    // Erstellt das Optionsmenü in der Aktionsleiste.
+    /*
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_activity_details, menu);
+        return true;
+    }*/
 
+    // Reagiert auf Klicks auf die Menüelemente,  das Teilen des Ortes oder zurücktaste.
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            backAction();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     // Initialisiert die Google Map und konfiguriert die Kartenansicht.
     private void initMap() {
@@ -325,7 +403,7 @@ public class ActivityPlaceDetail extends AppCompatActivity {
                         Snackbar.make(parent_view, R.string.unable_create_map, Snackbar.LENGTH_SHORT).show();
                     } else {
                         // config map
-                        googleMap = Tools.configStaticMap(ActivityPlaceDetail.this, googleMap, place);
+                        googleMap = Tools.configStaticMap(ActivityPlaceDetail.this, googleMap, activityModel);
                     }
                 }
             });
@@ -335,7 +413,7 @@ public class ActivityPlaceDetail extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //Toast.makeText(getApplicationContext(),"OPEN", Toast.LENGTH_LONG).show();
-                Intent navigation = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?daddr=" + place.lat + "," + place.lng));
+                Intent navigation = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?daddr=" + activityModel.location.latitude + "," + activityModel.location.longitude));
                 startActivity(navigation);
             }
         });
@@ -356,7 +434,7 @@ public class ActivityPlaceDetail extends AppCompatActivity {
     // Öffnet den ausgewählten Ort in der Google Maps-Anwendung.
     private void openPlaceInMap() {
         Intent openPlaceMap = new Intent(this, ActivityMaps.class);
-        openPlaceMap.putExtra(ActivityMaps.EXTRA_OBJ, place);
+        openPlaceMap.putExtra(ActivityMaps.EXTRA_OBJ, activityModel);
         startActivity(openPlaceMap);
     }
 
@@ -402,60 +480,11 @@ public class ActivityPlaceDetail extends AppCompatActivity {
     }
 
 
-
-    // Methode zum Abrufen der Detaildaten eines Ortes von der API.
-    private void requestDetailsPlace(int place_id) {
-        // Überprüfung, ob bereits ein Prozess läuft
-        if (onProcess) {
-            Snackbar.make(parent_view, R.string.task_running, Snackbar.LENGTH_SHORT).show();
-            return;
-        }
-        // Setze den Prozessstatus auf aktiv
-        onProcess = true;
-        // Zeige den Fortschrittsbalken an
-        showProgressbar(true);
-
-        // Erstelle einen API-Aufruf für die Detaildaten des Ortes
-        //callback = RestAdapter.createMobcApiAPI().getPlaceDetails(place_id);
-        // Führe den API-Aufruf aus
-        callback.enqueue(new retrofit2.Callback<CallbackPlaceDetails>() {
-            @Override
-            public void onResponse(Call<CallbackPlaceDetails> call, Response<CallbackPlaceDetails> response) {
-                // Verarbeite die Antwort des API-Aufrufs
-                CallbackPlaceDetails resp = response.body();
-                if (resp != null) {
-                    // Aktualisiere die Ortsdaten in der Datenbank und zeige die Daten verzögert an
-                    displayDataWithDelay(place);
-                } else {
-                    // Zeige eine Fehlermeldung an, wenn die Antwort leer ist
-                    onFailureRetry(getString(R.string.failed_load_details));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<CallbackPlaceDetails> call, Throwable t) {
-                // Behandlung bei einem API-Aufruf-Fehler
-                if (call != null && !call.isCanceled()) {
-                    // Überprüfe die Internetverbindung
-                    boolean conn = Tools.cekConnection(ActivityPlaceDetail.this);
-                    if (conn) {
-                        // Zeige eine Fehlermeldung an, wenn der API-Aufruf fehlgeschlagen ist
-                        onFailureRetry(getString(R.string.failed_load_details));
-                    } else {
-                        // Zeige eine Fehlermeldung bei fehlender Internetverbindung
-                        onFailureRetry(getString(R.string.no_internet));
-                    }
-                }
-            }
-        });
-    }
-
-
     /*
       Zeigt die Daten des Ortes mit einer leichten Verzögerung an,
       um die Benutzeroberfläche responsiver zu machen.
      */
-    private void displayDataWithDelay(final Place resp) {
+    private void displayDataWithDelay(final Activity resp) {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -466,18 +495,7 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         }, 1000);
     }
 
-    /*
-      Zeigt eine Snackbar-Nachricht mit einer Wiederholungsoption an,
-      wenn das Laden der Daten fehlgeschlagen ist.
-     */
-    private void onFailureRetry(final String msg) {
-        showProgressbar(false);
-        onProcess = false;
-        snackbar = Snackbar.make(parent_view, msg, Snackbar.LENGTH_INDEFINITE);
 
-        snackbar.show();
-        retryDisplaySnackbar();
-    }
 
     // Zeigt die Snackbar-Nachricht periodisch erneut an, wenn sie noch nicht angezeigt wird
     private void retryDisplaySnackbar() {
