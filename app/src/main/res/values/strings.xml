@@ -44,9 +44,13 @@
     <string name="failed_load_details">Failed load place details</string>
     <string name="photos_title">Photos</string>
     <string name="description_title">Description</string>
+    <string name="comment_title">Bewertung</string>
+    <string name="post_comment">Kommentare hinzufügen</string>
     <string name="map_title">Map</string>
     <string name="map_view">VIEW</string>
     <string name="map_navigate">NAVIGATE</string>
+    <string name="button_comment_post">Kommentar hinzufügen</string>
+    <string name="hint_Comment">Kommentar hier eingeben</string>
 
     <!--=== activity Search ==================================================================== -->
     <string name="hint_search">Search Place...</string>
