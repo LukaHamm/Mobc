@@ -1,217 +1,123 @@
 <resources>
-    <string name="app_name">The City</string>
+    <string name="app_name">Mobile Computing App Projekt</string>
 
-    <string name="city_name">Bandung</string>
-    <string name="city_address">Jawa Barat, Indonesia</string>
     <string name="about_text">Diese App wurde von Niklas Tarkel und Lukas Hammer entwickelt. Wir sind Studenten des Fachs Mobile Computing und haben diese Anwendung erstellt, um Ihnen eine großartige Erfahrung zu bieten. Vielen Dank, dass Sie unsere App verwenden! </string>
 
-
-    <!--=== Nav Drawer Menu Items ============================================================== -->
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <!--=== Menüelemente der Navigationsleiste ================================================= -->
+    <string name="navigation_drawer_open">Navigationsschublade öffnen</string>
+    <string name="navigation_drawer_close">Navigationsschublade schließen</string>
     <string name="profile">Profil</string>
     <string name="title_nav_all">Alle Sportbereiche</string>
     <string name="title_nav_fav">Meine Favoriten</string>
     <string name="title_nav_news">Deine News</string>
     <string name="title_nav_ownplaces">Eigene Orte</string>
-    <string name="title_nav_calesthenics">Calesthenics</string>
-    <string name="title_nav_parcouring">Parcouring</string>
+    <string name="title_nav_calesthenics">Calisthenics</string>
+    <string name="title_nav_parcouring">Parkour</string>
     <string name="title_nav_outdoor">Outdoor</string>
-    <string name="title_nav_outdoorGyms">Outdoor Gyms</string>
+    <string name="title_nav_outdoorGyms">Outdoor-Gyms</string>
+    <string name="titel_dropdown_menue">Kategorie</string>
 
 
-    <!--=== activity FullScreenImage =========================================================== -->
-    <string name="image_of">%1$d of %2$d</string>
+    <!--===  Array für die namen der Sportkategorien (siehe newPlace) ========================== -->
+    <string-array name="dropdown_items">
+        <item>Calisthenics</item>
+        <item>Parkouring</item>
+        <item>Outdoor</item>
+        <item>Outdoor-Gyms</item>
+    </string-array>
 
-    <!--=== activity Main ====================================================================== -->
-    <string name="press_again_exit_app">Press again to exit</string>
+    <!--=== Activity Vollbildansicht =========================================================== -->
+    <string name="image_of">%1$d von %2$d</string>
 
-    <!--=== activity Maps ====================================================================== -->
-    <string name="no_item_at">No Item at</string>
+    <!--=== Main Activity Strings ============================================================== -->
+    <string name="press_again_exit_app">Erneut drücken, um die App zu beenden</string>
+
+    <!--=== Maps Activity Strings ============================================================== -->
+    <string name="no_item_at">Kein Eintrag unter</string>
     <string name="dialog_content_gps">
-        GPS is disabled in your device. Would you like to enable it?
+        GPS ist auf Ihrem Gerät deaktiviert. Möchten Sie es aktivieren?
     </string>
     <string name="activity_title_maps">@string/title_nav_all</string>
 
-    <!--=== activity PlaceDetails ============================================================== -->
-    <string name="add_favorite">Hinzugefügt zu Favouriten!</string>
-    <string name="remove_favorite">Entfernt von Favouriten!</string>
-    <string name="no_phone_number">do not have a phone</string>
-    <string name="no_website">do not have a website</string>
-    <string name="fail_dial_number">Cannot dial phone number</string>
-    <string name="fail_open_website">Cannot open website</string>
-    <string name="unable_create_map">Sorry! unable to create maps</string>
-    <string name="failed_load_details">Failed load place details</string>
-    <string name="photos_title">Photos</string>
-    <string name="description_title">Description</string>
-    <string name="map_title">Map</string>
-    <string name="map_view">VIEW</string>
-    <string name="map_navigate">NAVIGATE</string>
+    <!--=== Place Details Activity Strings ===================================================== -->
+    <string name="add_favorite">Zu Favoriten hinzugefügt!</string>
+    <string name="remove_favorite">Aus Favoriten entfernt!</string>
+    <string name="no_phone_number">keine Telefonnummer</string>
+    <string name="no_website">keine Webseite</string>
+    <string name="fail_dial_number">Telefonnummer kann nicht gewählt werden</string>
+    <string name="fail_open_website">Webseite kann nicht geöffnet werden</string>
+    <string name="unable_create_map">Entschuldigung! Karten können nicht erstellt werden</string>
+    <string name="failed_load_details">Laden der Ortseinzelheiten fehlgeschlagen</string>
+    <string name="photos_title">Fotos</string>
+    <string name="description_title">Beschreibung</string>
+    <string name="map_title">Karte</string>
+    <string name="map_view">ANSICHT</string>
+    <string name="map_navigate">NAVIGIEREN</string>
 
-    <!--=== activity Search ==================================================================== -->
-    <string name="hint_search">Search Place...</string>
-    <string name="please_fill">Please fill search input</string>
+    <!--=== Search Activity Strings ============================================================ -->
+    <string name="hint_search">Ort suchen...</string>
+    <string name="please_fill">Bitte Sucheingabe ausfüllen</string>
 
-    <!--=== activity Setting =================================================================== -->
-    <string name="default_notification_channel_id">Default</string>
-    <string name="developer_name">Dream Space</string>
-    <string name="copyright">Copyright © 2016 Dream Space. \nAll right reserved</string>
-    <string name="pref_category_notif">Notifications</string>
-    <string name="pref_category_display">Display</string>
-    <string name="pref_category_other">Others</string>
+    <!--=== Settings Activity Strings ========================================================== -->
+    <string name="default_notification_channel_id">Standard</string>
+    <string name="developer_name">Lukas Hammer und Niklas Tarkel</string>
+    <string name="copyright">Urheberrecht © 2023. Alle Rechte vorbehalten</string>
+    <string name="pref_category_notif">Benachrichtigungen</string>
+    <string name="pref_category_display">Anzeige</string>
+    <string name="pref_category_other">Andere</string>
+    <string name="pref_title_notif">Push-Benachrichtigungen</string>
+    <string name="pref_title_ringtone">Klingelton</string>
+    <string name="pref_title_vibrate">Vibration</string>
+    <string name="pref_title_cache">Bildcache löschen</string>
+    <string name="pref_title_theme">Themenfarbe</string>
+    <string name="pref_title_more">Weitere Apps</string>
+    <string name="pref_title_rate">Bewertung</string>
+    <string name="pref_title_about">Über</string>
+    <string name="pref_ringtone_silent">Stumm</string>
+    <string name="pref_title_copyright">Urheberrecht</string>
+    <string name="pref_title_dev_name">Entwickelt von</string>
+    <string name="pref_title_term">Nutzungsbedingungen &amp; Datenschutz</string>
+    <string name="pref_key_notif">schlüssel_benachrichtigungen</string>
+    <string name="pref_key_ringtone">schlüssel_klingelton</string>
+    <string name="pref_key_vibrate">schlüssel_vibration</string>
+    <string name="pref_key_reset_cache">schlüssel_cache_zurücksetzen</string>
+    <string name="pref_key_theme">schlüssel_theme</string>
+    <string name="dialog_confirm_title">Bestätigung</string>
+    <string name="dialog_about_title">Über unsere Projektarbeit!</string>
+    <string name="activity_title_settings">Einstellungen</string>
+    <string name="message_clear_image_cache">Sind Sie sicher, dass Sie den Bildcache löschen möchten?</string>
+    <string name="message_after_clear_image_cache">Bildcache erfolgreich gelöscht</string>
+    <string name="title_dialog_theme">Farbthema</string>
+    <string name="grant_permission_account_storage">Erlauben Sie den Zugriff auf Ihr Konto und den Speicher, um fortzufahren</string>
+    <string name="content_term"> Wissen wir noch nicht! Das was Papa Scholz sagt!</string>
 
-    <string name="pref_title_notif">Push Notifications</string>
-    <string name="pref_title_ringtone">Ringtone</string>
-    <string name="pref_title_vibrate">Vibrate</string>
-    <string name="pref_title_cache">Clear Image Cache</string>
-    <string name="pref_title_theme">Theme Color</string>
-    <string name="pref_title_more">More Apps</string>
-    <string name="pref_title_rate">Rate</string>
-    <string name="pref_title_about">About</string>
-    <string name="pref_ringtone_silent">Silent</string>
-    <string name="pref_title_copyright">Copyright</string>
-    <string name="pref_title_dev_name">Developed By</string>
-    <string name="pref_title_term">Term &amp; Policies</string>
+    <!--===  Activity Strings ================================================================== -->
+    <string name="splash_welcome_text">WILLKOMMEN</string>
+    <string name="splash_desc_text">Durchsuchen Sie alle interessanten Orte mit der MOBC-App</string>
 
-    <string name="pref_key_notif">key_notifications</string>
-    <string name="pref_key_ringtone">key_ringtone</string>
-    <string name="pref_key_vibrate">key_vibrate</string>
-    <string name="pref_key_reset_cache">key_reset_cache</string>
-    <string name="pref_key_theme">key_theme</string>
-    <string name="dialog_confirm_title">Confirmation</string>
-    <string name="dialog_about_title">About</string>
-    <string name="activity_title_settings">Settings</string>
+    <!--=== Fragement Kategorie Strings ======================================================== -->
+    <string name="refresh_failed">Aktualisierung fehlgeschlagen</string>
+    <string name="load_of">Laden von %1$d von %2$d</string>
+    <string name="load_success">Daten erfolgreich geladen</string>
 
-    <string name="message_clear_image_cache">Are you sure want to clear image cache?</string>
-    <string name="message_after_clear_image_cache">Image cache successfully clear</string>
-    <string name="title_dialog_theme">Color Theme</string>
-    <string name="grant_permission_account_storage">Grant account, storage permission to enable</string>
-    <string name="content_term">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dolor risus, aliquet a erat quis, viverra molestie orci. Suspendisse vehicula porta libero. Nam tincidunt nulla ipsum, vel iaculis risus scelerisque sed. Phasellus venenatis, enim vel placerat blandit, leo eros bibendum erat, at auctor mauris diam ac risus. Aenean sit amet congue neque, sit amet condimentum elit. Fusce lacinia massa vel nisl scelerisque, in scelerisque dolor elementum. Vivamus leo enim, congue dictum congue vitae, porttitor id purus. Sed eu ultricies erat. Morbi hendrerit, mi ac volutpat commodo, magna turpis pretium nibh, at fringilla eros lorem quis tellus. Praesent porttitor purus nibh, ac vestibulum massa fringilla vel. Pellentesque dapibus nulla quis luctus dictum. In scelerisque ut ex sed facilisis. Nunc eu finibus nulla, ut hendrerit sem. Suspendisse accumsan risus vel diam fringilla iaculis.
-        \n\nQuisque facilisis finibus aliquam. Sed mattis, dui fringilla ornare finibus, orci odio blandit risus, ut maximus dui odio non leo. Donec laoreet lacus nisi, a mollis velit suscipit ac. Quisque faucibus ut nisl in congue. Nam sagittis consectetur tempus. Suspendisse eget posuere dui. Donec ultricies velit ex, vel cursus odio sollicitudin in. Nullam faucibus auctor ligula, eu rhoncus dui facilisis a. Curabitur vel feugiat est. Quisque congue at enim eleifend ultrices. Proin dapibus risus lorem, nec condimentum nunc consequat vitae. Quisque sapien lorem, vestibulum vitae justo eget, fringilla eleifend nisi.
-        \n\nMauris ultricies augue sit amet est sollicitudin laoreet. Fusce ut congue felis. Fusce dictum tristique elit nec iaculis. Mauris sodales tempus fringilla. Fusce nec nunc tempus, tempor sapien sit amet, ultricies erat. Mauris ultrices ac lorem ultrices facilisis. Nam pharetra, nisi a imperdiet interdum, nunc justo ultricies nisl, a laoreet massa dui vel enim. Pellentesque et magna ac tellus ullamcorper malesuada a ac nisl. Curabitur id est et neque convallis accumsan. Aliquam eleifend varius massa. Curabitur eu finibus tortor.
-        \n\nVivamus aliquam nisl rutrum orci volutpat porta in ornare est. Quisque ligula ipsum, vulputate id aliquam vitae, semper vitae orci. Nam non pulvinar ligula, eget tincidunt ante. Quisque sapien massa, varius tempus pretium id, vehicula at magna. Ut ut ultrices augue. Nam nec ullamcorper tellus, at finibus lectus. Fusce vel iaculis mauris, id porta nulla. Aenean ac mollis sapien. Morbi imperdiet augue tempus nulla luctus, sit amet feugiat purus elementum.
-    </string>
+    <!--=== Andere Strings ===================================================================== -->
+    <string name="action_settings">Einstellungen</string>
+    <string name="no_internet">"Keine Internetverbindung"</string>
+    <string name="task_running">Aufgabe läuft noch</string>
+    <string name="no_item">Kein Eintrag</string>
 
-
-    <!--=== activity Splash ==================================================================== -->
-    <string name="splash_welcome_text">WELCOME</string>
-    <string name="splash_desc_text">Browse all the interesting place using The City app</string>
-
-    <!--=== fragment Category ================================================================== -->
-    <string name="refresh_failed">Refresh failed</string>
-    <string name="load_of">Load %1$d of %2$d</string>
-    <string name="load_success">Successfully load data</string>
-
-
-    <!-- ==================== OTHERS STRING ==================================================== -->
-    <string name="action_settings">Settings</string>
-    <string name="no_internet">"No internet connection"</string>
-    <string name="task_running">Task still running</string>
-    <string name="no_item">No Item</string>
-
-    <!--Basic action Text-->
+    <!-- Basic Action Strings -->
     <string name="OK">OK</string>
-    <string name="YES">YES</string>
-    <string name="NO">NO</string>
-    <string name="SETTING">SETTING</string>
-    <string name="CANCEL">CANCEL</string>
-    <string name="SAVE">SAVE</string>
-    <string name="DISMISS">DISMISS</string>
-    <string name="HIDE">HIDE</string>
-    <string name="RETRY">RETRY</string>
+    <string name="YES">JA</string>
+    <string name="NO">NEIN</string>
+    <string name="SETTING">EINSTELLUNG</string>
+    <string name="CANCEL">ABBRECHEN</string>
+    <string name="SAVE">SPEICHERN</string>
+    <string name="DISMISS">SCHLIESSEN</string>
+    <string name="HIDE">AUSBLENDEN</string>
+    <string name="RETRY">ERNEUT VERSUCHEN</string>
     <string name="DETAILS">DETAILS</string>
-    <string name="FAILED">FAILED</string>
+    <string name="FAILED">FEHLGESCHLAGEN</string>
     <string name="title_activity_new_place">ActivityNewPlace</string>
-    <string name="large_text">
-        "Material is the metaphor.\n\n"
-
-        "A material metaphor is the unifying theory of a rationalized space and a system of motion."
-        "The material is grounded in tactile reality, inspired by the study of paper and ink, yet "
-        "technologically advanced and open to imagination and magic.\n"
-        "Surfaces and edges of the material provide visual cues that are grounded in reality. The "
-        "use of familiar tactile attributes helps users quickly understand affordances. Yet the "
-        "flexibility of the material creates new affordances that supercede those in the physical "
-        "world, without breaking the rules of physics.\n"
-        "The fundamentals of light, surface, and movement are key to conveying how objects move, "
-        "interact, and exist in space and in relation to each other. Realistic lighting shows "
-        "seams, divides space, and indicates moving parts.\n\n"
-
-        "Bold, graphic, intentional.\n\n"
-
-        "The foundational elements of print based design typography, grids, space, scale, color, "
-        "and use of imagery guide visual treatments. These elements do far more than please the "
-        "eye. They create hierarchy, meaning, and focus. Deliberate color choices, edge to edge "
-        "imagery, large scale typography, and intentional white space create a bold and graphic "
-        "interface that immerse the user in the experience.\n"
-        "An emphasis on user actions makes core functionality immediately apparent and provides "
-        "waypoints for the user.\n\n"
-
-        "Motion provides meaning.\n\n"
-
-        "Motion respects and reinforces the user as the prime mover. Primary user actions are "
-        "inflection points that initiate motion, transforming the whole design.\n"
-        "All action takes place in a single environment. Objects are presented to the user without "
-        "breaking the continuity of experience even as they transform and reorganize.\n"
-        "Motion is meaningful and appropriate, serving to focus attention and maintain continuity. "
-        "Feedback is subtle yet clear. Transitions are efﬁcient yet coherent.\n\n"
-
-        "3D world.\n\n"
-
-        "The material environment is a 3D space, which means all objects have x, y, and z "
-        "dimensions. The z-axis is perpendicularly aligned to the plane of the display, with the "
-        "positive z-axis extending towards the viewer. Every sheet of material occupies a single "
-        "position along the z-axis and has a standard 1dp thickness.\n"
-        "On the web, the z-axis is used for layering and not for perspective. The 3D world is "
-        "emulated by manipulating the y-axis.\n\n"
-
-        "Light and shadow.\n\n"
-
-        "Within the material environment, virtual lights illuminate the scene. Key lights create "
-        "directional shadows, while ambient light creates soft shadows from all angles.\n"
-        "Shadows in the material environment are cast by these two light sources. In Android "
-        "development, shadows occur when light sources are blocked by sheets of material at "
-        "various positions along the z-axis. On the web, shadows are depicted by manipulating the "
-        "y-axis only. The following example shows the card with a height of 6dp.\n\n"
-
-        "Resting elevation.\n\n"
-
-        "All material objects, regardless of size, have a resting elevation, or default elevation "
-        "that does not change. If an object changes elevation, it should return to its resting "
-        "elevation as soon as possible.\n\n"
-
-        "Component elevations.\n\n"
-
-        "The resting elevation for a component type is consistent across apps (e.g., FAB elevation "
-        "does not vary from 6dp in one app to 16dp in another app).\n"
-        "Components may have different resting elevations across platforms, depending on the depth "
-        "of the environment (e.g., TV has a greater depth than mobile or desktop).\n\n"
-
-        "Responsive elevation and dynamic elevation offsets.\n\n"
-
-        "Some component types have responsive elevation, meaning they change elevation in response "
-        "to user input (e.g., normal, focused, and pressed) or system events. These elevation "
-        "changes are consistently implemented using dynamic elevation offsets.\n"
-        "Dynamic elevation offsets are the goal elevation that a component moves towards, relative "
-        "to the component’s resting state. They ensure that elevation changes are consistent "
-        "across actions and component types. For example, all components that lift on press have "
-        "the same elevation change relative to their resting elevation.\n"
-        "Once the input event is completed or cancelled, the component will return to its resting "
-        "elevation.\n\n"
-
-        "Avoiding elevation interference.\n\n"
-
-        "Components with responsive elevations may encounter other components as they move between "
-        "their resting elevations and dynamic elevation offsets. Because material cannot pass "
-        "through other material, components avoid interfering with one another any number of ways, "
-        "whether on a per component basis or using the entire app layout.\n"
-        "On a component level, components can move or be removed before they cause interference. "
-        "For example, a floating action button (FAB) can disappear or move off screen before a "
-        "user picks up a card, or it can move if a snackbar appears.\n"
-        "On the layout level, design your app layout to minimize opportunities for interference. "
-        "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
-        "when a user tries to pick up one of cards.\n\n"
-    </string>
-
-
+    <string name="large_text"></string>
 </resources>

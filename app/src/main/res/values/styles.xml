@@ -1,49 +1,75 @@
 <resources>
 
+    <!-- Stil für die gesamte App -->
     <style name="AppTheme" parent="BaseTheme" />
 
+    <!-- Basisthema für die App -->
     <style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item> 
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item> 
-        <item name="colorControlHighlight">@color/colorPrimaryLight</item> 
-        <item name="colorAccent">@color/colorAccent</item>
-    </style>
-
-    <!-- Setting theme. -->
-    <style name="AppThemeSetting" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+        <!-- Die Hauptfarbe der App-Leiste -->
         <item name="colorPrimary">@color/colorPrimary</item>
+        <!-- Die Farbe der Statusleiste -->
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <!-- Farbe für Hervorhebungen und Steuerelemente -->
+        <item name="colorControlHighlight">@color/colorPrimaryLight</item>
+        <!-- Akzentfarbe für UI-Elemente -->
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- Erscheinungsbild/Theme der App mit dunkler Action Bar -->
+    <style name="AppThemeSetting" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Passen Sie hier Ihr Erscheinungsbild an. -->
+        <!-- Die Hauptfarbe der App-Leiste -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <!-- Die Farbe der Statusleiste -->
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <!-- Akzentfarbe für UI-Elemente -->
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <!-- Überlagerung für die App-Action-Bar -->
     <style name="AppThemeSetting.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
+    <!-- Überlagerung für Popups in der App -->
     <style name="AppThemeSetting.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <!-- Stil für Checkbox-Widgets -->
     <style name="Checkbox" parent="@style/Widget.AppCompat.CompoundButton.CheckBox">
-        <item name="colorPrimary">@color/colorPrimary</item> 
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item> 
-        <item name="colorControlHighlight">@color/colorPrimaryLight</item> 
+        <!-- Die Hauptfarbe der App-Leiste -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <!-- Die Farbe der Statusleiste -->
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <!-- Farbe für Hervorhebungen und Steuerelemente -->
+        <item name="colorControlHighlight">@color/colorPrimaryLight</item>
+        <!-- Akzentfarbe für UI-Elemente -->
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- Stil für Rippel-Effekte in Weiß -->
     <style name="RippleStyleWhite">
+        <!-- Aktivieren des Rippel-Effekts -->
         <item name="mrl_rippleOverlay">true</item>
+        <!-- Farbe des Rippel-Effekts in Weiß -->
         <item name="mrl_rippleColor">#80FFFFFF</item>
+        <!-- Aktivieren des Rippel-Hover-Effekts -->
         <item name="mrl_rippleHover">true</item>
+        <!-- Transparenz des Rippel-Effekts -->
         <item name="mrl_rippleAlpha">0.2</item>
     </style>
 
+    <!-- Stil für Rippel-Effekte in Schwarz, abgeleitet von RippleStyleWhite -->
     <style name="RippleStyleBlack" parent="RippleStyleWhite">
+        <!-- Farbe des Rippel-Effekts in Schwarz -->
         <item name="mrl_rippleColor">#8096989A</item>
     </style>
 
-    <style name="schriftart">
-        <item name="android:textSize">16sp</item> <!-- Hier die gewünschte Textgröße festlegen -->
-        <item name="android:textColor">@android:color/black</item> <!-- Hier die gewünschte Textfarbe festlegen -->
-        <item name="android:fontFamily">sans-serif</item> <!-- Hier die gewünschte Schriftart festlegen -->
+    <!-- Stil für Textelemente -->
+    <style name="Schriftart">
+        <!-- Textgröße -->
+        <item name="android:textSize">16sp</item>
+        <!-- Textfarbe -->
+        <item name="android:textColor">@android:color/black</item>
+        <!-- Schriftart -->
+        <item name="android:fontFamily">sans-serif</item>
     </style>
-
 
 </resources>

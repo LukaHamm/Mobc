@@ -25,28 +25,6 @@ public class RestAdapter {
      * @return Eine API-Instanz, um API-Anfragen zu erstellen.
      */
 
-    public static API createAPI() {
-
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(BuildConfig.DEBUG ? Level.BODY : Level.NONE);
-
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .connectTimeout(5, TimeUnit.SECONDS)
-                .writeTimeout(10, TimeUnit.SECONDS)
-                .readTimeout(30, TimeUnit.SECONDS)
-                .addInterceptor(logging)
-                .cache(null)
-                .build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(AppConfig.general.web_url)
-                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create()))
-                .client(okHttpClient)
-                .build();
-
-        return retrofit.create(API.class);
-    }
-
     public static API createMobcApi (){
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(BuildConfig.DEBUG ? Level.BODY : Level.NONE);
@@ -77,31 +55,4 @@ public class RestAdapter {
     }
 
 
-
-    /**
-     * Erstellt eine spezielle kürzere Retrofit-Instanz für die GCM-Registrierung.
-     * Verwendet eine kürzere Verbindungstimeout-Dauer, um schneller eine Registrierung durchzuführen.
-     * @return Eine API-Instanz, um API-Anfragen für die GCM-Registrierung durchzuführen.
-     */
-    public static API createShortAPI() {
-
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(BuildConfig.DEBUG ? Level.BODY : Level.NONE);
-
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .connectTimeout(2, TimeUnit.SECONDS)
-                .writeTimeout(2, TimeUnit.SECONDS)
-                .readTimeout(2, TimeUnit.SECONDS)
-                .addInterceptor(logging)
-                .cache(null)
-                .build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(AppConfig.general.web_url)
-                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().setLenient().create()))
-                .client(okHttpClient)
-                .build();
-
-        return retrofit.create(API.class);
-    }
 }

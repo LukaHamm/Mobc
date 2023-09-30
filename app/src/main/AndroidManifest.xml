@@ -3,6 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="GoogleAppIndexingWarning">
 
+    <!-- Permission für dateizugriff-->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -69,15 +73,7 @@
         <activity
             android:name=".activity.ActivityFullScreenImage"
             android:exported="false" />
-        <activity
-            android:name=".activity.ActivitySearch"
-            android:exported="false" />
-        <activity
-            android:name=".activity.ActivityNewsInfo"
-            android:exported="false" />
-        <activity
-            android:name=".activity.ActivityNewsInfoDetails"
-            android:exported="false" /> <!-- This meta-data tag is required to use Google Play Services. -->
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" /> <!-- Add Google Map Library -->

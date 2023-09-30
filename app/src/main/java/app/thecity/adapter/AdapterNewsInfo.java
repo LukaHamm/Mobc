@@ -77,7 +77,6 @@ public class AdapterNewsInfo extends RecyclerView.Adapter<RecyclerView.ViewHolde
         public OriginalViewHolder(View v) {
             super(v);
             title = (TextView) v.findViewById(R.id.title);
-            brief_content = (TextView) v.findViewById(R.id.brief_content);
             image = (ImageView) v.findViewById(R.id.image);
             lyt_parent = (LinearLayout) v.findViewById(R.id.lyt_parent);
         }
@@ -104,13 +103,10 @@ public class AdapterNewsInfo extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         RecyclerView.ViewHolder vh;
-        if (viewType == VIEW_ITEM) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_info, parent, false);
-            vh = new OriginalViewHolder(v);
-        } else {
+
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_loading, parent, false);
             vh = new ProgressViewHolder(v);
-        }
+
         return vh;
     }
 

@@ -7,8 +7,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -38,14 +36,10 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 import java.util.List;
 
-import app.thecity.AppConfig;
 import app.thecity.R;
 import app.thecity.adapter.AdapterImageList;
-
-import app.thecity.connection.RestAdapter;
 import app.thecity.connection.callbacks.CallbackPlaceDetails;
 import app.thecity.data.Constant;
-import app.thecity.data.DatabaseHandler;
 import app.thecity.data.SharedPref;
 import app.thecity.data.ThisApplication;
 import app.thecity.model.Images;
@@ -96,7 +90,7 @@ public class ActivityPlaceDetail extends AppCompatActivity {
     private WebView description = null;
     private View parent_view = null;
     private GoogleMap googleMap;
-    private DatabaseHandler db;
+
 
     private boolean onProcess = false;
     private boolean isFromNotif = false;
@@ -115,7 +109,6 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         setContentView(R.layout.activity_place_details);
         parent_view = findViewById(android.R.id.content);
 
-        db = new DatabaseHandler(this);
         // animation transition --> App Bas layout siehe Place Details in App
         ViewCompat.setTransitionName(findViewById(R.id.app_bar_layout), EXTRA_OBJ);
 
@@ -131,33 +124,14 @@ public class ActivityPlaceDetail extends AppCompatActivity {
                 Tools.displayImage(this, (ImageView) findViewById(R.id.image), Constant.getURLimgPlace(place.image));
             }
 
-        // Methode zum Steuern des Favoriten-Buttons
-        favAktualisieren();
+
 
         // Konfiguration der Toolbar und Initialisierung der Google Map
         setupToolbar(place.name == null ? "" : place.name);
         initMap();
 
 
-        // Abfolge wenn FavouriteButton geklickt wird
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Überprüfen, ob der aktuelle Ort in den Favoriten existiert + Nachricht
-                // ThisApplication... =  Analyse-Tracking "FAVORITES" Aktionstyp (Hinzufügen oder Entfernen) und der Name des Ortes als Parameter übergeben werden
-                if (db.isFavoritesExist(place.place_id)) {
-                    db.deleteFavorites(place.place_id);
-                    Snackbar.make(parent_view, place.name + " " + getString(R.string.remove_favorite), Snackbar.LENGTH_SHORT).show();
-                    //ThisApplication.getInstance().trackEvent(Constant.Event.FAVORITES.name(), "REMOVE", place.name);
-                } else {
-                    db.addFavorites(place.place_id);
-                    Snackbar.make(parent_view, place.name + " " + getString(R.string.add_favorite), Snackbar.LENGTH_SHORT).show();
-                    //ThisApplication.getInstance().trackEvent(Constant.Event.FAVORITES.name(), "ADD", place.name);
-                }
-                // Aktualisiere das Symbol des FloatingActionButton (fab) basierend auf den Favoritenstatus
-                favAktualisieren();
-            }
-        });
+
 
         // for system bar in lollipop
         Tools.systemBarLolipop(this);
@@ -214,8 +188,7 @@ public class ActivityPlaceDetail extends AppCompatActivity {
             ((TextView) findViewById(R.id.distance)).setText(Tools.getFormatedDistance(distance));
         }
 
-        // Zeige die Bildergalerie des Ortes anhand der Bilder in der Datenbank
-        setImageGallery(db.getListImageByPlaceId(p.place_id));
+
     }
 
     /*
@@ -224,7 +197,6 @@ public class ActivityPlaceDetail extends AppCompatActivity {
      */
     @Override
     protected void onResume() {
-        loadPlaceData();
         if (description != null) description.onResume();
         super.onResume();
     }
@@ -289,17 +261,7 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         startActivity(openImageIntent);
     }
 
-    /*
-      Ändert das Symbol des FloatingActionButton (fab) basierend auf dem Vorhandensein
-      des Orts in der Favoritenliste.
-     */
-    private void favAktualisieren() {
-        if (db.isFavoritesExist(place.place_id)) {
-            fab.setImageResource(R.drawable.ic_nav_favorites);
-        } else {
-            fab.setImageResource(R.drawable.ic_nav_favorites_outline);
-        }
-    }
+
 
     // Konfiguriert die Toolbar und CollapsingToolbarLayout und zeigt den Namen des Ortes an.
     private void setupToolbar(String name) {
@@ -349,27 +311,7 @@ public class ActivityPlaceDetail extends AppCompatActivity {
     }
 
 
-    // Erstellt das Optionsmenü in der Aktionsleiste.
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_activity_details, menu);
-        return true;
-    }
 
-    // Reagiert auf Klicks auf die Menüelemente,  das Teilen des Ortes oder zurücktaste.
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            backAction();
-            return true;
-        } else if (id == R.id.action_share) {
-            if (!place.isDraft()) {
-                Tools.methodShare(ActivityPlaceDetail.this, place);
-            }
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
     // Initialisiert die Google Map und konfiguriert die Kartenansicht.
     private void initMap() {
@@ -459,22 +401,7 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         finish();
     }
 
-    /*
-      Lädt die Ortsdaten und zeigt sie an. Wenn der Ort noch nicht in der Datenbank gespeichert ist,
-      wird versucht, die Daten von der API abzurufen.
-     */
-    private void loadPlaceData() {
-        place = db.getPlace(place.place_id);
-        if (place.isDraft()) {
-            if (Tools.cekConnection(this)) {
-                requestDetailsPlace(place.place_id);
-            } else {
-                onFailureRetry(getString(R.string.no_internet));
-            }
-        } else {
-            displayData(place);
-        }
-    }
+
 
     // Methode zum Abrufen der Detaildaten eines Ortes von der API.
     private void requestDetailsPlace(int place_id) {
@@ -489,7 +416,7 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         showProgressbar(true);
 
         // Erstelle einen API-Aufruf für die Detaildaten des Ortes
-        callback = RestAdapter.createAPI().getPlaceDetails(place_id);
+        //callback = RestAdapter.createMobcApiAPI().getPlaceDetails(place_id);
         // Führe den API-Aufruf aus
         callback.enqueue(new retrofit2.Callback<CallbackPlaceDetails>() {
             @Override
@@ -498,7 +425,6 @@ public class ActivityPlaceDetail extends AppCompatActivity {
                 CallbackPlaceDetails resp = response.body();
                 if (resp != null) {
                     // Aktualisiere die Ortsdaten in der Datenbank und zeige die Daten verzögert an
-                    place = db.updatePlace(resp.place);
                     displayDataWithDelay(place);
                 } else {
                     // Zeige eine Fehlermeldung an, wenn die Antwort leer ist
@@ -548,12 +474,7 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         showProgressbar(false);
         onProcess = false;
         snackbar = Snackbar.make(parent_view, msg, Snackbar.LENGTH_INDEFINITE);
-        snackbar.setAction(R.string.RETRY, new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loadPlaceData();
-            }
-        });
+
         snackbar.show();
         retryDisplaySnackbar();
     }

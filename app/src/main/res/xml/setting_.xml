@@ -1,0 +1,32 @@
+<PreferenceScreen xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:ignore="MissingDefaultResource">
+
+
+
+    <PreferenceCategory
+        android:key="@string/pref_category_display"
+        android:title="@string/pref_category_display">
+
+        <Preference
+            android:key="@string/pref_key_theme"
+            android:title="@string/pref_title_theme" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_category_other">
+        <Preference
+            android:key="key_dev"
+            android:summary="@string/developer_name"
+            android:title="@string/pref_title_dev_name" />
+        <Preference
+            android:summary="@string/copyright"
+            android:title="@string/pref_title_copyright" />
+        <Preference
+            android:key="@string/pref_title_term"
+            android:title="@string/pref_title_term" />
+        <Preference
+            android:key="key_about"
+            android:title="@string/pref_title_about" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

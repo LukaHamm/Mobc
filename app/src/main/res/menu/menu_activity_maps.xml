@@ -5,14 +5,6 @@
     <group android:checkableBehavior="single">
 
             <item
-                android:id="@+id/nav_all"
-                android:title="@string/title_nav_all"
-                app:showAsAction="never" />
-            <item
-                android:id="@+id/nav_favorites"
-                android:title="@string/title_nav_fav"
-                app:showAsAction="never"/>
-            <item
                 android:id="@+id/nav_ownplaces"
                 android:title="@string/title_nav_ownplaces"
                 app:showAsAction="never" />

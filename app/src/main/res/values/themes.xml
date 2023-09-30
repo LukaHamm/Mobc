@@ -1,3 +1,8 @@
+<!-- Diese XML-Datei definiert drei verschiedene Stile für eine Android-App. 
+     "AppTheme.NoActionBar" deaktiviert die Action Bar und blendet den Aktivitätstitel aus.
+     "AppTheme.AppBarOverlay" wird wahrscheinlich als Overlay-Stil für die Action Bar verwendet.
+     "AppTheme.PopupOverlay" wird wahrscheinlich als Overlay-Stil für Popup-Fenster oder Dialoge verwendet.
+     Diese Stile können in der App verwendet werden, um das Erscheinungsbild und Verhalten anzupassen. -->
 <resources>
 
     <style name="AppTheme.NoActionBar">

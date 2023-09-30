@@ -195,7 +195,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-light"
                 android:padding="@dimen/spacing_large"
-                android:text="@string/description_title"
+                android:text="Beschreibung:"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 android:textColor="@color/material_grey_800"
                 android:id="@+id/textView2" />

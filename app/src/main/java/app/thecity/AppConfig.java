@@ -24,8 +24,7 @@ public class AppConfig extends AppConfigExt implements Serializable {
     /* Konfiguration für die allgemeine Anwendung */
     public static class General implements Serializable {
 
-        /* Bearbeiten Sie WEB_URL mit Ihrer URL. Stellen Sie sicher, dass am Ende der URL ein Schrägstrich ('/') vorhanden ist. */
-        public String web_url = "https://demo.dream-space.web.id/the_city/";
+
 
         public String web_url_Mobc = "https://grumpy-calf-jacket.cyclic.cloud/";
 

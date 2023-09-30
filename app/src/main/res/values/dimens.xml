@@ -1,9 +1,9 @@
 <resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
+    <!-- Standard-Bildschirmränder gemäß den Android Design-Richtlinien. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <!--genaral spacing-->
+    <!-- Allgemeine Abstände -->
     <dimen name="spacing_xsmall">2dp</dimen>
     <dimen name="spacing_small">3dp</dimen>
     <dimen name="spacing_medium">5dp</dimen>
@@ -15,30 +15,42 @@
     <dimen name="spacing_xmlarge">40dp</dimen>
     <dimen name="spacing_xxlarge">50dp</dimen>
 
+    <!-- Erhebung (Elevation) für Karten und UI-Elemente -->
     <dimen name="elevation_card">1dp</dimen>
     <dimen name="card_corner_radius">3dp</dimen>
     <dimen name="elevation_low">9dp</dimen>
     <dimen name="elevation_high">12dp</dimen>
+
+    <!-- Höhe der Statusleiste -->
     <dimen name="status_bar_height">25dp</dimen>
+
+    <!-- Randabstand für FAB (Floating Action Button) -->
     <dimen name="fab_margin">16dp</dimen>
 
-    <!--for item recycle-->
+    <!-- Abmessungen für Listenelemente -->
     <dimen name="item_place_width">180dp</dimen>
     <dimen name="item_place_tag_height">45dp</dimen>
 
-    <!--for drawer menu-->
+    <!-- Abmessungen für das Drawer-Menü -->
     <dimen name="drawer_menu_width">250dp</dimen>
 
+    <!-- Größe des Icons im Splash Screen -->
     <dimen name="splash_icon_size">230dp</dimen>
     <dimen name="text_desc_width">210dp</dimen>
 
-    <!--for detail activity-->
+    <!-- Abmessungen für die Detailansicht -->
     <dimen name="image_toolbar_height">270dp</dimen>
     <dimen name="collapse_toolbar_height">110dp</dimen>
 
+    <!-- Höhe des Lade-Icons -->
     <dimen name="icon_loading_height">150dp</dimen>
-    <dimen name="map_marker_size">40dp</dimen>
-    <dimen name="app_bar_height">180dp</dimen>
-    <dimen name="text_margin">16dp</dimen>
 
+    <!-- Größe des Kartenmarkers -->
+    <dimen name="map_marker_size">40dp</dimen>
+
+    <!-- Höhe der App-Leiste -->
+    <dimen name="app_bar_height">180dp</dimen>
+
+    <!-- Randabstand für Textelemente -->
+    <dimen name="text_margin">16dp</dimen>
 </resources>

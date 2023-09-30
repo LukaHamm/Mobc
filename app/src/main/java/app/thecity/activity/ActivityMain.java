@@ -11,7 +11,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.IdRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,9 +24,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
-import app.thecity.AppConfig;
 import app.thecity.R;
-import app.thecity.data.DatabaseHandler;
 import app.thecity.data.SharedPref;
 import app.thecity.fragment.FragmentCategory;
 import app.thecity.model.User;
@@ -44,7 +41,7 @@ public class ActivityMain extends AppCompatActivity {
     private FloatingActionButton fab;
     private FloatingActionButton newPlace;
     private NavigationView navigationView;
-    private DatabaseHandler db;
+
     private SharedPref sharedPref;
     private TextView usernameNav ;
     private RelativeLayout nav_header_lyt;
@@ -77,8 +74,6 @@ public class ActivityMain extends AppCompatActivity {
         // Initialisiere die Schwebende NewPlace (Floating Action Button)
         newPlace = (FloatingActionButton) findViewById(R.id.newPlace);
 
-        // Initialisiere die Datenbank-Handler-Klasse
-        db = new DatabaseHandler(this);
         // Initialisiere die gemeinsamen Einstellungen
         sharedPref = new SharedPref(this);
 
@@ -94,15 +89,7 @@ public class ActivityMain extends AppCompatActivity {
         // Wähle standardmäßig das erste Element im Seitenmenü aus
         onItemSelected(R.id.nav_all, getString(R.string.title_nav_all));
 
-        // Füge einen Klicklistener zur Schwebenden Suchbutton hinzu
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Öffne die Aktivität für die Suche
-                Intent searchIntent = new Intent(ActivityMain.this, ActivitySearch.class);
-                startActivity(searchIntent);
-            }
-        });
+
 
         // Füge einen Klicklistener zur Schwebenden Create_Place Button hinzu
         newPlace.setOnClickListener(new View.OnClickListener() {
@@ -164,8 +151,6 @@ public class ActivityMain extends AppCompatActivity {
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
             public void onDrawerOpened(View drawerView) {
-                // Aktualisiere die Anzahl der Favoriten im Navigationselement, wenn die Schublade geöffnet wird
-                updateFavoritesCounter(navigationView, R.id.nav_favorites, db.getFavoritesSize());
                 super.onDrawerOpened(drawerView);
             }
         };
@@ -184,33 +169,12 @@ public class ActivityMain extends AppCompatActivity {
             }
         });
 
-        // Entferne das Navigationsmenüelement "News Info", wenn es deaktiviert ist
-        if (!AppConfig.general.enable_news_info) navigationView.getMenu().removeItem(R.id.nav_news);
 
-        // Setze das Aussehen des Navigationskopfbereichs
+        // Setze das Aussehen des Navigationskopfbereichs plus die Farbe die in Settings ausgewählt
         View nav_header = navigationView.getHeaderView(0);
         nav_header_lyt = (RelativeLayout) nav_header.findViewById(R.id.nav_header_lyt);
         nav_header_lyt.setBackgroundColor(Tools.colorBrighter(sharedPref.getThemeColorInt()));
 
-        // Klick Listener Menükopf Einstellungen
-        (nav_header.findViewById(R.id.menu_nav_setting)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Starte die Einstellungsaktivität bei Klick auf das Einstellungen-Element im Navigationskopf
-                Intent openSettingsIntent = new Intent(getApplicationContext(), ActivitySetting.class);
-                startActivity(openSettingsIntent);
-            }
-        });
-
-        // Klick Listener Menükopf Karte
-        (nav_header.findViewById(R.id.menu_nav_map)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Starte die Kartenaktivität bei Klick auf das Karten-Element im Navigationskopf
-                Intent openMapIntent = new Intent(getApplicationContext(), ActivityMaps.class);
-                startActivity(openMapIntent);
-            }
-        });
     }
 
     /*
@@ -246,8 +210,6 @@ public class ActivityMain extends AppCompatActivity {
         if (id == R.id.action_settings) {
             Intent openSettingsIntentSideBar = new Intent(getApplicationContext(), ActivitySetting.class);
             startActivity(openSettingsIntentSideBar);
-        } else if (id == R.id.action_about) {
-            Tools.aboutAction(ActivityMain.this);
         }
 
         return super.onOptionsItemSelected(item);
@@ -272,15 +234,7 @@ public class ActivityMain extends AppCompatActivity {
             fragment = new FragmentCategory();
             bundle.putInt(FragmentCategory.TAG_CATEGORY, -1);
             actionBar.setTitle(title);
-        } else if (id == R.id.nav_favorites) {
-            //Favourites
-            fragment = new FragmentCategory();
-            bundle.putInt(FragmentCategory.TAG_CATEGORY, -2);
-            actionBar.setTitle(title);
-        } else if (id == R.id.nav_news) {
-            // News Info
-            Intent openNewsInfosIntent = new Intent(this, ActivityNewsInfo.class);
-            startActivity(openNewsInfosIntent);
+
         } else if (id == R.id.nav_ownplaces) {
             fragment = new FragmentCategory();
             bundle.putInt(FragmentCategory.TAG_CATEGORY, categories[10]);
@@ -347,7 +301,7 @@ public class ActivityMain extends AppCompatActivity {
      */
     @Override
     protected void onResume() {
-        updateFavoritesCounter(navigationView, R.id.nav_favorites, db.getFavoritesSize());
+
         if (actionBar != null) {
             Tools.setActionBarColor(this, actionBar);
             // for system bar in lollipop
@@ -370,14 +324,6 @@ public class ActivityMain extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         active = false;
-    }
-
-    /*
-    Diese Methode wird verwendet, um die Anzahl der Favoriten im Navigationsmenü anzuzeigen.
-     */
-    private void updateFavoritesCounter(NavigationView nav, @IdRes int itemId, int count) {
-        TextView view = (TextView) nav.getMenu().findItem(itemId).getActionView().findViewById(R.id.counter);
-        view.setText(String.valueOf(count));
     }
 
 

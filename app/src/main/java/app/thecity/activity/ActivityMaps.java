@@ -35,7 +35,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
@@ -46,7 +45,6 @@ import java.util.List;
 import app.thecity.AppConfig;
 import app.thecity.R;
 import app.thecity.data.Constant;
-import app.thecity.data.DatabaseHandler;
 import app.thecity.model.Category;
 import app.thecity.model.Place;
 import app.thecity.utils.PermissionUtil;
@@ -58,7 +56,7 @@ public class ActivityMaps extends AppCompatActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     private Toolbar toolbar;
     private ActionBar actionBar;
-    private DatabaseHandler db;
+
     private ClusterManager<Place> mClusterManager;
     private View parent_view;
     private int cat[];
@@ -99,7 +97,7 @@ public class ActivityMaps extends AppCompatActivity implements OnMapReadyCallbac
         ext_place = (Place) getIntent().getSerializableExtra(EXTRA_OBJ);
         isSinglePlace = (ext_place != null);
 
-        db = new DatabaseHandler(this);
+
         initMapFragment();
         initToolbar();
 
@@ -137,7 +135,6 @@ public class ActivityMaps extends AppCompatActivity implements OnMapReadyCallbac
             mClusterManager.setRenderer(placeMarkerRenderer);
             this.mMap.setOnCameraIdleListener(mClusterManager);
 
-            loadClusterManager(db.getAllPlace());
         }
         mMap.animateCamera(location);
         mMap.setOnInfoWindowClickListener(marker -> {
@@ -290,7 +287,6 @@ public class ActivityMaps extends AppCompatActivity implements OnMapReadyCallbac
             return true;
         } else {
             String category_text;
-            if (item.getItemId() != R.id.menu_nav_map) {
                 category_text = item.getTitle().toString();
                 int itemId = item.getItemId();
                 if (itemId == R.id.nav_all) {
@@ -309,8 +305,7 @@ public class ActivityMaps extends AppCompatActivity implements OnMapReadyCallbac
 
                 clearViewPager();
 
-                // get category object when menu click
-                cur_category = db.getCategory(cat_id);
+
 
                 if (isSinglePlace) {
                     isSinglePlace = false;
@@ -318,23 +313,16 @@ public class ActivityMaps extends AppCompatActivity implements OnMapReadyCallbac
                     mMap.setOnCameraIdleListener(mClusterManager);
                 }
 
-                List<Place> places = db.getAllPlaceByCategory(cat_id);
-                loadClusterManager(places);
-                if (places.size() == 0) {
-                    Snackbar.make(parent_view, getString(R.string.no_item_at) + " " + item.getTitle().toString(), Snackbar.LENGTH_LONG).show();
-                }
+
                 placeMarkerRenderer = new PlaceMarkerRenderer(this, mMap, mClusterManager);
                 initClusterWithSlider();
                 mClusterManager.setRenderer(placeMarkerRenderer);
 
                 actionBar.setTitle(category_text);
 
-                showSlider = places.size() != 0;
                 toggleViewPager(showSlider);
-                if (places.size() != 0) {
-                    initViewPager();
-                }
-            }
+
+
         }
         return super.onOptionsItemSelected(item);
     }
