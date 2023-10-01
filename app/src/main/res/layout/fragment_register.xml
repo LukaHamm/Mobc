@@ -65,7 +65,7 @@
         android:id="@+id/backToLoginButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Schon Registrier? Registrieren"
+        android:text="Schon Registrier? Ab zum Login!"
         android:gravity="center"
         android:clickable="true" />
 </LinearLayout>
