@@ -8,6 +8,11 @@ public enum ActivityType {
         this.categoryId = categoryid;
     }
 
+    /**
+     * Erstellend des Enums in Abhängigkeit von der Kategorie-Id
+     * @param categoryId
+     * @return
+     */
     public static ActivityType getbyCategoryId(int categoryId){
         for (ActivityType activityType : values()){
             if (activityType.categoryId == categoryId){

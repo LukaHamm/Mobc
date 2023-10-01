@@ -109,7 +109,9 @@ public class ActivityNewPlace extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-        // Klickereignis für den Spinner
+        /**
+         * Clicklistener für das Dropdown-Menü zum Setzen der Kategorie
+         */
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
@@ -122,7 +124,10 @@ public class ActivityNewPlace extends AppCompatActivity {
             }
         });
 
-        // Klickereignis für den "Bild auswählen"-Button
+        /**
+         * Hier wird der Clicklistener für das Auswählen einer neuen Aktivität initialisiert
+         * Es wird die Aktivität für das Öffnen der Bildergalerie aufgerufen
+         */
         selectImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -138,7 +143,9 @@ public class ActivityNewPlace extends AppCompatActivity {
             }
         });
 
-        // Klickereignis für den "Ort speichern"-Button
+        /**
+         * Hier wird ein ClickListener für das Anlegen einer neuen Aktivität eingebaut
+         */
         saveNewPlaceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -148,7 +155,7 @@ public class ActivityNewPlace extends AppCompatActivity {
     }
 
     /**
-     * Bewertet die ausgewählte Kategorie im Dropdown-Menü und setzt die entsprechende Aktivitätstyp.
+     * Der User kann über das Dropdown die entsprechende Aktivität setzen abhängig vom übergebenen String wird das Enum ActivityType gesetzt.
      *
      * @param selectedItem Der ausgewählte Eintrag im Dropdown-Menü.
      */
@@ -179,7 +186,8 @@ public class ActivityNewPlace extends AppCompatActivity {
     }
 
     /**
-     * Sendet die erstellte Aktivität an den Server, einschließlich Bilder, falls vorhanden.
+     * Sendet die erstellte Aktivität an den Server
+     * Die Bilder werden im Erfolgsfall mittels der Methode uploadImage übertragen
      */
     private void postActivity() {
         User user = Tools.readuser(getApplicationContext());
@@ -188,7 +196,7 @@ public class ActivityNewPlace extends AppCompatActivity {
         Location location = new Location(curLocation.latitude, curLocation.longitude, "");
         Activity activity = new Activity(titleEditText.getText().toString(), selectedCategoryType.name().toString(), null, descriptionEditText.getText().toString(), null, location, addressEditText.getText().toString(), null);
 
-        Call<Activity> callPostActivity = RestAdapter.createImageApi().postActivity(header, activity);
+        Call<Activity> callPostActivity = RestAdapter.createMobcApi().postActivity(header, activity);
         callPostActivity.enqueue(new Callback<Activity>() {
             @Override
             public void onResponse(Call<Activity> call, Response<Activity> response) {

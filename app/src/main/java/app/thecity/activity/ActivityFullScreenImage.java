@@ -31,7 +31,7 @@ public class ActivityFullScreenImage extends AppCompatActivity {
      * Layout "activity_full_screen_image" erstellt. Dabei werden die übergebenen Daten aus dem Intent
      * verarbeitet, um die gewählte Bildposition und die Liste der Bilder zu erhalten.
      * Die entsprechenden Daten werden in den entsprechenden Ansichten angezeigt, und der ViewPager
-     * wird konfiguriert, um die Bilder anzuzeigen!
+     * wird konfiguriert, um die Bilder anzuzeigen und durchzuscrollen!
      * @param savedInstanceState Das Bundle-Objekt, das den Zustand der Aktivität enthält.
      */
     @Override

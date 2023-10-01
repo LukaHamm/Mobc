@@ -24,8 +24,12 @@ public abstract class PermissionUtil {
     };
 
 
+    /**
+     * Erhalte die verweigerten Berechtigungen
+     * @param act
+     * @return
+     */
 
-    // Erhalte die verweigerten Berechtigungen
     public static String[] getDeniedPermission(Activity act) {
         List<String> permissions = new ArrayList<>();
         for (int i = 0; i < PERMISSION_ALL.length; i++) {
@@ -41,7 +45,11 @@ public abstract class PermissionUtil {
         return permissions.toArray(new String[permissions.size()]);
     }
 
-    // Überprüfe und fordere die Benachrichtigungsberechtigung an
+
+    /**
+     * Überprüfe und fordere die Benachrichtigungsberechtigung an
+     * @param act
+     */
     public static void checkAndRequestNotification(Activity act) {
         SharedPref sharedPref = new SharedPref(act);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -55,13 +63,24 @@ public abstract class PermissionUtil {
     }
 
 
-    // Überprüfe, ob die Berechtigung erteilt wurde
+
+    /**
+     * Überprüfe, ob die Berechtigung erteilt wurde
+     * @param ctx
+     * @param permission
+     * @return
+     */
     public static boolean isGranted(Context ctx, String permission) {
         if (!Tools.needRequestPermission()) return true;
         return (ctx.checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED);
     }
 
-    // Überprüfe, ob die Standortberechtigung erteilt wurde
+
+    /**
+     * Überprüfe, ob die Standortberechtigung erteilt wurde
+     * @param ctx
+     * @return
+     */
     public static boolean isLocationGranted(Context ctx) {
         return isGranted(ctx, Manifest.permission.ACCESS_FINE_LOCATION);
     }

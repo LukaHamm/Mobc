@@ -41,21 +41,14 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-/*
-    Diese Klasse mit dem Namen "AdapterPlaceGrid" ist ein RecyclerView-Adapter für die Anzeige einer
-    Rasteransicht von Orten (Places) in Android Studio. Der Adapter zeigt die Orte in einem Raster an
-    und ermöglicht das Klicken auf jeden Ort für weitere Aktionen. Er unterstützt auch das Laden
-    weiterer Elemente durch Scrollen (endloses Scrollen) in der Rasteransicht.
- */
+
 
 public class AdapterPlaceGrid extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final int VIEW_ITEM = 1;
     private final int VIEW_PROG = 0;
-    private boolean loading;
     private Context ctx;
     private List<Activity> items = new ArrayList<>();
-    private OnLoadMoreListener onLoadMoreListener;
     private OnItemClickListener onItemClickListener;
     private int lastPosition = -1;
     private boolean clicked = false;
@@ -69,20 +62,14 @@ public class AdapterPlaceGrid extends RecyclerView.Adapter<RecyclerView.ViewHold
         void onItemClick(View view, Activity viewModel);
     }
 
-    /*
-        Diese Methode wird verwendet, um einen "OnItemClickListener" für den Adapter zu setzen,
-        der aufgerufen wird, wenn ein Benutzer auf einen Ort in der Rasteransicht klickt.
+    /**
+        Ist der ClickListener für das Starten der Detailansicht
      */
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
 
-    /*
-        hält die Referenzen zu den Views, die jedes Element (Ort) in der RecyclerView repräsentieren.
-        Hier sind es ein TextView "title" für den Namen des Ortes, ein ImageView "image" für das
-        Bild des Ortes, ein LinearLayout "lyt_distance" für die Entfernungsinformationen (optional)
-        und ein MaterialRippleLayout "lyt_parent" für das Kachel-Layout des Ortes.
-     */
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public TextView title;
@@ -117,10 +104,10 @@ public class AdapterPlaceGrid extends RecyclerView.Adapter<RecyclerView.ViewHold
     public AdapterPlaceGrid(Context ctx, RecyclerView view, List<Activity> items) {
         this.ctx = ctx;
         this.items = items;
-        lastItemViewDetector(view);
+
     }
 
-    /*
+    /**
          Layout für jedes Element in der RecyclerView aufgeblasen (inflated) und ein ViewHolder erstellt,
          der die Views hält. Je nachdem, ob es sich um ein reguläres Element oder den Fortschrittsbalken
          handelt, wird der entsprechende ViewHolder zurückgegeben
@@ -138,11 +125,12 @@ public class AdapterPlaceGrid extends RecyclerView.Adapter<RecyclerView.ViewHold
         return vh;
     }
 
-    /*
+    /**
         Hier werden die Daten für jedes Element in der RecyclerView gebunden.
         Der reguläre ViewHolder zeigt die Informationen zum Ort an, fügt ein Klickereignis
         für "lyt_parent" hinzu, um den OnItemClickListener auszulösen, und wendet eine Animation
         auf das Element an, wenn es gebunden wird
+        Der OnclickListener wechselt zur Detailansicht und übergibt das Ort-Objekt
      */
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
@@ -191,16 +179,15 @@ public class AdapterPlaceGrid extends RecyclerView.Adapter<RecyclerView.ViewHold
 
 
 
-    /*
-        Methode gibt die Anzahl der Elemente in der Liste zurück. Sie wird vom RecyclerView verwendet,
-        um zu wissen, wie viele Elemente in der Rasteransicht angezeigt werden sollen
+    /**
+       @return Anzahl Orte
      */
     @Override
     public int getItemCount() {
         return items.size();
     }
 
-    /*
+    /**
         gibt den View-Typ für ein Element anhand seiner Position zurück. Abhängig davon, ob es sich
         um ein reguläres Element oder den Fortschrittsbalken handelt, wird der entsprechende
         View-Typ zurückgegeben
@@ -215,7 +202,7 @@ public class AdapterPlaceGrid extends RecyclerView.Adapter<RecyclerView.ViewHold
         return position;
     }
 
-    /*
+    /**
         Diese Methode wird verwendet, um eine Animation auf jedes Element in der Rasteransicht
         anzuwenden, wenn es gebunden wird. Dadurch wird ein Einblenden-Effekt für die Elemente
         erzeugt, wenn sie auf dem Bildschirm erscheinen.
@@ -229,42 +216,19 @@ public class AdapterPlaceGrid extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
-    /*
-        Methode wird verwendet, um weitere Daten (Orte) in die Liste einzufügen,
-        wenn beim endlosen Scrollen neue Elemente geladen werden. Sie aktualisiert die Anzeige,
-        um die neuen Elemente in der Rasteransicht anzuzeigen
+    /**
+     * Methode um die Listdaten zu altualisieren
+     * @param items
      */
     public void insertData(List<Activity> items) {
-        setLoaded();
         int positionStart = getItemCount();
         int itemCount = items.size();
         this.items.addAll(items);
         notifyItemRangeInserted(positionStart, itemCount);
     }
 
-    /*
-        Diese Methoden werden verwendet, um den Ladezustand des Adapters zu setzen. "setLoaded()"
-        gibt an, dass der Ladevorgang abgeschlossen ist, während "setLoading()" den Adapter in den
-        Lademodus versetzt und den Fortschrittsbalken hinzufügt
-     */
-    public void setLoaded() {
-        loading = false;
-        for (int i = 0; i < getItemCount(); i++) {
-            if (items.get(i) == null) {
-                items.remove(i);
-                notifyItemRemoved(i);
-            }
-        }
-    }
 
-    public void setLoading() {
-        if (getItemCount() != 0) {
-            this.items.add(null);
-            notifyItemInserted(getItemCount() - 1);
-        }
-    }
-
-    /*
+    /**
         Diese Methode wird verwendet, um die Liste von Orten zurückzusetzen.
         Sie wird normalerweise verwendet, wenn du eine neue Liste von Orten erhalten und
         anzeigen möchtest
@@ -274,50 +238,8 @@ public class AdapterPlaceGrid extends RecyclerView.Adapter<RecyclerView.ViewHold
         notifyDataSetChanged();
     }
 
-    /*
-        Diese Methode wird verwendet, um einen OnLoadMoreListener zu setzen, der aufgerufen wird,
-        wenn neue Elemente (Orte) geladen werden müssen
-     */
-    public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
-        this.onLoadMoreListener = onLoadMoreListener;
-    }
 
-    /*
-        Diese Methode erkennt das letzte sichtbare Element in der Rasteransicht,
-        um das endlose Scrollen zu aktivieren. Wenn das letzte Element sichtbar ist und
-        weitere Elemente geladen werden müssen, wird der OnLoadMoreListener aufgerufen
-     */
-    private void lastItemViewDetector(RecyclerView recyclerView) {
-        if (recyclerView.getLayoutManager() instanceof StaggeredGridLayoutManager) {
-            final StaggeredGridLayoutManager layoutManager = (StaggeredGridLayoutManager) recyclerView.getLayoutManager();
-            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    super.onScrolled(recyclerView, dx, dy);
-                    int lastPos = getLastVisibleItem(layoutManager.findLastVisibleItemPositions(null));
-                    if (!loading && lastPos == getItemCount() - 1 && onLoadMoreListener != null) {
-                        int current_page = getItemCount() / AppConfig.general.limit_loadmore;
-                        onLoadMoreListener.onLoadMore(current_page);
-                        loading = true;
-                    }
-                }
-            });
-        }
-    }
 
-    public interface OnLoadMoreListener {
-        void onLoadMore(int current_page);
-    }
 
-    /*
-        Diese Methode gibt die Position des letzten sichtbaren Elements in der Rasteransicht zurück.
-     */
-    private int getLastVisibleItem(int[] into) {
-        int last_idx = into[0];
-        for (int i : into) {
-            if (last_idx < i) last_idx = i;
-        }
-        return last_idx;
-    }
 
 }

@@ -45,7 +45,7 @@ public class AdapterImageList extends RecyclerView.Adapter<AdapterImageList.View
         }
     }
 
-    /*
+    /**
         Diese Methode wird verwendet, um einen "OnItemClickListener" für den Adapter zu setzen,
         der aufgerufen wird, wenn ein Benutzer auf ein Bild in der Liste klickt
      */
@@ -53,7 +53,7 @@ public class AdapterImageList extends RecyclerView.Adapter<AdapterImageList.View
         this.onItemClickListener = onItemClickListener;
     }
 
-    /*
+    /**
         Konstruktor dieses Adapters wird verwendet, um eine Instanz des Adapters zu erstellen
         und die erforderlichen Daten zu übergeben
      */
@@ -73,7 +73,7 @@ public class AdapterImageList extends RecyclerView.Adapter<AdapterImageList.View
         return vh;
     }
 
-    /*
+    /**
         Hier werden die Daten für jedes Element in der RecyclerView gebunden. Das Bild wird mit
         Hilfe der "Tools.displayImage"-Methode in die ImageView geladen. Außerdem wird ein
         Klickereignis für das "lyt_parent" (das Kachel-Layout) hinzugefügt, das den
@@ -93,9 +93,10 @@ public class AdapterImageList extends RecyclerView.Adapter<AdapterImageList.View
         });
     }
 
-    /*
+    /**
          Methode gibt die Anzahl der Elemente in der Liste zurück. Sie wird vom RecyclerView verwendet,
          um zu wissen, wie viele Elemente angezeigt werden sollen.
+     @return Anzahl der Bildelemente
      */
     @Override
     public int getItemCount() {

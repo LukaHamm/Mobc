@@ -29,7 +29,7 @@ public class ActivitySplash extends AppCompatActivity {
 
     /**
      * Diese Methode wird aufgerufen, wenn die Aktivität erstellt wird.
-     * Sie initialisiert die Ansichtskomponenten, zeigt den Splash-Screen an und führt die
+     * Sie initialisiert die Ansichtskomponenten, zeigt den Start-Screen an und führt die
      * Berechtigungsprüfung durch.
      */
     @Override
@@ -46,33 +46,16 @@ public class ActivitySplash extends AppCompatActivity {
             String[] permission = PermissionUtil.getDeniedPermission(this);
             if (permission.length != 0) {
                 requestPermissions(permission, 200);
-            } else {
-                requestRemoteConfig();
             }
-        } else {
-            requestRemoteConfig();
         }
-
+        startActivityMainDelay(false);
         // for system bar in lollipop
         Tools.systemBarLolipop(this);
 
         Tools.RTLMode(getWindow());
     }
 
-    /**
-     * Überprüft, ob Remote Config verwendet wird und ob eine Internetverbindung besteht. Falls ja,
-     * werden die Remote Config-Werte abgerufen und aktiviert. Andernfalls werden die Einstellungen
-     * aus den gespeicherten Präferenzen verwendet.
-     */
-    private void requestRemoteConfig() {
-        if (!AppConfig.USE_REMOTE_CONFIG || !Tools.cekConnection(this)) {
-            AppConfig.setFromSharedPreference();
-            startActivityMainDelay(false);
-            return;
-        }
-        Log.d("REMOTE_CONFIG", "requestRemoteConfig");
 
-    }
 
     /**
      * Verzögert den Start der Hauptaktivität (ActivityMain) um einen bestimmten Zeitraum,
@@ -104,7 +87,6 @@ public class ActivitySplash extends AppCompatActivity {
                 boolean rationale = shouldShowRequestPermissionRationale(perm);
                 sharedPref.setNeverAskAgain(perm, !rationale);
             }
-            requestRemoteConfig();
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }

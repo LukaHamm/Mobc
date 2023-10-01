@@ -41,7 +41,6 @@ import app.thecity.R;
 import app.thecity.adapter.AdapterComments;
 import app.thecity.adapter.AdapterImageList;
 import app.thecity.connection.RestAdapter;
-import app.thecity.connection.callbacks.CallbackPlaceDetails;
 import app.thecity.data.Constant;
 import app.thecity.data.SharedPref;
 import app.thecity.data.ThisApplication;
@@ -98,13 +97,12 @@ public class ActivityPlaceDetail extends AppCompatActivity {
 
     private Activity activityModel = null;
 
-    private WebView description = null;
+    private TextView description = null;
     private View parent_view = null;
     private GoogleMap googleMap;
 
     private boolean onProcess = false;
     private boolean isFromNotif = false;
-    private Call<CallbackPlaceDetails> callback;
     private View lyt_progress;
     private View lyt_distance;
     private float distance = -1;
@@ -122,7 +120,7 @@ public class ActivityPlaceDetail extends AppCompatActivity {
 
     /**
      * Initialisiert die Ansicht, die Toolbar und die Google Map, wenn die Aktivität erstellt wird.
-     *
+     * Hier wird der von der Hauptaktivität übergebene Ort entgegen genommen und in einer Instanzvariable gespeichert
      * @param savedInstanceState Ein Bundle-Objekt, das den Zustand der Aktivität enthält.
      */
     @Override
@@ -135,6 +133,7 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         adapterComments = new AdapterComments(getApplicationContext(),new ArrayList<>());
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         editText = findViewById(R.id.commentbody);
+        description = findViewById(R.id.description);
         button = findViewById(R.id.commenpostButton);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,18 +147,16 @@ public class ActivityPlaceDetail extends AppCompatActivity {
 
         // Hier wird der Place aus dem übergebenden Intent (vorherige Activity) extrahiert
         activityModel = (Activity) getIntent().getSerializableExtra(EXTRA_OBJ);
+        description.setText(activityModel.description);
         isFromNotif = getIntent().getBooleanExtra(EXTRA_NOTIF_FLAG, false);
 
         // Initialisierung von Views
-        //fab = (FloatingActionButton) findViewById(R.id.fab);
         lyt_progress = findViewById(R.id.lyt_progress);
         lyt_distance = findViewById(R.id.lyt_distance);
             if (activityModel.images != null && !activityModel.images.isEmpty()) {
                 Tools.displayImage(this, (ImageView) findViewById(R.id.image), Constant.getURLimgActivity(activityModel.images.get(0)));
             }
 
-        // Methode zum Steuern des Favoriten-Buttons
-        //favAktualisieren();
 
         // Konfiguration der Toolbar und Initialisierung der Google Map
         setupToolbar(activityModel.title == null ? "" : activityModel.title);
@@ -176,7 +173,7 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         fetchComments();
     }
     /**
-     * Diese Methode ruft Kommentare für die Aktivität von einem Remote-Server ab und aktualisiert die Benutzeroberfläche
+     * Diese Methode ruft Kommentare für die Aktivität vonm Server ab und aktualisiert die Benutzeroberfläche
      * mit den abgerufenen Kommentaren, wenn die Anfrage erfolgreich ist.
      */
     private void fetchComments() {
@@ -201,32 +198,32 @@ public class ActivityPlaceDetail extends AppCompatActivity {
     }
 
     /**
-     * Diese Methode postet einen neuen Kommentar zur Aktivität auf einem Remote-Server und aktualisiert die
+     * Diese Methode postet einen neuen Kommentar zur Aktivität an den Server und aktualisiert die
      * Kommentarliste, wenn der Postvorgang erfolgreich ist.
      */
     private void postComment() {
-        // Holen Sie den eingegebenen Text aus dem EditText-Feld
+        // Holen des eingegebenen Text aus dem EditText-Feld
         String text = editText.getText().toString();
         editText.setText("");
         editText.clearFocus();
 
-        // Lesen Sie den Benutzer aus der Anwendung
+        // Lesen des Benutzers aus der Anwendung
         User user = Tools.readuser(getApplicationContext());
 
-        // Erstellen Sie einen Authentifizierungs-Header für die Anfrage
+        // Erstellen eines Authentifizierungs-Headers für die Anfrage
         String header = "bearer " + user.token;
 
         // Überprüfen, ob der eingegebene Text nicht leer ist
         if (text != null && !text.isEmpty()) {
-            // Erstellen Sie ein Evaluation-Objekt mit dem eingegebenen Text
+            // Erstellen des Evaluation-Objekts mit dem eingegebenen Text
             Evaluation evaluation = new Evaluation(text, "", 0, null, "");
 
-            // Erstellen Sie eine Anfrage an den Server, um den Kommentar zu posten
+            // Erstellen der Anfrage an den Server, um den Kommentar zu posten
             Call<ResponseBody> callPostComment = RestAdapter.createMobcApi().postCommentsToActivity(header, activityModel._id, evaluation);
             callPostComment.enqueue(new retrofit2.Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    // Wenn der Postvorgang erfolgreich ist, rufen Sie die Methode fetchComments auf, um die Kommentare zu aktualisieren
+                    // Wenn der Postvorgang erfolgreich ist, wird die Methode fetchComments aufgerufen, um die Kommentare zu aktualisieren
                     fetchComments();
                 }
 
@@ -243,7 +240,7 @@ public class ActivityPlaceDetail extends AppCompatActivity {
      * Diese Methode zeigt die Daten des angegebenen Place-Objekts an, einschließlich Name, Adresse, Telefon,
      * Website, Beschreibung und Bildergalerie.
      *
-     * @param activity Das Place-Objekt, dessen Daten angezeigt werden sollen.
+     * @param activity Das Ort-Objekt, dessen Daten angezeigt werden sollen.
      */
     private void displayData(Activity activity) {
         // Konfiguriere die Toolbar mit dem Ortsnamen
@@ -257,26 +254,6 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         // Setze die Adresse, Telefonnummer und Website des Ortes in den entsprechenden TextViews
         ((TextView) findViewById(R.id.address)).setText(activity.address);
 
-        // Zeige die Beschreibung des Ortes in einer WebView an
-        description = (WebView) findViewById(R.id.description);
-        String html_data = "<style>img{max-width:100%;height:auto;} iframe{width:100%;}</style> ";
-        html_data += activity.description;
-        description.getSettings().setBuiltInZoomControls(true);
-        description.setBackgroundColor(Color.TRANSPARENT);
-        description.setWebChromeClient(new WebChromeClient());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            description.loadDataWithBaseURL(null, html_data, "text/html; charset=UTF-8", "utf-8", null);
-        } else {
-            description.loadData(html_data, "text/html; charset=UTF-8", null);
-        }
-        description.getSettings().setJavaScriptEnabled(true);
-
-        // Deaktiviere das Scrollen in der Beschreibungsansicht durch Berührung
-        description.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                return (event.getAction() == MotionEvent.ACTION_MOVE);
-            }
-        });
 
         // Setze die Entfernungsinformation des Ortes in den TextView für die Entfernung
         distance = activityModel.distance;
@@ -291,19 +268,12 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         setImageGallery(activityModel.images);
     }
 
-    /**
-     * Diese Methode wird aufgerufen, wenn die Aktivität wieder aufgenommen wird. Hier wird loadPlaceData()
-     * aufgerufen, um die Daten des Ortes anzuzeigen.
-     */
-    @Override
-    protected void onResume() {
-        if (description != null) description.onResume();
-        super.onResume();
-    }
+
 
     /**
      * Eine Methode, die aufgerufen wird, wenn auf bestimmte Layout-Elemente wie Adresse, Telefon
-     * oder Website geklickt wird, um die entsprechenden Aktionen auszuführen.
+     * oder Website geklickt wird, um die entsprechenden Aktionen auszuführen
+     * Es wird die Maps-Aktivität mit dem entsprechnden Ort-Objekt sowie Lämgen- und Breitengrad aufgerufen
      *
      * @param view Das geklickte Layout-Element.
      */
@@ -319,7 +289,7 @@ public class ActivityPlaceDetail extends AppCompatActivity {
     }
 
     /**
-     * Diese Methode zeigt eine Bildergalerie des Ortes an, die aus Bildern besteht, die im Place-Objekt enthalten sind.
+     * Diese Methode zeigt eine Bildergalerie des Ortes an, die aus Bildern besteht, die im Ort-Objekt enthalten sind.
      *
      * @param images Die Liste der Bild-IDs.
      */
@@ -393,8 +363,11 @@ public class ActivityPlaceDetail extends AppCompatActivity {
     }
 
 
-
-    // Reagiert auf Klicks auf die Menüelemente, das Teilen des Ortes oder Zurücktaste.
+    /**
+     * Reagiert auf Klicks auf die Menüelemente, das Teilen des Ortes oder Zurücktaste.
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -406,7 +379,7 @@ public class ActivityPlaceDetail extends AppCompatActivity {
     }
 
     /**
-     * Initialisiert die Google Map und konfiguriert die Kartenansicht.
+     * Initialisiert die Google Map und konfiguriert die Kartenansicht in den FrameLayout.
      */
     private void initMap() {
         if (googleMap == null) {
@@ -425,6 +398,9 @@ public class ActivityPlaceDetail extends AppCompatActivity {
             });
         }
 
+        /**
+         * KlickListner auf das Distanzfeld um die Maps-Aktivität zu starten
+         */
         ((Button) findViewById(R.id.bt_navigate)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -432,12 +408,18 @@ public class ActivityPlaceDetail extends AppCompatActivity {
                 startActivity(navigation);
             }
         });
+        /**
+         * KlickListner für den Ansicht-Button um die MapsActivity zu starten
+         */
         ((Button) findViewById(R.id.bt_view)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openPlaceInMap();
             }
         });
+        /**
+         * KlickListner für die Karte um die MapsActivity zu starten
+         */
         ((LinearLayout) findViewById(R.id.map)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -448,6 +430,7 @@ public class ActivityPlaceDetail extends AppCompatActivity {
 
     /**
      * Öffnet den ausgewählten Ort in der Google Maps-Anwendung.
+     * Übergibt das Ort-Objekt der Maps-Activity
      */
     private void openPlaceInMap() {
         Intent openPlaceMap = new Intent(this, ActivityMaps.class);
@@ -455,15 +438,7 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         startActivity(openPlaceMap);
     }
 
-    /**
-     * Diese Methode wird aufgerufen, wenn die Aktivität zerstört wird. Hier wird überprüft, ob der API-Aufruf
-     * noch ausgeführt wird, und gegebenenfalls abgebrochen.
-     */
-    @Override
-    protected void onDestroy() {
-        if (callback != null && callback.isExecuted()) callback.cancel();
-        super.onDestroy();
-    }
+
 
     /**
      * Diese Methode wird aufgerufen, wenn die Zurück-Taste des Geräts gedrückt wird. Hier wird festgelegt,
@@ -474,15 +449,6 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         backAction();
     }
 
-    /**
-     * Diese Methode wird aufgerufen, wenn die Aktivität pausiert wird. Hier wird sichergestellt,
-     * dass die WebView pausiert wird, um Ressourcen zu sparen.
-     */
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (description != null) description.onPause();
-    }
 
     /**
      * Diese Hilfsmethode legt fest, wie die Aktivität beendet wird, abhängig davon,

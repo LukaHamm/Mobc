@@ -50,6 +50,8 @@ public class ActivityMain extends AppCompatActivity {
 
     /**
      * Initialisiert die Aktivität, setzt das Layout und führt notwendige Initialisierungen durch.
+     * Hier werden die Sidebar geladen und mit den entsprechenden Aktionen verknüpft
+     * In dieser Methode wird zudem überprüft ob ein User mit Token bereits vorhanden ist, ist das nicht der Fall wird die LoginActivity aufgerufen
      * @param savedInstanceState Das Bundle-Objekt, das den Zustand der Aktivität enthält.
      */
     @Override
@@ -128,6 +130,12 @@ public class ActivityMain extends AppCompatActivity {
         toggle.syncState();
     }
 
+    /**
+     * Diese Methode wird aufgerufen wenn ein Menüpunkt im Seitenmenü ausgewählt wird
+     *
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -141,6 +149,8 @@ public class ActivityMain extends AppCompatActivity {
 
     /**
      * Behandelt die Auswahl eines Elements im Navigationsmenü.
+     * Hier wird das Fragment mit einer Kategorie-Id in das Framelayout geladen in
+     * Abhängigkeit vom Menüpunkt
      *
      * @param id    Die ID des ausgewählten Elements.
      * @param title Der Titel des ausgewählten Elements.
@@ -163,7 +173,7 @@ public class ActivityMain extends AppCompatActivity {
             actionBar.setTitle(title);
         } else if (id == R.id.nav_ownplaces) {
             fragment = new FragmentCategory();
-            bundle.putInt(FragmentCategory.TAG_CATEGORY, categories[10]);
+            bundle.putInt(FragmentCategory.TAG_CATEGORY, categories[4]);
             actionBar.setTitle(title);
         } else if (id == R.id.nav_calesthenics) {
             fragment = new FragmentCategory();
@@ -195,31 +205,9 @@ public class ActivityMain extends AppCompatActivity {
         return true;
     }
 
-    /**
-     * Versteckt die virtuelle Tastatur, wenn sie geöffnet ist.
-     */
-    private void hideKeyboard() {
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
 
     private long exitTime = 0;
 
-    /**
-     * Beendet die App, wenn die Zurück-Taste erneut innerhalb von 2 Sekunden gedrückt wird.
-     * Ansonsten wird eine Benachrichtigung angezeigt.
-     */
-    public void doExitApp() {
-        if ((System.currentTimeMillis() - exitTime) > 2000) {
-            Toast.makeText(this, R.string.press_again_exit_app, Toast.LENGTH_SHORT).show();
-            exitTime = System.currentTimeMillis();
-        } else {
-            finish();
-        }
-    }
 
     @Override
     protected void onResume() {

@@ -19,38 +19,25 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import com.google.android.gms.common.api.Api;
-import com.google.android.material.snackbar.Snackbar;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import app.thecity.AppConfig;
 import app.thecity.R;
 import app.thecity.activity.ActivityMain;
 import app.thecity.activity.ActivityPlaceDetail;
 import app.thecity.adapter.AdapterPlaceGrid;
-import app.thecity.connection.API;
+
 import app.thecity.connection.RestAdapter;
-import app.thecity.connection.callbacks.CallbackListPlace;
-import app.thecity.connection.callbacks.CallbackUser;
-import app.thecity.data.SharedPref;
+
 import app.thecity.data.ThisApplication;
 import app.thecity.model.Activity;
-import app.thecity.model.Place;
+
 import app.thecity.model.User;
 import app.thecity.utils.ActivityType;
 import app.thecity.utils.Tools;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.ResponseBody;
+
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -77,6 +64,14 @@ public class FragmentCategory extends Fragment {
     private List<Activity> activityList;
     private Call<List<Activity>> callActivityList;
 
+    /**
+     * Laden des Fragments in das Frame Layout
+     * @param inflater LayoutInflater-Objekt zum Aufblasen der View
+     * @param container FrameLayout das in xml definiert ist
+     * @param savedInstanceState übergebene Parameter (für die Kategorie-Ids)
+     *
+     * @return
+     */
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -120,6 +115,10 @@ public class FragmentCategory extends Fragment {
         fetch();
         return root_view;
     }
+
+    /**
+     * Methode zum Abfragen der Orte in Abhängigkeit der Kategorie-Id
+     */
     private void fetch() {
         ActivityType activityType = ActivityType.getbyCategoryId(category_id);
         if (activityType == null) {
@@ -131,6 +130,10 @@ public class FragmentCategory extends Fragment {
         }
     }
 
+    /**
+     * Laden aller Aktivitäten in Abhängigkeit von der Kategorie
+     * @param activityType
+     */
     private void fetchActivities(ActivityType activityType){
             callActivityList = RestAdapter.createMobcApi().getActivities(activityType.name());
             callActivityList.enqueue(new retrofit2.Callback<List<Activity>>() {
@@ -159,6 +162,9 @@ public class FragmentCategory extends Fragment {
 
     }
 
+    /**
+     * Laden der eigenen Aktivitäten
+     */
     private void fetchOwnActivities(){
         User user = Tools.readuser(getContext());
         String header = "bearer " + user.token;
@@ -189,8 +195,9 @@ public class FragmentCategory extends Fragment {
     }
 
 
-
-    // Aufräumen und Callbacks aufheben, wenn die Ansicht zerstört wird
+    /**
+     * Callbacks sauber beenden
+     */
     @Override
     public void onDestroyView() {
         if (callActivityList != null && callActivityList.isExecuted()) {
@@ -199,21 +206,36 @@ public class FragmentCategory extends Fragment {
         super.onDestroyView();
     }
 
-    // Die RecyclerView bei der Wiederaufnahme des Fragments aktualisieren
+    /**
+     *Die RecyclerView bei der Wiederaufnahme des Fragments aktualisieren
+     */
+
     @Override
     public void onResume() {
         adapter.notifyDataSetChanged();
         super.onResume();
     }
 
-    // Menüoptionen für das Fragment erstellen
+    /**
+     *Menüoptionen für das Fragment erstellen
+     * @param menu Optionsmenü.
+     *
+     * @param inflater
+     */
     @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_fragment_category, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    // Menüaktionen verarbeiten
+    //
+
+    /**
+     * Menüaktionen verarbeiten
+     * @param item Das Ausgewählte Menü-Item.
+     *
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_refresh) {
@@ -226,7 +248,9 @@ public class FragmentCategory extends Fragment {
     }
 
 
-    // Anzeigen, dass keine Elemente gefunden wurden
+    /**
+     * Anzeigen, dass keine Elemente gefunden wurden
+     */
     private void showNoItemView() {
         if (adapter.getItemCount() == 0) {
             lyt_not_found.setVisibility(View.VISIBLE);
