@@ -1,8 +1,11 @@
 package app.thecity.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
@@ -23,6 +26,8 @@ public class ProfileActivity extends AppCompatActivity {
     private ActionBar actionBar;
     private TextView usernameTextView;
     private TextView useremailTextView;
+
+    private Button logoutButton;
     /**
      * - setzt das passende Profil Layout
      * - initialisiert die Toolbar über Funktionsaufruf
@@ -32,7 +37,17 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
+        logoutButton = findViewById(R.id.logoutButton);
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean userdeleted = Tools.deleteUser(getApplicationContext());
+                if (userdeleted){
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
         initToolbar();
         set_User_Profile();
 

@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -43,7 +44,6 @@ public class LoginFragment extends Fragment {
         TextView signupButton = rootView.findViewById(R.id.signupButton);
         EditText usernameText = rootView.findViewById(R.id.usernameEditText);
         EditText passwordText = rootView.findViewById(R.id.passwordEditText);
-        TextView greeting = rootView.findViewById(R.id.greeting);
 
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,35 +59,43 @@ public class LoginFragment extends Fragment {
                 String password = passwordText.getText().toString();
                 String username = usernameText.getText().toString();
                 System.out.println("User: " + username);
-                System.out.println("Password: " +password);
-                UserInfo userInfo = new UserInfo(username,password);
-                Call<CallbackUser> callbackUserCall= api.login(userInfo);
-                callbackUserCall.enqueue(new retrofit2.Callback<CallbackUser>() {
-                    @Override
-                    public void onResponse(Call<CallbackUser> call, Response<CallbackUser> response) {
-                        CallbackUser resp = response.body();
-                        User user = resp.user;
-                        greeting.setText("Hello+ " + user.name + " your token is " + user.token + ", your id is " + user._id);
-                        Log.d("MeineActivity", "Benutzername: " + user.name);
-                        try {
-                            File file = new File(getContext().getFilesDir(), "userdata.json");
-                            FileWriter fileWriter = new FileWriter(file);
-                            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-                            bufferedWriter.write(new Gson().toJson(user));
-                            bufferedWriter.close();
-                        }catch (IOException e){
-                            return;
+                System.out.println("Password: " + password);
+                UserInfo userInfo = new UserInfo(username, password);
+                Call<CallbackUser> callbackUserCall = api.login(userInfo);
+                if (username != null && !username.isEmpty() && password != null && !password.isEmpty()) {
+                    callbackUserCall.enqueue(new retrofit2.Callback<CallbackUser>() {
+                        @Override
+                        public void onResponse(Call<CallbackUser> call, Response<CallbackUser> response) {
+                            if (response.isSuccessful()) {
+                                CallbackUser resp = response.body();
+                                User user = resp.user;
+                                Log.d("MeineActivity", "Benutzername: " + user.name);
+                                try {
+                                    File file = new File(getContext().getFilesDir(), "userdata.json");
+                                    FileWriter fileWriter = new FileWriter(file);
+                                    BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+                                    bufferedWriter.write(new Gson().toJson(user));
+                                    bufferedWriter.close();
+                                } catch (IOException e) {
+                                    return;
+                                }
+
+                                Intent intent = new Intent(getActivity(), ActivityMain.class);
+                                startActivity(intent);
+                            }else {
+                                Toast.makeText(getContext(),"E-Mail oder Passwort falsch", Toast.LENGTH_LONG).show();
+                            }
+
                         }
 
-                        Intent intent = new Intent(getActivity(),ActivityMain.class);
-                        startActivity(intent);
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<CallbackUser> call, Throwable t) {
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<CallbackUser> call, Throwable t) {
+                            Log.e("onFailure", t.getMessage());
+                        }
+                    });
+                }else {
+                    Toast.makeText(getContext(),"Bitte füllen Sie alle Felder aus", Toast.LENGTH_LONG).show();
+                }
             }
 
         });

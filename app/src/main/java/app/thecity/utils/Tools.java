@@ -132,6 +132,15 @@ public class Tools {
         return user;
     }
 
+    public static boolean deleteUser(Context context){
+        File file = new File(context.getFilesDir(), "/userdata.json");
+        if (file != null && file.exists()){
+            return file.delete();
+        }
+        return false;
+    }
+
+
     // Überprüft die Internetverbindung
     public static boolean cekConnection(Context context) {
         ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

@@ -12,7 +12,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Register"
+        android:text="Registrieren"
         android:textSize="36sp">
     </TextView>
 
@@ -20,25 +20,25 @@
         android:id="@+id/usernameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="username"/>
+        android:hint="Username"/>
 
     <EditText
         android:id="@+id/emaileditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="email"/>
+        android:hint="E-Mail"/>
 
     <EditText
         android:id="@+id/nameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="first name"/>
+        android:hint="Vorname"/>
 
     <EditText
         android:id="@+id/lastNameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="last name"/>
+        android:hint="Nachname"/>
 
 
     <EditText
@@ -52,7 +52,7 @@
         android:id="@+id/passwordConfirmEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="confirm password"
+        android:hint="Passwort bestätigen"
         android:inputType="textPassword"/>
 
     <Button
@@ -65,7 +65,7 @@
         android:id="@+id/backToLoginButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="already registered? login"
+        android:text="Schon Registrier? Registrieren"
         android:gravity="center"
         android:clickable="true" />
 </LinearLayout>

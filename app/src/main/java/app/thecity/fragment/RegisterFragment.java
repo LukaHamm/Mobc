@@ -1,6 +1,7 @@
 package app.thecity.fragment;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,10 +53,10 @@ public class RegisterFragment extends Fragment {
             public void onClick(View view) {
                 if (usernameEditText.getText().toString().isEmpty() || nameEditText.getText().toString().isEmpty() || lastnameEditText.getText().toString().isEmpty() || emailEditText.getText().toString().isEmpty() ||
                 passwordEditText.getText().toString().isEmpty() ||  confirmPasswordEditText.getText().toString().isEmpty()){
-                    Toast.makeText(getContext(),"Please fill in the blanks", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(),"Bitte füllen Sie alle Felder aus", Toast.LENGTH_LONG).show();
                 }
                 else if (!passwordEditText.getText().toString().equals(confirmPasswordEditText.getText().toString())){
-                    Toast.makeText(getContext(),"Passwords don't match", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(),"Passwörter stimmen nicht überein", Toast.LENGTH_LONG).show();
                 }else {
                     User user = new User(nameEditText.getText().toString(),lastnameEditText.getText().toString(),usernameEditText.getText().toString(),emailEditText.getText().toString(),passwordEditText.getText().toString());
                     API api = RestAdapter.createMobcApi();
@@ -68,7 +69,7 @@ public class RegisterFragment extends Fragment {
 
                         @Override
                         public void onFailure(Call<String> call, Throwable t) {
-
+                            Log.e("onFailure", t.getMessage());
                         }
                     });
                 }
