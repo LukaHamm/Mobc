@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -43,7 +42,6 @@ import java.util.List;
 import app.thecity.R;
 import app.thecity.adapter.AdapterComments;
 import app.thecity.adapter.AdapterImageList;
-
 import app.thecity.connection.RestAdapter;
 import app.thecity.connection.callbacks.CallbackPlaceDetails;
 import app.thecity.data.Constant;
@@ -51,7 +49,6 @@ import app.thecity.data.SharedPref;
 import app.thecity.data.ThisApplication;
 import app.thecity.model.Activity;
 import app.thecity.model.Evaluation;
-import app.thecity.model.Images;
 import app.thecity.model.Place;
 import app.thecity.model.User;
 import app.thecity.utils.Tools;
@@ -365,7 +362,7 @@ public class ActivityPlaceDetail extends AppCompatActivity {
             public void onClick(View v) {
                 // Überprüfe, ob es Bilder in der Bildergalerie gibt
                 if (new_images_str == null || new_images_str.size() <= 0) return;
-                // Öffne die Bildergalerie mit dem ersten Bild (Position 0)
+                // Öffne die Bildergalerie mit dem ersten Bild (PositiAon 0)
                 openImageGallery(0);
             }
         });
