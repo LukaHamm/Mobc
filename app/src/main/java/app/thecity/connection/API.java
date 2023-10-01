@@ -87,6 +87,14 @@ public interface API {
             @Path("id") String id,
             @Body Evaluation evaluation
     );
+
+    @Headers({CONTENT_TYPE_JSON})
+    @POST("api/activities/")
+    Call<Activity> postActivity(
+            @Header("token") String token,
+            @Body Activity activity
+    );
+
     @Headers({CONTENT_TYPE_JSON})
     @GET("/api/comments//activity/{id}")
     Call<List<Evaluation>> getComments(

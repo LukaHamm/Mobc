@@ -8,7 +8,7 @@ public class Location implements Serializable {
 
     public String locationname;
 
-    public Location(int latitude, int longitude, String locationname) {
+    public Location(double latitude, double longitude, String locationname) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.locationname = locationname;

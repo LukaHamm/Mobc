@@ -22,14 +22,23 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import java.io.IOException;
 
 import app.thecity.R;
+import app.thecity.connection.RestAdapter;
 import app.thecity.data.SharedPref;
+import app.thecity.model.Activity;
+import app.thecity.model.Location;
+import app.thecity.model.User;
 import app.thecity.utils.ActivityType;
 import app.thecity.utils.Tools;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ActivityNewPlace extends AppCompatActivity {
 
@@ -41,6 +50,8 @@ public class ActivityNewPlace extends AppCompatActivity {
     private EditText addressEditText;
     private ImageView selectedImageView;
     private EditText descriptionEditText;
+
+    private EditText titleEditText;
     private Button selectImageButton;
     private Button saveNewPlaceButton;
     private ActivityType selectedCategoryType;
@@ -57,6 +68,7 @@ public class ActivityNewPlace extends AppCompatActivity {
         selectImageButton = findViewById(R.id.selectImageButton);
         saveNewPlaceButton = findViewById(R.id.safe_new_place_button);
         addressEditText = findViewById(R.id.address);
+        titleEditText = findViewById(R.id.title);
 
         CollapsingToolbarLayout collapsingToolbar = findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setContentScrimColor(new SharedPref(this).getThemeColorInt());
@@ -115,12 +127,40 @@ public class ActivityNewPlace extends AppCompatActivity {
         saveNewPlaceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                /*
                 String activityInfo = generateActivityInfo();
                 Toast.makeText(ActivityNewPlace.this, activityInfo, Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(ActivityNewPlace.this, ActivityMain.class);
                 startActivity(intent);
                 finish();
+                 */
+                postActivity();
+            }
+        });
+    }
+
+    private void postActivity(){
+        User user = Tools.readuser(getApplicationContext());
+        String header = "bearer " + user.token;
+        LatLng curLocation = Tools.getCurLocation(getApplicationContext());
+        Location location = new Location(curLocation.latitude,curLocation.longitude,"");
+        Activity activity = new Activity(titleEditText.getText().toString(),selectedCategoryType.name().toString(),null,descriptionEditText.getText().toString(),null,location,addressEditText.getText().toString(),null);
+        Call<Activity> callPostActivity = RestAdapter.createImageApi().postActivity(header, activity);
+        callPostActivity.enqueue(new Callback<Activity>() {
+            @Override
+            public void onResponse(Call<Activity> call, Response<Activity> response) {
+                //postimages
+                Activity activityRes = response.body();
+                if (activityRes != null){
+                    String id =activityRes._id;
+                    //postImages(String id)
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Activity> call, Throwable t) {
+                Log.e("onFailure", t.getMessage());
             }
         });
     }
