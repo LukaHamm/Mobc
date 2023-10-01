@@ -74,7 +74,7 @@ public class ActivityMain extends AppCompatActivity {
         activityMain = this;
 
         // Initialisiere die Schwebende FavouritenButton (Floating Action Button)
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        //fab = (FloatingActionButton) findViewById(R.id.fab);
 
         // Initialisiere die Schwebende NewPlace (Floating Action Button)
         newPlace = (FloatingActionButton) findViewById(R.id.newPlace);
@@ -343,9 +343,11 @@ public class ActivityMain extends AppCompatActivity {
         return activityMain;
     }
 
-    public static void animateFab(final boolean hide) {
-        FloatingActionButton f_ab = (FloatingActionButton) activityMain.findViewById(R.id.fab);
+
+    public static void animateNewplace(final boolean hide) {
+        FloatingActionButton f_ab = (FloatingActionButton) activityMain.findViewById(R.id.newPlace);
         int moveY = hide ? (2 * f_ab.getHeight()) : 0;
         f_ab.animate().translationY(moveY).setStartDelay(100).setDuration(400).start();
     }
+
 }

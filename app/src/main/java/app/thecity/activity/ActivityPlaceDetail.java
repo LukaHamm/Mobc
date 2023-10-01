@@ -143,7 +143,7 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         isFromNotif = getIntent().getBooleanExtra(EXTRA_NOTIF_FLAG, false);
 
         // Initialisierung von Views
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        //fab = (FloatingActionButton) findViewById(R.id.fab);
         lyt_progress = findViewById(R.id.lyt_progress);
         lyt_distance = findViewById(R.id.lyt_distance);
             if (activityModel.images != null && !activityModel.images.isEmpty()) {

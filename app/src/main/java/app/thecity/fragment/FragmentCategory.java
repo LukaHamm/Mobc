@@ -111,9 +111,9 @@ public class FragmentCategory extends Fragment {
             public void onScrollStateChanged(RecyclerView v, int state) {
                 super.onScrollStateChanged(v, state);
                 if (state == v.SCROLL_STATE_DRAGGING || state == v.SCROLL_STATE_SETTLING) {
-                    ActivityMain.animateFab(true);
+                    ActivityMain.animateNewplace(true);
                 } else {
-                    ActivityMain.animateFab(false);
+                    ActivityMain.animateNewplace(false);
                 }
             }
         });
