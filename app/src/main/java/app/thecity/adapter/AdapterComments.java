@@ -22,6 +22,12 @@ public class AdapterComments extends RecyclerView.Adapter<AdapterComments.Evalua
         this.evaluationList=evaluationList;
     }
 
+    /**
+     * Bläst das Layout für einen Kommentar auf
+     * @param parent   Die ViewGroup in der das Element eingesetzt werden soll
+     * @param viewType Der Typ der View .
+     * @return
+     */
     @NonNull
     @Override
     public EvaluationsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -29,6 +35,11 @@ public class AdapterComments extends RecyclerView.Adapter<AdapterComments.Evalua
         return new EvaluationsViewHolder(view);
     }
 
+    /**
+     * Setzt den Kommentartext und Verfasser
+     * @param holder   Die Viewholder-Komponente die das Layout beinhaltet
+     * @param position Die Position der Daten.
+     */
     @Override
     public void onBindViewHolder(@NonNull EvaluationsViewHolder holder, int position) {
         Evaluation comment = evaluationList.get(position);
@@ -42,6 +53,10 @@ public class AdapterComments extends RecyclerView.Adapter<AdapterComments.Evalua
 
     }
 
+
+    /**
+     * Unterklasse um die Kommentare in den Veiwholdern darstellen zu können
+     */
     public class EvaluationsViewHolder extends RecyclerView.ViewHolder {
         TextView usernameText;
         TextView commentText;
@@ -53,7 +68,10 @@ public class AdapterComments extends RecyclerView.Adapter<AdapterComments.Evalua
         }
     }
 
-
+    /**
+     * Einfügen der neu gefetchten Kommentare
+     * @param evaluationList
+     */
     public void insertData(List<Evaluation> evaluationList){
         this.evaluationList = evaluationList;
         notifyDataSetChanged();

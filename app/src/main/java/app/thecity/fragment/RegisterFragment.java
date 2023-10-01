@@ -27,6 +27,15 @@ import retrofit2.Response;
 
 public class RegisterFragment extends Fragment {
 
+    /**
+     * Initialiserien der Ansichten
+     * Clicklistener mit dem RegisterButtom verbinden mit Register-HTTP Methode
+     * @param inflater LayoutInflater mit dem die View aufgeblasen wird
+     * @param container Framelayout definiert in xml
+     * @param savedInstanceState Übergabeparameter
+     *
+     * @return
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

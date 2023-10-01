@@ -71,34 +71,45 @@ import app.thecity.activity.ActivityMain;
 import app.thecity.activity.ActivitySplash;
 import app.thecity.data.SharedPref;
 import app.thecity.data.ThisApplication;
-import app.thecity.model.DeviceInfo;
-import app.thecity.model.NewsInfo;
-import app.thecity.model.Place;
+
 import app.thecity.model.User;
 
 
 public class Tools {
 
 
-
-    // Methode zur Aktivierung des RTL-Layoutmodus
+    /**
+     * Methode zur Aktivierung des RTL-Layoutmodu
+     * @param window
+     */
     public static void RTLMode(Window window) {
         if (AppConfig.RTL_LAYOUT) {
             window.getDecorView().setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
         }
     }
 
-    // Überprüft, ob die Berechtigung zur Anfrage von Berechtigungen benötigt wird (API-Level 22 und höher)
+    /**
+     * Überprüft, ob die Berechtigung zur Anfrage von Berechtigungen benötigt wird (API-Level 22 und höher)
+     * @return
+     */
     public static boolean needRequestPermission() {
         return (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1);
     }
 
-    // Überprüft, ob die Android-Version Lollipop (API-Level 21) oder höher ist
+
+    /**
+     *  Überprüft, ob die Android-Version Lollipop (API-Level 21) oder höher ist
+     * @return
+     */
     public static boolean isLolipopOrHigher() {
         return (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP);
     }
 
-    // Konfiguriert die Statusleiste für Android Lollipop (API-Level 21) oder höher
+
+    /**
+     * Konfiguriert die Statusleiste für Android Lollipop (API-Level 21) oder höher
+     * @param act
+     */
     public static void systemBarLolipop(Activity act) {
         if (isLolipopOrHigher()) {
             Window window = act.getWindow();
@@ -108,6 +119,11 @@ public class Tools {
         }
     }
 
+    /**
+     * Liest den Nutzer aus der USer-Json-Datei
+     * @param context
+     * @return
+     */
     public static User readuser(Context context){
        User user = null;
         try {
@@ -132,6 +148,11 @@ public class Tools {
         return user;
     }
 
+    /**
+     * Löschen der Benutzerdatei
+     * @param context
+     * @return
+     */
     public static boolean deleteUser(Context context){
         File file = new File(context.getFilesDir(), "/userdata.json");
         if (file != null && file.exists()){
@@ -141,24 +162,14 @@ public class Tools {
     }
 
 
-    // Überprüft die Internetverbindung
-    public static boolean cekConnection(Context context) {
-        ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivity != null)
-        {
-            NetworkInfo[] info = connectivity.getAllNetworkInfo();
-            if (info != null)
-                for (int i = 0; i < info.length; i++)
-                    if (info[i].getState() == NetworkInfo.State.CONNECTED)
-                    {
-                        return true;
-                    }
 
-        }
-        return false;
-    }
 
-    // Lädt ein Bild von einer URL und zeigt es in einem ImageView mit Cross-Fade-Effekt an
+    /**
+     * Lädt ein Bild von einer URL und zeigt es in einem ImageView mit Cross-Fade-Effekt an
+     * @param ctx
+     * @param img
+     * @param url
+     */
     public static void displayImage(Context ctx, ImageView img, String url) {
         try {
             Glide.with(ctx.getApplicationContext()).load(url)
@@ -169,7 +180,14 @@ public class Tools {
         }
     }
 
-    // Lädt ein Bild von einer URL und zeigt es in einem ImageView mit Cross-Fade-Effekt an und einer Thumbnail-Größe
+    /**
+     * Lädt ein Bild von einer URL und zeigt es in einem ImageView mit Cross-Fade-Effekt an und einer Thumbnail-Größe
+     * @param ctx
+     * @param img
+     * @param url
+     * @param thumb
+     */
+
     public static void displayImageThumb(Context ctx, ImageView img, String url, float thumb) {
         try {
             Glide.with(ctx.getApplicationContext()).load(url)
@@ -182,20 +200,12 @@ public class Tools {
     }
 
 
-    // Löscht den Bild-Cache im Hintergrund
-    public static void clearImageCacheOnBackground(final Context ctx) {
-        try {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    Glide.get(ctx).clearDiskCache();
-                }
-            }).start();
-        } catch (Exception e) {
-        }
-    }
 
-    // Gibt den Namen des Geräts zurück
+
+    /**
+     * Gibt den Namen des Geräts zurück
+     * @return
+     */
     public static String getDeviceName() {
         String manufacturer = Build.MANUFACTURER;
         String model = Build.MODEL;
@@ -206,12 +216,20 @@ public class Tools {
         }
     }
 
-    // Gibt die Android-Version zurück
+
+    /**
+     * Gibt die Android-Version zurück
+     * @return
+     */
     public static String getAndroidVersion() {
         return Build.VERSION.RELEASE + "";
     }
 
-    // Berechnet die Spaltenanzahl für ein Grid basierend auf der Displaybreite und der Zellenbreite
+    /**
+     * Berechnet die Spaltenanzahl für ein Grid basierend auf der Displaybreite und der Zellenbreite
+     * @param activity
+     * @return
+     */
     public static int getGridSpanCount(Activity activity) {
         Display display = activity.getWindowManager().getDefaultDisplay();
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -222,7 +240,13 @@ public class Tools {
     }
 
 
-    // Konfiguriert die statische Karte in Google Maps für eine gegebene Place-Instanz
+    /**
+     * Konfiguriert die statische Karte in Google Maps für eine gegebene Place-Instanz
+     * @param act
+     * @param googleMap
+     * @param activity
+     * @return
+     */
     public static GoogleMap configStaticMap(Activity act, GoogleMap googleMap, app.thecity.model.Activity activity) {
         // set map type
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
@@ -254,7 +278,12 @@ public class Tools {
         return googleMap;
     }
 
-    // Konfiguriert die Google Maps in der Aktivität
+
+    /**
+     * Konfiguriert die Google Maps in der Aktivität
+     * @param googleMap
+     * @return
+     */
     public static GoogleMap configActivityMaps(GoogleMap googleMap) {
         // set map type
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
@@ -275,23 +304,20 @@ public class Tools {
     }
 
 
-    // Startet den Play Store zur Bewertung der App
-    public static void rateAction(Activity activity) {
-        Uri uri = Uri.parse("market://details?id=" + activity.getPackageName());
-        Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
-        try {
-            activity.startActivity(goToMarket);
-        } catch (ActivityNotFoundException e) {
-            activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + activity.getPackageName())));
-        }
-    }
 
-    // Gibt die URL im Play Store für die aktuelle App zurück
+    /**
+     * Gibt die URL im Play Store für die aktuelle App zurück
+     * @param act
+     * @return
+     */
     private static String getPlayStoreUrl(Activity act) {
         return "http://play.google.com/store/apps/details?id=" + act.getPackageName();
     }
 
-    // Zeigt einen Dialog mit App-Informationen an
+    /**
+     * Zeigt einen Dialog mit App-Informationen an
+     * @param activity
+     */
     public static void aboutAction(Activity activity) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle(activity.getString(R.string.dialog_about_title));
@@ -300,59 +326,14 @@ public class Tools {
         builder.show();
     }
 
-    // Wählt eine Telefonnummer
-    public static void dialNumber(Context ctx, String phone) {
-        try {
-            Intent i = new Intent(Intent.ACTION_DIAL);
-            i.setData(Uri.parse("tel:" + phone));
-            ctx.startActivity(i);
-        } catch (Exception e) {
-            Toast.makeText(ctx, "Cannot dial number", Toast.LENGTH_SHORT);
-        }
-    }
 
-    // Öffnet eine URL in einem Browser
-    public static void directUrl(Context ctx, String website) {
-        String url = website;
-        if (!url.startsWith("https://") && !url.startsWith("http://")) {
-            url = "http://" + url;
-        }
-        Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        ctx.startActivity(i);
-    }
 
-    // Teilt den aktuellen Ort in einer Place-Instanz
-    public static void methodShare(Activity act, app.thecity.model.Activity p) {
-
-        // string to share
-        //FIXME Adresse?
-        String shareBody = "View good place \'" + p.title + "\'"
-                + "\n" + "located at : " + "placeholder" + "\n\n"
-                + "Using app : " + getPlayStoreUrl(act);
-
-        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-        sharingIntent.setType("text/plain");
-
-        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, act.getString(R.string.app_name));
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-        act.startActivity(Intent.createChooser(sharingIntent, "Share Using"));
-    }
-
-    // Teilt die aktuellen Neuigkeiten in einer NewsInfo-Instanz
-    public static void methodShareNews(Activity act, NewsInfo n) {
-
-        // string to share
-        String shareBody = n.title + "\n\n" + getPlayStoreUrl(act);
-
-        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-        sharingIntent.setType("text/plain");
-
-        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, act.getString(R.string.app_name));
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-        act.startActivity(Intent.createChooser(sharingIntent, "Share Using"));
-    }
-
-    // Erstellt einen Bitmap aus einer View
+    /**
+     * Erstellt einen Bitmap aus einer View
+     * @param act
+     * @param view
+     * @return
+     */
     public static Bitmap createBitmapFromView(Activity act, View view) {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         act.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -369,14 +350,25 @@ public class Tools {
     }
 
 
-    // Setzt die Farbe der Action Bar
+
+
+    /**
+     * Setzt die Farbe der Action Bar
+     * @param ctx
+     * @param actionbar
+     */
     public static void setActionBarColor(Context ctx, ActionBar actionbar) {
         ColorDrawable colordrw = new ColorDrawable(new SharedPref(ctx).getThemeColorInt());
         actionbar.setBackgroundDrawable(colordrw);
     }
 
 
-    // Verdunkelt eine Farbe
+
+    /**
+     * Verdunkelt eine Farbe
+     * @param color
+     * @return
+     */
     public static int colorDarker(int color) {
         float[] hsv = new float[3];
         Color.colorToHSV(color, hsv);
@@ -384,7 +376,11 @@ public class Tools {
         return Color.HSVToColor(hsv);
     }
 
-    // Erhellt eine Farbe
+    /**
+     * Erhellt eine Farbe
+     * @param color
+     * @return
+     */
     public static int colorBrighter(int color) {
         float[] hsv = new float[3];
         Color.colorToHSV(color, hsv);
@@ -392,7 +388,10 @@ public class Tools {
         return Color.HSVToColor(hsv);
     }
 
-    // Startet die Anwendung neu
+    /**
+     * Startet die Anwendung neu
+     * @param activity
+     */
     public static void restartApplication(Activity activity) {
         activity.finish();
         ActivityMain.getInstance().finish();
@@ -400,7 +399,13 @@ public class Tools {
         activity.startActivity(i);
     }
 
-    // Berechnet die Entfernung zwischen zwei geografischen Koordinaten
+
+    /**
+     * Berechnet die Entfernung zwischen zwei geografischen Koordinaten
+     * @param from
+     * @param to
+     * @return
+     */
     private static float calculateDistance(LatLng from, LatLng to) {
         Location start = new Location("");
         start.setLatitude(from.latitude);
@@ -421,61 +426,11 @@ public class Tools {
     }
 
 
-    // Filtert die Place-Liste nach Entfernung (wenn gewünscht)
-    public static List<Place> filterItemsWithDistance(Activity act, List<Place> items) {
-        if (AppConfig.general.sort_by_distance) { // checking for distance sorting
-            LatLng curLoc = Tools.getCurLocation(act);
-            if (curLoc != null) {
-                return Tools.getSortedDistanceList(items, curLoc);
-            }
-        }
-        return items;
-    }
-
-
-    // Berechnet die Entfernungen für die Place-Liste basierend auf der aktuellen Position (wenn gewünscht)
-    public static List<Place> itemsWithDistance(Context ctx, List<Place> items) {
-        if (AppConfig.general.sort_by_distance) { // checking for distance sorting
-            LatLng curLoc = Tools.getCurLocation(ctx);
-            if (curLoc != null) {
-                return Tools.getDistanceList(items, curLoc);
-            }
-        }
-        return items;
-    }
-
-    // Berechnet die Entfernungen für die Place-Liste basierend auf der aktuellen Position
-    public static List<Place> getDistanceList(List<Place> places, LatLng curLoc) {
-        if (places.size() > 0) {
-            for (Place p : places) {
-                p.distance = calculateDistance(curLoc, p.getPosition());
-            }
-        }
-        return places;
-    }
-
-    // Sortiert die Place-Liste nach Entfernung basierend auf der aktuellen Position
-    public static List<Place> getSortedDistanceList(List<Place> places, LatLng curLoc) {
-        List<Place> result = new ArrayList<>();
-        if (places.size() > 0) {
-            for (int i = 0; i < places.size(); i++) {
-                Place p = places.get(i);
-                p.distance = calculateDistance(curLoc, p.getPosition());
-                result.add(p);
-            }
-            Collections.sort(result, new Comparator<Place>() {
-                @Override
-                public int compare(final Place p1, final Place p2) {
-                    return Float.compare(p1.distance, p2.distance);
-                }
-            });
-        } else {
-            return places;
-        }
-        return result;
-    }
-
-    // Gibt die aktuelle Position als LatLng zurück
+    /**
+     * Gibt die aktuelle Position als LatLng zurück
+     * @param ctx
+     * @return
+     */
     public static LatLng getCurLocation(Context ctx) {
         if (PermissionUtil.isLocationGranted(ctx)) {
             LocationManager manager = (LocationManager) ctx.getSystemService(Context.LOCATION_SERVICE);
@@ -493,10 +448,13 @@ public class Tools {
         return null;
     }
 
-    public void updateDistanceLocationFound (){
 
-    }
-
+    /**
+     * Gibt die Distanz zur derzeitigen Position zurück
+     * @param context
+     * @param destination
+     * @return
+     */
     public static float getDistanceToCurrentLocation(Context context, LatLng destination){
         LatLng curLocation = getCurLocation(context);
         if(curLocation != null) {
@@ -507,7 +465,11 @@ public class Tools {
 
     }
 
-    // Erhält die zuletzt bekannte Position
+    /**
+     *  Erhält die zuletzt bekannte Position
+     * @param ctx
+     * @return
+     */
     @SuppressLint("MissingPermission")
     public static Location getLastKnownLocation(Context ctx) {
         // add location listener
@@ -532,7 +494,11 @@ public class Tools {
     }
 
 
-    // Anforderung für Ortungsaktualisierungen
+    /**
+     *  Anforderung für Ortungsaktualisierungen
+     * @param manager
+     * @return
+     */
     @SuppressLint("MissingPermission")
     private static LocationListener requestLocationUpdate(LocationManager manager) {
         // Define a listener that responds to location updates
@@ -560,7 +526,11 @@ public class Tools {
     private static LocationCallback locationCallback = null;
     private static FusedLocationProviderClient locationProviderClient = null;
 
-    // Setzt den LocationListener
+
+    /**
+     * Setzt den LocationListener
+     * @param ctx
+     */
     @SuppressLint("MissingPermission")
     private static void setLocationListener(Context ctx) {
         if (locationCallback != null) return;
@@ -587,43 +557,19 @@ public class Tools {
         locationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
     }
 
+    /**
+     * Liefert die Distanze in einen Formatiereten String zurück
+     * @param distance
+     * @return
+     */
     public static String getFormatedDistance(float distance) {
         DecimalFormat df = new DecimalFormat();
         df.setMaximumFractionDigits(1);
         return df.format(distance) + " " + AppConfig.general.distance_metric_str;
     }
 
-    public static DeviceInfo getDeviceInfo(Context context) {
-        String phoneID = Build.SERIAL;
-        try {
-            phoneID = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-        } catch (Exception e) {
-        }
-        DeviceInfo deviceInfo = new DeviceInfo();
-        deviceInfo.setDevice(Tools.getDeviceName());
-        deviceInfo.setEmail(phoneID);
-        deviceInfo.setVersion(Tools.getAndroidVersion());
-        deviceInfo.setDate_create(System.currentTimeMillis());
 
-        return deviceInfo;
-    }
-
-    // Diese Methode nimmt einen Zeitstempel als Eingabe und gibt das Datum in einem einfachen Format zurück (z. B. "Jan 01, 2023")
-    public static String getFormattedDateSimple(Long dateTime) {
-        SimpleDateFormat newFormat = new SimpleDateFormat("MMM dd, yyyy");
-        return newFormat.format(new Date(dateTime));
-    }
-
-    /*
-        Ähnlich wie die vorherige Methode, aber gibt das Datum und die Uhrzeit im Format "Monat Tag,
-        Jahr Stunden:Minuten" zurück (z. B. "January 01, 2023 12:30")
-     */
-    public static String getFormattedDate(Long dateTime) {
-        SimpleDateFormat newFormat = new SimpleDateFormat("MMMM dd, yyyy hh:mm");
-        return newFormat.format(new Date(dateTime));
-    }
-
-    /*
+    /**
          Diese Methode konvertiert die Dichte-unabhängigen Pixel (dp) in echte Pixel (px).
          Es verwendet TypedValue.applyDimension unter Verwendung der Ressourcen und Displaymetriken
          des übergebenen Contexts
@@ -633,36 +579,4 @@ public class Tools {
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
     }
 
-    /*
-        Diese Methode ermöglicht das Öffnen einer URL entweder in einer benutzerdefinierten
-        Registerkarte oder in einem externen Browser, basierend auf der Konfiguration
-     */
-    public static void directLinkToBrowser(Activity activity, String url) {
-        if (!URLUtil.isValidUrl(url)) {
-            Toast.makeText(activity, "Ops, Cannot open url", Toast.LENGTH_LONG).show();
-            return;
-        }
-        if (!AppConfig.general.open_link_in_app) {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            activity.startActivity(browserIntent);
-            return;
-        }
-        int color = ResourcesCompat.getColor(activity.getResources(), R.color.colorPrimary, null);
-        int secondaryColor = ResourcesCompat.getColor(activity.getResources(), R.color.colorAccent, null);
-
-        CustomTabsIntent.Builder intentBuilder = new CustomTabsIntent.Builder();
-        CustomTabColorSchemeParams defaultColors = new CustomTabColorSchemeParams.Builder()
-                .setToolbarColor(color)
-                .setSecondaryToolbarColor(secondaryColor)
-                .build();
-        intentBuilder.setDefaultColorSchemeParams(defaultColors);
-        intentBuilder.setShowTitle(true);
-        intentBuilder.setUrlBarHidingEnabled(true);
-
-
-        CustomTabsHelper.openCustomTab(activity, intentBuilder.build(), Uri.parse(url), (activity1, uri) -> {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            activity.startActivity(browserIntent);
-        });
-    }
 }

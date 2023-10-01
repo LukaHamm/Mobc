@@ -16,11 +16,7 @@ import java.util.List;
 import app.thecity.R;
 import app.thecity.utils.Tools;
 
-/*
-    Diese Klasse namens "AdapterFullScreenImage" ist ein PagerAdapter für die Verwendung mit einem
-    ViewPager in Android Studio. Sie ermöglicht das Anzeigen einer Sammlung von Bildern im
-    Vollbildmodus,wobei der Benutzer durch die Bilder blättern kann.
- */
+
 
 public class AdapterFullScreenImage extends PagerAdapter {
 
@@ -28,22 +24,28 @@ public class AdapterFullScreenImage extends PagerAdapter {
     private List<String> imagePaths;
     private LayoutInflater inflater;
 
-    // Kosntruktor Instanz des Adapters zu erstellen und die erforderlichen Daten zu übergeben
+    /**
+     * Kosntruktor Instanz des Adapters zu erstellen und die erforderlichen Daten zu übergeben
+     * @param activity
+     * @param imagePaths
+     */
+
     public AdapterFullScreenImage(Activity activity, List<String> imagePaths) {
         this.act = activity;
         this.imagePaths = imagePaths;
     }
 
-    /*
+    /**
         gibt die Anzahl der Bilder in der Liste zurück. Sie wird vom ViewPager verwendet,
         um zu wissen, wie viele Elemente in der Ansicht angezeigt werden sollen.
+     @return Anzahl der Bilder
      */
     @Override
     public int getCount() {
         return this.imagePaths.size();
     }
 
-    /*
+    /**
         Diese Methode wird verwendet, um zu überprüfen, ob eine Ansicht (View) zu einem bestimmten
         Objekt (Object) gehört. In diesem Fall wird überprüft, ob die Ansicht mit dem übergebenen
         Objekt (hier ein RelativeLayout) übereinstimmt.
@@ -53,7 +55,7 @@ public class AdapterFullScreenImage extends PagerAdapter {
         return view == ((RelativeLayout) object);
     }
 
-    /*
+    /**
         Hier wird eine neue Ansicht für das Bild an der gegebenen Position erstellt und dem ViewPager
         hinzugefügt. Diese Methode wird aufgerufen, wenn der ViewPager die aktuelle Seite anzeigen möchte
      */
@@ -70,7 +72,7 @@ public class AdapterFullScreenImage extends PagerAdapter {
         return viewLayout;
     }
 
-    /*
+    /**
         Diese Methode wird aufgerufen, wenn ein Bild nicht mehr benötigt wird und aus dem ViewPager
         entfernt werden soll
      */

@@ -162,7 +162,7 @@
                 android:paddingRight="@dimen/spacing_medium"
                 android:paddingTop="@dimen/spacing_middle">
 
-                <WebView
+                <TextView
                     android:id="@+id/description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -31,9 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -43,7 +41,6 @@ import app.thecity.R;
 import app.thecity.adapter.AdapterComments;
 import app.thecity.adapter.AdapterImageList;
 import app.thecity.connection.RestAdapter;
-import app.thecity.connection.callbacks.CallbackPlaceDetails;
 import app.thecity.data.Constant;
 import app.thecity.data.SharedPref;
 import app.thecity.data.ThisApplication;
@@ -56,9 +53,9 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
-/*
-       BEARBEITET
-     Android-Aktivität (Activity), die die Details zu einem bestimmten Ort anzeigt
+/**
+ * Diese Klasse repräsentiert eine Android-Aktivität, die die Details zu einem bestimmten Ort anzeigt.
+ * Die Aktivität zeigt Informationen wie Name, Adresse, Beschreibung, Bilder und Bewertungen des Ortes an.
  */
 
 public class ActivityPlaceDetail extends AppCompatActivity {
@@ -66,11 +63,13 @@ public class ActivityPlaceDetail extends AppCompatActivity {
     private static final String EXTRA_OBJ = "key.EXTRA_OBJ";
     private static final String EXTRA_NOTIF_FLAG = "key.EXTRA_NOTIF_FLAG";
 
-    /*
-      Eine statische Methode zum Navigieren zur ActivityPlaceDetail (Detailsansicht des Standortes)
-      von einer anderen Aktivität aus. Sie akzeptiert die Startaktivität (activity),
-      eine freigegebene Ansicht (sharedView) für die Aktivitätstransition und ein Place-Objekt (p),
-      das die Details des Ortes enthält.
+    /**
+     * Navigiert von einer anderen Aktivität zur ActivityPlaceDetail (Detailansicht des Ortes).
+     * Akzeptiert die Startaktivität, eine freigegebene Ansicht für die Aktivitätstransition und ein Place-Objekt.
+     *
+     * @param activity    Die Startaktivität.
+     * @param sharedView  Die freigegebene Ansicht für die Aktivitätstransition.
+     * @param activityModel Das Place-Objekt, das die Details des Ortes enthält.
      */
     public static void navigate(AppCompatActivity activity, View sharedView, Activity activityModel) {
         // intentNavigation  = Startet Aktivit Place Details
@@ -80,10 +79,14 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         ActivityCompat.startActivity(activity, intentNavigation, options.toBundle());
     }
 
-    /*
-    Die statische Methode "navigateBase" erstellt ein Intent-Objekt zur Navigation von einer
-    Quell-Aktivität zur Ziel-Aktivität und fügt ein "Place"-Objekt sowie eine Flagge hinzu,
-    die angibt, ob der Standort über eine Benachrichtigung aufgerufen wurde.
+    /**
+     * Erstellt ein Intent-Objekt zur Navigation von einer Quell-Aktivität zur Ziel-Aktivität
+     * und fügt ein Place-Objekt sowie eine Flagge hinzu, die angibt, ob der Ort über eine Benachrichtigung aufgerufen wurde.
+     *
+     * @param context    Der Kontext der Quell-Aktivität.
+     * @param obj        Das Place-Objekt, das die Details des Ortes enthält.
+     * @param from_notif Eine Flagge, die angibt, ob der Ort über eine Benachrichtigung aufgerufen wurde.
+     * @return Ein Intent-Objekt für die Navigation.
      */
     public static Intent navigateBase(Context context, Place obj, Boolean from_notif) {
         Intent navigation_from_notifi = new Intent(context, ActivityPlaceDetail.class);
@@ -94,14 +97,12 @@ public class ActivityPlaceDetail extends AppCompatActivity {
 
     private Activity activityModel = null;
 
-    private FloatingActionButton fab;
-    private WebView description = null;
+    private TextView description = null;
     private View parent_view = null;
     private GoogleMap googleMap;
 
     private boolean onProcess = false;
     private boolean isFromNotif = false;
-    private Call<CallbackPlaceDetails> callback;
     private View lyt_progress;
     private View lyt_distance;
     private float distance = -1;
@@ -116,7 +117,12 @@ public class ActivityPlaceDetail extends AppCompatActivity {
 
     private AdapterComments adapterComments;
 
-    // Initialisiert die Ansicht, die Toolbar und die Google Map.
+
+    /**
+     * Initialisiert die Ansicht, die Toolbar und die Google Map, wenn die Aktivität erstellt wird.
+     * Hier wird der von der Hauptaktivität übergebene Ort entgegen genommen und in einer Instanzvariable gespeichert
+     * @param savedInstanceState Ein Bundle-Objekt, das den Zustand der Aktivität enthält.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //Hier wird die Methode onCreate der übergeordneten Klasse aufgerufen, um die Standardinitialisierungen für die Aktivität durch zuführen.
@@ -127,6 +133,7 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         adapterComments = new AdapterComments(getApplicationContext(),new ArrayList<>());
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         editText = findViewById(R.id.commentbody);
+        description = findViewById(R.id.description);
         button = findViewById(R.id.commenpostButton);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,18 +147,16 @@ public class ActivityPlaceDetail extends AppCompatActivity {
 
         // Hier wird der Place aus dem übergebenden Intent (vorherige Activity) extrahiert
         activityModel = (Activity) getIntent().getSerializableExtra(EXTRA_OBJ);
+        description.setText(activityModel.description);
         isFromNotif = getIntent().getBooleanExtra(EXTRA_NOTIF_FLAG, false);
 
         // Initialisierung von Views
-        fab = (FloatingActionButton) findViewById(R.id.fab);
         lyt_progress = findViewById(R.id.lyt_progress);
         lyt_distance = findViewById(R.id.lyt_distance);
             if (activityModel.images != null && !activityModel.images.isEmpty()) {
                 Tools.displayImage(this, (ImageView) findViewById(R.id.image), Constant.getURLimgActivity(activityModel.images.get(0)));
             }
 
-        // Methode zum Steuern des Favoriten-Buttons
-        //favAktualisieren();
 
         // Konfiguration der Toolbar und Initialisierung der Google Map
         setupToolbar(activityModel.title == null ? "" : activityModel.title);
@@ -167,53 +172,75 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         displayDataWithDelay(activityModel);
         fetchComments();
     }
-
-
-    private void fetchComments (){
+    /**
+     * Diese Methode ruft Kommentare für die Aktivität vonm Server ab und aktualisiert die Benutzeroberfläche
+     * mit den abgerufenen Kommentaren, wenn die Anfrage erfolgreich ist.
+     */
+    private void fetchComments() {
+        // Erstelle eine Anfrage an den Server, um Kommentare für die Aktivität abzurufen
         Call<List<Evaluation>> evaluationCall = RestAdapter.createMobcApi().getComments(activityModel._id);
         evaluationCall.enqueue(new retrofit2.Callback<List<Evaluation>>() {
             @Override
             public void onResponse(Call<List<Evaluation>> call, Response<List<Evaluation>> response) {
+                // Verarbeite die Antwort des Servers und aktualisiere die Benutzeroberfläche
                 List<Evaluation> evaluationList = response.body();
-                if (evaluationList != null){
+                if (evaluationList != null) {
                     adapterComments.insertData(evaluationList);
                 }
             }
 
             @Override
             public void onFailure(Call<List<Evaluation>> call, Throwable t) {
+                // Behandle den Fehlerfall und protokolliere eventuelle Fehlermeldungen
                 Log.e("onFailure", t.getMessage());
             }
         });
     }
 
-    private void postComment (){
+    /**
+     * Diese Methode postet einen neuen Kommentar zur Aktivität an den Server und aktualisiert die
+     * Kommentarliste, wenn der Postvorgang erfolgreich ist.
+     */
+    private void postComment() {
+        // Holen des eingegebenen Text aus dem EditText-Feld
         String text = editText.getText().toString();
         editText.setText("");
         editText.clearFocus();
+
+        // Lesen des Benutzers aus der Anwendung
         User user = Tools.readuser(getApplicationContext());
+
+        // Erstellen eines Authentifizierungs-Headers für die Anfrage
         String header = "bearer " + user.token;
-        if (text != null && !text.isEmpty()){
-            Evaluation evaluation= new Evaluation(text,"",0,null,"");
-            Call<ResponseBody> callPostComment = RestAdapter.createMobcApi().postCommentsToActivity(header,activityModel._id,evaluation);
+
+        // Überprüfen, ob der eingegebene Text nicht leer ist
+        if (text != null && !text.isEmpty()) {
+            // Erstellen des Evaluation-Objekts mit dem eingegebenen Text
+            Evaluation evaluation = new Evaluation(text, "", 0, null, "");
+
+            // Erstellen der Anfrage an den Server, um den Kommentar zu posten
+            Call<ResponseBody> callPostComment = RestAdapter.createMobcApi().postCommentsToActivity(header, activityModel._id, evaluation);
             callPostComment.enqueue(new retrofit2.Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    // Wenn der Postvorgang erfolgreich ist, wird die Methode fetchComments aufgerufen, um die Kommentare zu aktualisieren
                     fetchComments();
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    // Behandle den Fehlerfall und protokolliere eventuelle Fehlermeldungen
                     Log.e("onFailure", t.getMessage());
                 }
             });
         }
     }
 
-
-    /*
-      Zeigt die Daten des angegebenen Place-Objekts an, einschließlich Name, Adresse, Telefon,
-      Website, Beschreibung und Bildergalerie.
+    /**
+     * Diese Methode zeigt die Daten des angegebenen Place-Objekts an, einschließlich Name, Adresse, Telefon,
+     * Website, Beschreibung und Bildergalerie.
+     *
+     * @param activity Das Ort-Objekt, dessen Daten angezeigt werden sollen.
      */
     private void displayData(Activity activity) {
         // Konfiguriere die Toolbar mit dem Ortsnamen
@@ -227,26 +254,6 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         // Setze die Adresse, Telefonnummer und Website des Ortes in den entsprechenden TextViews
         ((TextView) findViewById(R.id.address)).setText(activity.address);
 
-        // Zeige die Beschreibung des Ortes in einer WebView an
-        description = (WebView) findViewById(R.id.description);
-        String html_data = "<style>img{max-width:100%;height:auto;} iframe{width:100%;}</style> ";
-        html_data += activity.description;
-        description.getSettings().setBuiltInZoomControls(true);
-        description.setBackgroundColor(Color.TRANSPARENT);
-        description.setWebChromeClient(new WebChromeClient());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            description.loadDataWithBaseURL(null, html_data, "text/html; charset=UTF-8", "utf-8", null);
-        } else {
-            description.loadData(html_data, "text/html; charset=UTF-8", null);
-        }
-        description.getSettings().setJavaScriptEnabled(true);
-
-        // Deaktiviere das Scrollen in der Beschreibungsansicht durch Berührung
-        description.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                return (event.getAction() == MotionEvent.ACTION_MOVE);
-            }
-        });
 
         // Setze die Entfernungsinformation des Ortes in den TextView für die Entfernung
         distance = activityModel.distance;
@@ -261,19 +268,14 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         setImageGallery(activityModel.images);
     }
 
-    /*
-       Wird aufgerufen, wenn die Aktivität wieder aufgenommen wird. Hier wird loadPlaceData()
-       aufgerufen, um die Daten des Ortes anzuzeigen.
-     */
-    @Override
-    protected void onResume() {
-        if (description != null) description.onResume();
-        super.onResume();
-    }
 
-    /*
-      Eine Methode, die aufgerufen wird, wenn auf bestimmte Layout-Elemente wie Adresse, Telefon
-      oder Website geklickt wird, um die entsprechenden Aktionen auszuführen.
+
+    /**
+     * Eine Methode, die aufgerufen wird, wenn auf bestimmte Layout-Elemente wie Adresse, Telefon
+     * oder Website geklickt wird, um die entsprechenden Aktionen auszuführen
+     * Es wird die Maps-Aktivität mit dem entsprechnden Ort-Objekt sowie Lämgen- und Breitengrad aufgerufen
+     *
+     * @param view Das geklickte Layout-Element.
      */
     public void clickLayout(View view) {
         int id = view.getId();
@@ -286,13 +288,14 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         }
     }
 
-    /*
-      Zeigt eine Bildergalerie des Ortes an, die aus Bildern besteht, die im Place-Objekt enthalten sind.
+    /**
+     * Diese Methode zeigt eine Bildergalerie des Ortes an, die aus Bildern besteht, die im Ort-Objekt enthalten sind.
+     *
+     * @param images Die Liste der Bild-IDs.
      */
     private void setImageGallery(List<String> images) {
         // add optional image into list
         List<String> new_images = new ArrayList<>();
-        //new_images.add(new Images(place.place_id, place.image));
         new_images.addAll(images);
         new_images_str = new ArrayList<>();
         for (String img : new_images) {
@@ -311,7 +314,11 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         });
     }
 
-    // Öffnet die Bildergalerie mit dem angegebenen Startbild.
+    /**
+     * Öffnet die Bildergalerie mit dem angegebenen Startbild.
+     *
+     * @param position Die Position des Startbilds.
+     */
     private void openImageGallery(int position) {
         Intent openImageIntent = new Intent(ActivityPlaceDetail.this, ActivityFullScreenImage.class);
         openImageIntent.putExtra(ActivityFullScreenImage.EXTRA_POS, position);
@@ -319,9 +326,11 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         startActivity(openImageIntent);
     }
 
-
-
-    // Konfiguriert die Toolbar und CollapsingToolbarLayout und zeigt den Namen des Ortes an.
+    /**
+     * Konfiguriert die Toolbar und CollapsingToolbarLayout und zeigt den Namen des Ortes an.
+     *
+     * @param name Der Name des Ortes.
+     */
     private void setupToolbar(String name) {
         // Finde die Toolbar-View mit der ID "toolbar" und setze sie als Support-Actionbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -341,43 +350,24 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         CollapsingToolbarLayout collapsing_toolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsing_toolbar.setContentScrimColor(new SharedPref(this).getThemeColorInt());
 
-        // Füge einen OnOffsetChangedListener zur AppBarLayout hinzu
-        ((AppBarLayout) findViewById(R.id.app_bar_layout)).addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                // Überprüfe, ob die Höhe des CollapsingToolbarLayouts minus der vertikalen Verschiebung kleiner als das Doppelte der minimalen Höhe des CollapsingToolbarLayouts ist
-                if (collapsing_toolbar.getHeight() + verticalOffset < 2 * ViewCompat.getMinimumHeight(collapsing_toolbar)) {
-                    // Zeige den FloatingActionButton, wenn der Bedingung erfüllt ist
-                    fab.show();
-                } else {
-                    // Verberge den FloatingActionButton, wenn der Bedingung nicht erfüllt ist
-                    fab.hide();
-                }
-            }
-        });
-
         // Füge einen OnClickListener zum ImageView mit der ID "image" hinzu
         (findViewById(R.id.image)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Überprüfe, ob es Bilder in der Bildergalerie gibt
                 if (new_images_str == null || new_images_str.size() <= 0) return;
-                // Öffne die Bildergalerie mit dem ersten Bild (PositiAon 0)
+                // Öffne die Bildergalerie mit dem ersten Bild (Position 0)
                 openImageGallery(0);
             }
         });
     }
 
 
-    // Erstellt das Optionsmenü in der Aktionsleiste.
-    /*
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_activity_details, menu);
-        return true;
-    }*/
-
-    // Reagiert auf Klicks auf die Menüelemente,  das Teilen des Ortes oder zurücktaste.
+    /**
+     * Reagiert auf Klicks auf die Menüelemente, das Teilen des Ortes oder Zurücktaste.
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -388,7 +378,9 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    // Initialisiert die Google Map und konfiguriert die Kartenansicht.
+    /**
+     * Initialisiert die Google Map und konfiguriert die Kartenansicht in den FrameLayout.
+     */
     private void initMap() {
         if (googleMap == null) {
             MapFragment mapFragment1 = (MapFragment) getFragmentManager().findFragmentById(R.id.mapPlaces);
@@ -399,27 +391,35 @@ public class ActivityPlaceDetail extends AppCompatActivity {
                     if (googleMap == null) {
                         Snackbar.make(parent_view, R.string.unable_create_map, Snackbar.LENGTH_SHORT).show();
                     } else {
-                        // config map
+                        // Konfiguriere die Karte
                         googleMap = Tools.configStaticMap(ActivityPlaceDetail.this, googleMap, activityModel);
                     }
                 }
             });
         }
 
+        /**
+         * KlickListner auf das Distanzfeld um die Maps-Aktivität zu starten
+         */
         ((Button) findViewById(R.id.bt_navigate)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(getApplicationContext(),"OPEN", Toast.LENGTH_LONG).show();
                 Intent navigation = new Intent(Intent.ACTION_VIEW, Uri.parse("http://maps.google.com/maps?daddr=" + activityModel.location.latitude + "," + activityModel.location.longitude));
                 startActivity(navigation);
             }
         });
+        /**
+         * KlickListner für den Ansicht-Button um die MapsActivity zu starten
+         */
         ((Button) findViewById(R.id.bt_view)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openPlaceInMap();
             }
         });
+        /**
+         * KlickListner für die Karte um die MapsActivity zu starten
+         */
         ((LinearLayout) findViewById(R.id.map)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -428,58 +428,45 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         });
     }
 
-    // Öffnet den ausgewählten Ort in der Google Maps-Anwendung.
+    /**
+     * Öffnet den ausgewählten Ort in der Google Maps-Anwendung.
+     * Übergibt das Ort-Objekt der Maps-Activity
+     */
     private void openPlaceInMap() {
         Intent openPlaceMap = new Intent(this, ActivityMaps.class);
         openPlaceMap.putExtra(ActivityMaps.EXTRA_OBJ, activityModel);
         startActivity(openPlaceMap);
     }
 
-    /*
-      Wird aufgerufen, wenn die Aktivität zerstört wird. Hier wird überprüft, ob der API-Aufruf
-      noch ausgeführt wird und gegebenenfalls abgebrochen
-     */
-    @Override
-    protected void onDestroy() {
-        if (callback != null && callback.isExecuted()) callback.cancel();
-        super.onDestroy();
-    }
 
-    /*
-     Wird aufgerufen, wenn die Zurück-Taste des Geräts gedrückt wird. Hier wird festgelegt,
-     wie die Aktivität beendet wird, basierend auf dem Wert von isFromNotif
+
+    /**
+     * Diese Methode wird aufgerufen, wenn die Zurück-Taste des Geräts gedrückt wird. Hier wird festgelegt,
+     * wie die Aktivität beendet wird, basierend auf dem Wert von isFromNotif.
      */
     @Override
     public void onBackPressed() {
         backAction();
     }
 
-    /*
-      Wird aufgerufen, wenn die Aktivität pausiert wird. Hier wird sichergestellt,
-      dass die WebView pausiert wird, um Ressourcen zu sparen.
-     */
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (description != null) description.onPause();
-    }
 
-    /*
-      Eine Hilfsmethode, die festlegt, wie die Aktivität beendet wird, abhängig davon,
-      ob sie von einer Benachrichtigung gestartet wurde oder nicht
+    /**
+     * Diese Hilfsmethode legt fest, wie die Aktivität beendet wird, abhängig davon,
+     * ob sie von einer Benachrichtigung gestartet wurde oder nicht.
      */
     private void backAction() {
         if (isFromNotif) {
-            Intent openMainAcitvity = new Intent(this, ActivityMain.class);
-            startActivity(openMainAcitvity);
+            Intent openMainActivity = new Intent(this, ActivityMain.class);
+            startActivity(openMainActivity);
         }
         finish();
     }
 
-
-    /*
-      Zeigt die Daten des Ortes mit einer leichten Verzögerung an,
-      um die Benutzeroberfläche responsiver zu machen.
+    /**
+     * Diese Methode zeigt die Daten des Ortes mit einer leichten Verzögerung an,
+     * um die Benutzeroberfläche responsiver zu machen.
+     *
+     * @param resp Das Place-Objekt mit den Daten.
      */
     private void displayDataWithDelay(final Activity resp) {
         new Handler().postDelayed(new Runnable() {
@@ -492,9 +479,9 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         }, 1000);
     }
 
-
-
-    // Zeigt die Snackbar-Nachricht periodisch erneut an, wenn sie noch nicht angezeigt wird
+    /**
+     * Diese Methode zeigt die Snackbar-Nachricht periodisch erneut an, wenn sie noch nicht angezeigt wird.
+     */
     private void retryDisplaySnackbar() {
         if (snackbar != null && !snackbar.isShown()) {
             new Handler().postDelayed(new Runnable() {
@@ -506,8 +493,14 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         }
     }
 
-    // Zeigt oder verbirgt die Fortschrittsanzeige.
+    /**
+     * Diese Methode zeigt oder verbirgt die Fortschrittsanzeige.
+     *
+     * @param show Ein Wert, der angibt, ob die Fortschrittsanzeige angezeigt oder verborgen werden soll.
+     */
     private void showProgressbar(boolean show) {
         lyt_progress.setVisibility(show ? View.VISIBLE : View.GONE);
     }
+
+
 }

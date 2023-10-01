@@ -31,7 +31,7 @@ public class ProfileActivity extends AppCompatActivity {
     /**
      * - setzt das passende Profil Layout
      * - initialisiert die Toolbar über Funktionsaufruf
-     *
+     *  Setzt einen Clicklistener zum Ausloggen des Nutzers (löscht User-JSON)
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +53,9 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Läat die dasten aus dem UserJson und zeigt sie an
+     */
     private void set_User_Profile(){
         //Finde die benötigten Textviews
         usernameTextView = findViewById(R.id.profile_name);
@@ -66,8 +69,10 @@ public class ProfileActivity extends AppCompatActivity {
         Log.d("MeineActivity", "Benutzername: " + username);
     }
 
+    /**
+     *Initialisiert die Toolbar (App-Aktionenleiste) oben auf der Aktivität.
+     */
 
-    // Initialisiert die Toolbar (App-Aktionenleiste) oben auf der Aktivität.
     private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -78,6 +83,11 @@ public class ProfileActivity extends AppCompatActivity {
         Tools.systemBarLolipop(this);
     }
 
+    /**
+     * Listener für das Zurückgehen in die ActivityMain
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
@@ -86,10 +96,10 @@ public class ProfileActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /*
+    /**
   Wird aufgerufen, wenn die Aktivität wieder aufgenommen wird. Es aktualisiert die
   Aktionenleistenfarbe und die Systemleiste (nur für Android Lollipop und höher).
- */
+  */
     @Override
     protected void onResume() {
         if (actionBar != null) {

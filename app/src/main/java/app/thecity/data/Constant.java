@@ -7,7 +7,11 @@ import app.thecity.AppConfig;
  */
 public class Constant {
 
-    // URL für Bilder von Orten
+    /**
+     * Baut die URL für die Orte
+     * @param file_name
+     * @return
+     */
     public static String getURLimgActivity(String file_name) {
         return AppConfig.general.web_url_Mobc + "api/activities/image/" + file_name;
     }

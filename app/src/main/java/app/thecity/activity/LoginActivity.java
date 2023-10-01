@@ -11,6 +11,11 @@ import app.thecity.fragment.RegisterFragment;
 
 public class LoginActivity extends AppCompatActivity {
 
+    /**
+     * Mehode zum Initialisieren der Views
+     * Laden des Layouts activity_login
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +28,9 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Methode zum hin und her wechseln zwischen Login- und RegisterFragment
+     */
     public void switchFragments() {
         if (getSupportFragmentManager().findFragmentById(R.id.logincontainer) instanceof LoginFragment) {
             getSupportFragmentManager().beginTransaction()

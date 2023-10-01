@@ -1,28 +1,25 @@
 package app.thecity.connection;
 
-import java.io.InputStream;
 import java.util.List;
 
-import app.thecity.connection.callbacks.CallbackDevice;
-import app.thecity.connection.callbacks.CallbackListNewsInfo;
-import app.thecity.connection.callbacks.CallbackListPlace;
-import app.thecity.connection.callbacks.CallbackPlaceDetails;
+
 import app.thecity.connection.callbacks.CallbackUser;
 import app.thecity.model.Activity;
-import app.thecity.model.DeviceInfo;
 import app.thecity.model.Evaluation;
 import app.thecity.model.User;
 import app.thecity.model.UserInfo;
+import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import retrofit2.http.Streaming;
 
 /**
  * Schnittstellenbeschreibung für die API-Anfragen an den Server.
@@ -30,56 +27,60 @@ import retrofit2.http.Streaming;
  */
 public interface API {
 
-    String CACHE = "Cache-Control: max-age=0";
-    String AGENT = "User-Agent: Place";
-
     String CONTENT_TYPE_JSON = "Content-Type: application/json";
 
-    String CONTENT_TYPE_IMAGE = "Content-Type: image/jpeg";
-    /* Place API transaction ------------------------------- */
-
-    // Ruft eine Liste von Orten basierend auf der Seitennummer, der Anzahl und dem Status (entwurf oder nicht) ab
-    @Headers({CACHE, AGENT})
-    @GET("app/services/listPlaces")
-    Call<CallbackListPlace> getPlacesByPage(
-            @Query("page") int page,
-            @Query("count") int count,
-            @Query("draft") int draft
-    );
-
-    // Ruft Details zu einem bestimmten Ort anhand der Ort-ID ab
-    @Headers({CACHE, AGENT})
-    @GET("app/services/getPlaceDetails")
-    Call<CallbackPlaceDetails> getPlaceDetails(
-            @Query("place_id") int place_id
-    );
-
+    /**
+     * HTTP-POST zum Einloggen des Users
+     *
+     * @param userInfo Passwort und username
+     * @return Das User-Objekt mit Token (Authentifizierung)
+     */
     @Headers({CONTENT_TYPE_JSON})
     @POST("api/user/login")
         Call<CallbackUser> login(
             @Body UserInfo userInfo
             );
 
+    /**
+     * HTTP-POST zum Regestrieren des Nutzers
+     * @param user Userdaten (Name, email, Passwort, etc.)
+     * @return
+     */
     @Headers({CONTENT_TYPE_JSON})
     @POST("api/user/register")
     Call<String> register(
             @Body User user
     );
-    @GET("/api/activities/image/{id}")
-    Call<ResponseBody> fetchImage (@Path("id") String id);
 
+    /**
+     * HTTP-GET zum holen der Aktivitäten in Abhängigkeit von der Kategorie
+     * @param category Kategorietyp zum Filtern der Aktivitäten
+     * @return Liste von Aktivitäten
+     */
     @Headers({CONTENT_TYPE_JSON})
     @GET("/api/activities/")
     Call<List<Activity>> getActivities(
             @Query("category") String category
     );
 
+    /**
+     * HTTP-GET um die eigenen geposteten Aktivitäten abzufragen
+     * @param token token zur Authentifizierung
+     * @return
+     */
     @Headers({CONTENT_TYPE_JSON})
     @GET("/api/activities/userId")
     Call<List<Activity>> getOwnActivities(
         @Header("token") String token
     );
 
+    /**
+     * HTTP-POST zum Anlegen eines neuen Kommentars zu einer Aktivität
+     * @param token zur Authentiizierung
+     * @param id der Aktivität
+     * @param evaluation Kommentar der gepostet werden soll
+     * @return
+     */
     @Headers({CONTENT_TYPE_JSON})
     @POST("api/comments/activity/{id}")
     Call<ResponseBody> postCommentsToActivity(
@@ -87,28 +88,47 @@ public interface API {
             @Path("id") String id,
             @Body Evaluation evaluation
     );
+
+    /**
+     * HTTP-POST zum Anlegen einer neuen Aktivität
+     * @param token zur Authentifizierung
+     * @param activity Aktivität die gepostet werden soll
+     * @return
+     */
+    @Headers({CONTENT_TYPE_JSON})
+    @POST("api/activities/")
+    Call<Activity> postActivity(
+            @Header("token") String token,
+            @Body Activity activity
+    );
+
+    /**
+     * HTTP-GET zum Laden aller Kommentare einer Aktivität
+     * @param id der Aktivität
+     * @return Liste der Kommentare
+     */
     @Headers({CONTENT_TYPE_JSON})
     @GET("/api/comments//activity/{id}")
     Call<List<Evaluation>> getComments(
             @Path("id") String id
     );
 
-
-    /* News Info API transaction ------------------------------- */
-
-    // Ruft eine Liste von "NewsInfo" Informationen basierend auf der Seitennummer und der Anzahl ab
-    @Headers({CACHE, AGENT})
-    @GET("app/services/listNewsInfo")
-    Call<CallbackListNewsInfo> getNewsInfoByPage(
-            @Query("page") int page,
-            @Query("count") int count
+    /**
+     * HTTP-POST zum Anlegen eines Bildes zu einer Aktivität
+     * @param image das Hochgeladen werden soll
+     * @param id der Aktivität
+     * @param token zur Authenifizierung
+     * @return
+     */
+    @Multipart
+    @POST("api/activities/image/{id}") // Der Endpunkt, an den das Bild hochgeladen wird
+    Call<ResponseBody> uploadImage(
+            @Part MultipartBody.Part image,
+            @Path("id") String id,
+            @Header("token") String token
     );
 
-    // Registriert das Gerät und erhält eine Antwort als Callback zurück
-    @Headers({CACHE, AGENT})
-    @POST("app/services/insertGcm")
-    Call<CallbackDevice> registerDevice(
-            @Body DeviceInfo deviceInfo
-    );
+
+
 
 }

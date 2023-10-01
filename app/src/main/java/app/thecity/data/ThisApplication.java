@@ -5,18 +5,18 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 
-import app.thecity.connection.callbacks.CallbackDevice;
-import retrofit2.Call;
 
 public class ThisApplication extends Application {
 
-    private Call<CallbackDevice> callback = null;
     private static ThisApplication mInstance;
 
 
     private Location location = null;
     private SharedPref sharedPref;
 
+    /**
+     * Setzen der Einstellungen der App des Users (Farbe...)
+     */
     @Override
     public void onCreate() {
         super.onCreate();
@@ -33,8 +33,11 @@ public class ThisApplication extends Application {
     }
 
 
+    /**
+     * Bildschirmansicht verfolgen
+     * @param event
+     */
 
-    // Bildschirmansicht verfolgen
     public void trackScreenView(String event) {
         Bundle params = new Bundle();
         event = event.replaceAll("[^A-Za-z0-9_]", "");
