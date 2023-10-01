@@ -94,7 +94,6 @@ public class ActivityPlaceDetail extends AppCompatActivity {
 
     private Activity activityModel = null;
 
-    private FloatingActionButton fab;
     private WebView description = null;
     private View parent_view = null;
     private GoogleMap googleMap;
@@ -341,20 +340,7 @@ public class ActivityPlaceDetail extends AppCompatActivity {
         CollapsingToolbarLayout collapsing_toolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsing_toolbar.setContentScrimColor(new SharedPref(this).getThemeColorInt());
 
-        // Füge einen OnOffsetChangedListener zur AppBarLayout hinzu
-        ((AppBarLayout) findViewById(R.id.app_bar_layout)).addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                // Überprüfe, ob die Höhe des CollapsingToolbarLayouts minus der vertikalen Verschiebung kleiner als das Doppelte der minimalen Höhe des CollapsingToolbarLayouts ist
-                if (collapsing_toolbar.getHeight() + verticalOffset < 2 * ViewCompat.getMinimumHeight(collapsing_toolbar)) {
-                    // Zeige den FloatingActionButton, wenn der Bedingung erfüllt ist
-                    fab.show();
-                } else {
-                    // Verberge den FloatingActionButton, wenn der Bedingung nicht erfüllt ist
-                    fab.hide();
-                }
-            }
-        });
+
 
         // Füge einen OnClickListener zum ImageView mit der ID "image" hinzu
         (findViewById(R.id.image)).setOnClickListener(new View.OnClickListener() {
