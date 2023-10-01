@@ -111,12 +111,12 @@
                     android:id="@+id/textView3" />
 
                 <!-- ImageView zur Anzeige des ausgewählten Bilds -->
-                <ImageView
-                    android:id="@+id/selectedImageView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_nav_ent" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_weight="2"
+                    android:id="@+id/images_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                </androidx.recyclerview.widget.RecyclerView>
 
                 <!-- Button zum Auswählen von Bildern -->
                 <Button
@@ -162,7 +162,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-light"
                 android:padding="@dimen/spacing_large"
-                android:text="@string/description_title"
+                android:hint="Beschreibung"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 android:textColor="@color/material_grey_800"
                 android:id="@+id/textView2" />

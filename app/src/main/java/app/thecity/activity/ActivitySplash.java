@@ -11,31 +11,26 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-
-
 import app.thecity.AppConfig;
 import app.thecity.R;
 import app.thecity.data.SharedPref;
-import app.thecity.data.ThisApplication;
 import app.thecity.utils.PermissionUtil;
 import app.thecity.utils.Tools;
 
-/*
-  Die Klasse ActivitySplash ist eine Android-Aktivität, die als Startbildschirm (Splash-Screen)
-  der App fungiert und gleichzeitig einige initialisierende Aufgaben ausführt,
-  bevor die Hauptaktivität (ActivityMain) gestartet wird.
+/**
+ * Die Klasse ActivitySplash ist eine Android-Aktivität, die als Startbildschirm (Splash-Screen)
+ * der App fungiert und gleichzeitig einige initialisierende Aufgaben ausführt,
+ * bevor die Hauptaktivität (ActivityMain) gestartet wird.
  */
 public class ActivitySplash extends AppCompatActivity {
 
     private SharedPref sharedPref;
     private View parent_view;
 
-    /*
-       Diese Methode wird aufgerufen, wenn die Aktivität erstellt wird.
-       Sie initialisiert die Ansichtskomponenten, zeigt den Splash-Screen an und führt die
-       Berechtigungsprüfung durch.
+    /**
+     * Diese Methode wird aufgerufen, wenn die Aktivität erstellt wird.
+     * Sie initialisiert die Ansichtskomponenten, zeigt den Splash-Screen an und führt die
+     * Berechtigungsprüfung durch.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,10 +59,10 @@ public class ActivitySplash extends AppCompatActivity {
         Tools.RTLMode(getWindow());
     }
 
-    /*
-      Überprüft, ob Remote Config verwendet wird und ob eine Internetverbindung besteht. Falls ja,
-      werden die Remote Config-Werte abgerufen und aktiviert. Andernfalls werden die Einstellungen
-      aus den gespeicherten Präferenzen verwendet
+    /**
+     * Überprüft, ob Remote Config verwendet wird und ob eine Internetverbindung besteht. Falls ja,
+     * werden die Remote Config-Werte abgerufen und aktiviert. Andernfalls werden die Einstellungen
+     * aus den gespeicherten Präferenzen verwendet.
      */
     private void requestRemoteConfig() {
         if (!AppConfig.USE_REMOTE_CONFIG || !Tools.cekConnection(this)) {
@@ -79,10 +74,10 @@ public class ActivitySplash extends AppCompatActivity {
 
     }
 
-    /*
-       Verzögert den Start der Hauptaktivität (ActivityMain) um einen bestimmten Zeitraum,
-       abhängig von der übergebenen Geschwindigkeit (fast). Dies wird verwendet,
-       um den Splash-Screen für eine gewisse Zeit anzuzeigen, bevor die Hauptaktivität gestartet wird
+    /**
+     * Verzögert den Start der Hauptaktivität (ActivityMain) um einen bestimmten Zeitraum,
+     * abhängig von der übergebenen Geschwindigkeit (fast). Dies wird verwendet,
+     * um den Splash-Screen für eine gewisse Zeit anzuzeigen, bevor die Hauptaktivität gestartet wird.
      */
     private void startActivityMainDelay(boolean fast) {
         new Handler(this.getMainLooper()).postDelayed(() -> nextActivity(), fast ? 1000 : 2000);
@@ -96,10 +91,10 @@ public class ActivitySplash extends AppCompatActivity {
     }
 
 
-    /*
-      Wird aufgerufen, nachdem der Benutzer auf die Berechtigungsanfrage reagiert hat.
-      Es überprüft, ob der Benutzer die Berechtigung verweigert und entscheidet,
-      ob die Remote Config abgerufen werden soll oder nicht
+    /**
+     * Wird aufgerufen, nachdem der Benutzer auf die Berechtigungsanfrage reagiert hat.
+     * Es überprüft, ob der Benutzer die Berechtigung verweigert hat und entscheidet,
+     * ob die Remote Config abgerufen werden soll oder nicht.
      */
     @Override
     @RequiresApi(api = Build.VERSION_CODES.M)

@@ -13,8 +13,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -36,7 +34,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
@@ -50,13 +47,16 @@ import app.thecity.connection.RestAdapter;
 import app.thecity.data.Constant;
 import app.thecity.model.Activity;
 import app.thecity.model.Category;
-import app.thecity.model.Place;
 import app.thecity.utils.ActivityType;
 import app.thecity.utils.PermissionUtil;
 import app.thecity.utils.Tools;
 import retrofit2.Call;
 import retrofit2.Response;
 
+/**
+ * Diese Klasse stellt die Aktivität für die Kartenansicht dar.
+ * Sie zeigt Orte (Places) auf einer Karte an und ermöglicht die Navigation zu den Details der Orte.
+ */
 public class ActivityMaps extends AppCompatActivity implements OnMapReadyCallback {
 
     public static final String EXTRA_OBJ = "key.EXTRA_OBJ";
@@ -83,13 +83,12 @@ public class ActivityMaps extends AppCompatActivity implements OnMapReadyCallbac
     private ViewPager viewPager;
     private MyViewPagerAdapter myViewPagerAdapter;
 
-
     /**
      * Initialisiert die Ansicht, die Karte und ruft einige Hilfsmethoden auf,
-     * um die ClusterManager-und ViewPager-Funktionen zu initialisieren
+     * um die ClusterManager-und ViewPager-Funktionen zu initialisieren.
      *
+     * @param savedInstanceState Die gespeicherten Daten, falls die Aktivität wiederhergestellt wird.
      */
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,12 +104,11 @@ public class ActivityMaps extends AppCompatActivity implements OnMapReadyCallbac
         ext_Activity = (Activity) getIntent().getSerializableExtra(EXTRA_OBJ);
         isSinglePlace = (ext_Activity != null);
 
-
         initMapFragment();
         initToolbar();
 
         cat = getResources().getIntArray(R.array.id_category);
-        if (!isSinglePlace){
+        if (!isSinglePlace) {
             this.fetchedActivities = (List<Activity>) getIntent().getSerializableExtra("activityList");
         }
         // for system bar in lollipop
@@ -118,7 +116,10 @@ public class ActivityMaps extends AppCompatActivity implements OnMapReadyCallbac
         Tools.RTLMode(getWindow());
     }
 
-    private void fetchAllListdata(){
+    /**
+     * Ruft die Liste aller Orte (Activities) aus dem Server ab.
+     */
+    private void fetchAllListdata() {
         Call<List<Activity>> callActivityList = RestAdapter.createMobcApi().getActivities(ActivityType.all.name());
         callActivityList.enqueue(new retrofit2.Callback<List<Activity>>() {
             @Override
@@ -143,13 +144,14 @@ public class ActivityMaps extends AppCompatActivity implements OnMapReadyCallbac
         });
     }
 
-
-
     /**
      * Diese Methode wird aufgerufen, wenn die Google Maps-Karte bereit ist. Sie initialisiert die
      * Karte, lädt Orte (Places) entweder für die gesamte Stadt oder nur für eine bestimmte Kategorie
      * und initialisiert den ClusterManager für die Marker-Cluster-Funktionalität.
+     *
+     * @param googleMap Die Google Map-Instanz, die bereit ist.
      */
+    @SuppressLint("PotentialBehaviorOverride")
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = Tools.configActivityMaps(googleMap);
@@ -254,14 +256,14 @@ public class ActivityMaps extends AppCompatActivity implements OnMapReadyCallbac
             placesPosition.put(activity.title + "", last_size + index);
             index++;
         }
-        if(mClusterManager != null) {
+        if (mClusterManager != null) {
             mClusterManager.clearItems();
             mClusterManager.cluster();
             mClusterManager.addItems(this.items);
         }
     }
 
-    // Initialisiert die Toolbar (App-Aktionenleiste) oben auf der Aktivität.
+    // Initialisiert die Toolbar (App-Aktionsleiste) oben auf der Aktivität.
     private void initToolbar() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -278,7 +280,6 @@ public class ActivityMaps extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
-
 
     private class PlaceMarkerRenderer extends DefaultClusterRenderer<Activity> {
         public PlaceMarkerRenderer(Context context, GoogleMap map, ClusterManager<Activity> clusterManager) {
@@ -308,97 +309,9 @@ public class ActivityMaps extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-    // Erstellt das Optionsmenü in der Aktionsleiste.
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_activity_maps, menu);
-        return true;
-    }
-
-    /*
-      Reagiert auf Klicks auf die Menüelemente und aktualisiert die Kartenansicht entsprechend
-      er ausgewählten Kategorie.
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
-            super.onBackPressed();
-            return true;
-        } else {
-            String category_text;
-
-                category_text = item.getTitle().toString();
-                int itemId = item.getItemId();
-                if (itemId == R.id.nav_all) {
-                    cat_id = -1;
-                } else if (itemId == R.id.nav_ownplaces) {
-                    cat_id = cat[10];
-                } else if (itemId == R.id.nav_calesthenics) {
-                    cat_id = cat[0];
-                } else if (itemId == R.id.nav_parcouring) {
-                    cat_id = cat[1];
-                } else if (itemId == R.id.nav_outdoor) {
-                    cat_id = cat[2];
-                } else if (itemId == R.id.nav_outdoorGyms) {
-                    cat_id = cat[3];
-                }
-
-                clearViewPager();
-                ActivityType activityType = ActivityType.getbyCategoryId(cat_id);
-                if (activityType != null) {
-                    Call<List<Activity>> callActivityList = RestAdapter.createMobcApi().getActivities(activityType.name());
-                    callActivityList.enqueue(new retrofit2.Callback<List<Activity>>() {
-                        @Override
-                        public void onResponse(Call<List<Activity>> call, Response<List<Activity>> response) {
-                            List<Activity> activityList = response.body();
-                            if (activityList != null) {
-                            for (Activity activity : activityList) {
-                                if (activity.location != null) {
-                                    activity.distance = Tools.getDistanceToCurrentLocation(getApplicationContext(), activity.getPosition());
-                                }
-                            }
-
-                                if (isSinglePlace) {
-                                    isSinglePlace = false;
-                                    mClusterManager = new ClusterManager<>(getApplicationContext(), mMap);
-                                    mMap.setOnCameraIdleListener(mClusterManager);
-                                }
-                                loadClusterManager(activityList);
-                                if (activityList.size() == 0) {
-                                    Snackbar.make(parent_view, getString(R.string.no_item_at) + " " + item.getTitle().toString(), Snackbar.LENGTH_LONG).show();
-                                }
-                                placeMarkerRenderer = new PlaceMarkerRenderer(getApplicationContext(), mMap, mClusterManager);
-                                initClusterWithSlider();
-                                mClusterManager.setRenderer(placeMarkerRenderer);
-
-                                actionBar.setTitle(category_text);
-
-                                showSlider = activityList.size() != 0;
-                                toggleViewPager(showSlider);
-                                if (activityList.size() != 0) {
-                                    initViewPager();
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<List<Activity>> call, Throwable t) {
-                            if (call != null && !call.isCanceled()) {
-                                Log.e("onFailure", t.getMessage());
-                            }
-                        }
-                    });
-
-                }
-            }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     /*
       Zeigt einen AlertDialog an, wenn das GPS des Geräts ausgeschaltet ist und ermöglicht
-      dem Benutzer, es einzuschalten
+      dem Benutzer, es einzuschalten.
      */
     private void showAlertDialogGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -539,12 +452,10 @@ public class ActivityMaps extends AppCompatActivity implements OnMapReadyCallbac
             return view == obj;
         }
 
-
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
             View view = (View) object;
             container.removeView(view);
         }
     }
-
 }

@@ -1,8 +1,9 @@
 package app.thecity.widget;
 
 import android.graphics.Rect;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Item Dekoration für eine RecyclerView - erzeugt gleichmäßige Abstände um jedes Element in einem Rasterlayout.
@@ -13,11 +14,6 @@ public class SpacingItemDecoration extends RecyclerView.ItemDecoration {
     private int spacingPx; // Abstand zwischen den Elementen in Pixeln
     private boolean includeEdge; // Gibt an, ob die äußeren Elemente des Rasters ebenfalls Abstand haben sollen
 
-    public SpacingItemDecoration(int spanCount, int spacingPx, boolean includeEdge) {
-        this.spanCount = spanCount;
-        this.spacingPx = spacingPx;
-        this.includeEdge = includeEdge;
-    }
 
     /**
      * Berechnet die Abstände für jedes Element im Rasterlayout basierend auf den festgelegten Parametern.

@@ -5,11 +5,9 @@ import android.app.Dialog;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
-import android.preference.PreferenceManager;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,46 +36,70 @@ public class ActivitySetting extends PreferenceActivity {
     private View parent_view;
     private SharedPref sharedPref;
 
+    /**
+     * Diese Methode wird aufgerufen, wenn die Aktivität erstellt wird.
+     *
+     * @param savedInstanceState Das gespeicherte Instanzzustands-Bundle.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Ressourcen aus XML-Ressourcendatei hinzufügen
         addPreferencesFromResource(R.xml.setting_);
         parent_view = findViewById(android.R.id.content);
         Tools.RTLMode(getWindow());
 
         sharedPref = new SharedPref(getApplicationContext());
 
-        Preference themePref = findPreference(getString(R.string.pref_key_theme));
+        // Initialisieren der Einstellungen für "Über" und andere Optionen
+        setupAboutPreference();
+        setupThemePreference();
+        setupTermPreference();
+    }
+
+    /**
+     * Diese Methode initialisiert die Einstellungen für "Über".
+     */
+    private void setupAboutPreference() {
         Preference aboutPref = findPreference("key_about");
-        final Preference prefTerm = findPreference(getString(R.string.pref_title_term));
-
-        if (!AppConfig.general.theme_color) {
-            PreferenceCategory categoryOthers = (PreferenceCategory) findPreference(getString(R.string.pref_category_display));
-            categoryOthers.removePreference(themePref);
-        }
-
         aboutPref.setOnPreferenceClickListener(preference -> {
             Tools.aboutAction(ActivitySetting.this);
             return true;
         });
+    }
 
-        themePref.setOnPreferenceClickListener(preference -> {
-            dialogColorChooser(ActivitySetting.this);
-            return true;
-        });
+    /**
+     * Diese Methode initialisiert die Einstellungen für das App-Thema.
+     */
+    private void setupThemePreference() {
+        Preference themePref = findPreference(getString(R.string.pref_key_theme));
+        if (!AppConfig.general.theme_color) {
+            PreferenceCategory categoryOthers = (PreferenceCategory) findPreference(getString(R.string.pref_category_display));
+            categoryOthers.removePreference(themePref);
+        } else {
+            themePref.setOnPreferenceClickListener(preference -> {
+                dialogColorChooser(ActivitySetting.this);
+                return true;
+            });
+        }
+    }
 
+    /**
+     * Diese Methode initialisiert die Einstellungen für die Nutzungsbedingungen.
+     */
+    private void setupTermPreference() {
+        final Preference prefTerm = findPreference(getString(R.string.pref_title_term));
         prefTerm.setOnPreferenceClickListener(preference -> {
             dialogTerm(ActivitySetting.this);
             return true;
         });
     }
 
-    @Override
-    protected void onResume() {
-        initToolbar();
-        super.onResume();
-    }
-
+    /**
+     * Diese Methode zeigt ein Dialogfeld mit den Nutzungsbedingungen an.
+     *
+     * @param activity Die Aktivität, in der der Dialog angezeigt wird.
+     */
     public void dialogTerm(Activity activity) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setTitle(activity.getString(R.string.pref_title_term));
@@ -86,6 +108,11 @@ public class ActivitySetting extends PreferenceActivity {
         builder.show();
     }
 
+    /**
+     * Diese Methode zeigt ein Dialogfeld zum Ändern der App-Farbe an.
+     *
+     * @param activity Die Aktivität, in der der Dialog angezeigt wird.
+     */
     private void dialogColorChooser(Activity activity) {
         final Dialog dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -123,38 +150,18 @@ public class ActivitySetting extends PreferenceActivity {
         dialog.getWindow().setAttributes(lp);
     }
 
-    private static void bindPreferenceSummaryToValue(Preference preference) {
-        preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
-        sBindPreferenceSummaryToValueListener.onPreferenceChange(
-                preference,
-                PreferenceManager.getDefaultSharedPreferences(preference.getContext()).getString(preference.getKey(), "")
-        );
-    }
-
-    private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
-        @Override
-        public boolean onPreferenceChange(Preference preference, Object value) {
-            String stringValue = value.toString();
-
-            if (preference instanceof ListPreference) {
-                ListPreference listPreference = (ListPreference) preference;
-                int index = listPreference.findIndexOfValue(stringValue);
-                preference.setSummary(
-                        index >= 0 ? listPreference.getEntries()[index] : null
-                );
-            } else {
-                preference.setSummary(stringValue);
-            }
-            return true;
-        }
-    };
-
+    /**
+     * Diese Methode wird aufgerufen, wenn die Aktivität wieder in den Vordergrund gebracht wird.
+     */
     @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        getDelegate().onPostCreate(savedInstanceState);
+    protected void onResume() {
+        initToolbar();
+        super.onResume();
     }
 
+    /**
+     * Diese Methode initialisiert die Toolbar.
+     */
     private void initToolbar() {
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -164,6 +171,12 @@ public class ActivitySetting extends PreferenceActivity {
         Tools.setActionBarColor(this, actionBar);
     }
 
+    /**
+     * Diese Methode wird aufgerufen, wenn ein Menüelement ausgewählt wird.
+     *
+     * @param item Das ausgewählte Menüelement.
+     * @return true, wenn das Ereignis behandelt wurde, andernfalls false.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {

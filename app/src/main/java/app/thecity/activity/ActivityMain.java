@@ -3,16 +3,12 @@ package app.thecity.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.IdRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,189 +22,110 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
-import app.thecity.AppConfig;
+import java.io.Serializable;
+
 import app.thecity.R;
 import app.thecity.data.SharedPref;
 import app.thecity.fragment.FragmentCategory;
-import app.thecity.model.Activity;
 import app.thecity.model.User;
 import app.thecity.utils.PermissionUtil;
 import app.thecity.utils.Tools;
-
-// Hauptaktivität der App
+/**
+ * Diese Klasse stellt die Hauptaktivität der App dar.
+ * Sie enthält das Hauptmenü und ermöglicht die Navigation zu verschiedenen Funktionen der App.
+ */
 public class ActivityMain extends AppCompatActivity {
 
-    //Hallo
     public ActionBar actionBar;
     public Toolbar toolbar;
     private int[] categories;
-    private FloatingActionButton fab;
+    private static boolean active = false;
+
     private FloatingActionButton newPlace;
     private NavigationView navigationView;
-
     private SharedPref sharedPref;
-    private TextView usernameNav ;
-    private RelativeLayout nav_header_lyt;
+    private RelativeLayout navHeaderLayout;
+    private static ActivityMain menueActivityMain;
+    private Fragment fragment;
 
-    static ActivityMain activityMain;
-    Fragment fragment;
-
-    /*
-     In dieser Methode wird die Aktivität initialisiert. Es werden die Toolbar, das Navigationsmenü
-     und die Kategorien initialisiert. Die erste Kategorie (FragmentCategory) wird angezeigt,
-     und ein Klick auf den FAB (Floating Action Button) öffnet die ActivitySearch.
-     Es wird auch die Benachrichtigungsberechtigung überprüft und die Systemleiste für
-     Lollipop-Geräte angepasst
+    /**
+     * Initialisiert die Aktivität, setzt das Layout und führt notwendige Initialisierungen durch.
+     * @param savedInstanceState Das Bundle-Objekt, das den Zustand der Aktivität enthält.
      */
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Setze das Layout der Hauptaktivität
         setContentView(R.layout.activity_main);
-        // Weise die Hauptaktivität dieser Variable zu
-        activityMain = this;
+        menueActivityMain = this;
 
-        // Initialisiere die Schwebende FavouritenButton (Floating Action Button)
-        //fab = (FloatingActionButton) findViewById(R.id.fab);
+        newPlace = findViewById(R.id.newPlace);
 
-        // Initialisiere die Schwebende NewPlace (Floating Action Button)
-        newPlace = (FloatingActionButton) findViewById(R.id.newPlace);
-
-        // Initialisiere die Datenbank-Handler-Klasse
-        // Initialisiere die gemeinsamen Einstellungen
         sharedPref = new SharedPref(this);
 
-        // Initialisiere die Toolbar
         initToolbar();
-        // Initialisiere das Navigationsmenü im Seitenmenü
         initDrawerMenu();
 
-
-        // Lade die Kategorien-IDs aus den Ressourcen
         categories = getResources().getIntArray(R.array.id_category);
-
-        // Wähle standardmäßig das erste Element im Seitenmenü aus
         onItemSelected(R.id.nav_all, getString(R.string.title_nav_all));
 
-
-
-        // Füge einen Klicklistener zur Schwebenden Create_Place Button hinzu
         newPlace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Öffne die Aktivität für die Suche
                 Intent newPlaceIntent = new Intent(ActivityMain.this, ActivityNewPlace.class);
                 startActivity(newPlaceIntent);
             }
         });
 
-        // Überprüfe und beantrage gegebenenfalls Berechtigungen für Benachrichtigungen
         PermissionUtil.checkAndRequestNotification(this);
-
-        // Konfiguriere die Systemleiste für Lollipop
         Tools.systemBarLolipop(this);
-
-        // Konfiguriere die Rechts-nach-links-Schriftartunterstützung
         Tools.RTLMode(getWindow());
 
-            User user = Tools.readuser(getApplicationContext());
+        User user = Tools.readuser(getApplicationContext());
 
-            if (user == null || user.token == null) {
-                Intent intent = new Intent(this, LoginActivity.class);
-                startActivity(intent);
-            }
-
-
-
-
-
-    }
-
-    // Initialisiere die Toolbar
-    private void initToolbar() {
-        // Finde die Toolbar in der Layout-Datei und setze sie als Aktionsleiste
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        // Erhalte eine Referenz zur Aktionsleiste
-        actionBar = getSupportActionBar();
-        // Zeige den Zurück-Pfeil in der Aktionsleiste an
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        // Aktiviere die Home-Button-Funktionalität der Aktionsleiste
-        actionBar.setHomeButtonEnabled(true);
-        // Setze die Farbe der Aktionsleiste
-        Tools.setActionBarColor(this, actionBar);
-    }
-
-    /*
-      In dieser Methode wird das Navigationsmenü (Drawer) initialisiert. Es werden Menüoptionen
-      festgelegt und die Klickaktionen für verschiedene Menüpunkte werden definiert. Außerdem wird
-      die Navigation Header-View angepasst und Klickaktionen für die Menüelemente "Einstellungen"
-      und "Karte" festgelegt.
-       */
-    private void initDrawerMenu() {
-        // Finde die Schublade (DrawerLayout) in der Layout-Datei
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        // Erstelle einen Toggle-Listener für die Schublade, um den Schubladenstatus zu überwachen
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                // Aktualisiere die Anzahl der Favoriten im Navigationselement, wenn die Schublade geöffnet wird
-                super.onDrawerOpened(drawerView);
-            }
-        };
-        // Setze den Toggle-Listener für die Schublade
-        drawer.setDrawerListener(toggle);
-        // Synchronisiere den Schubladenstatus mit dem Toggle-Status (z. B. zeige/hide den Hamburger-Button)
-        toggle.syncState();
+        if (user == null || user.token == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
 
         // Finde das Navigationselement in der Layout-Datei und setze einen Listener für Navigationselement-Auswahlereignisse
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
-                // Verarbeite das ausgewählte Navigationselement
                 return onItemSelected(item.getItemId(), item.getTitle().toString());
             }
         });
 
-
-        // Setze das Aussehen des Navigationskopfbereichs plus die Farbe die in Settings ausgewählt
+        // Setze das Aussehen des Navigationskopfbereichs
         View nav_header = navigationView.getHeaderView(0);
-        nav_header_lyt = (RelativeLayout) nav_header.findViewById(R.id.nav_header_lyt);
-        nav_header_lyt.setBackgroundColor(Tools.colorBrighter(sharedPref.getThemeColorInt()));
-
+        navHeaderLayout = nav_header.findViewById(R.id.nav_header_lyt);
     }
 
-    /*
-    Wenn die Zurück-Taste gedrückt wird, wird das Navigationsmenü geöffnet, wenn es geschlossen ist.
-    Wenn es bereits geöffnet ist, wird die doExitApp-Methode aufgerufen, um die App zu beenden.
+    /**
+     * Initialisiert die Toolbar und setzt sie als ActionBar.
      */
-    @Override
-    public void onBackPressed() {
-        // Zuerst wird versucht, das Schubladensystem (DrawerLayout) in der Layout-Datei zu finden
-        // draweelayout entspricht der navigationsleiste rechts mit den 3 balken
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (!drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.openDrawer(GravityCompat.START);
-        } else {
-            doExitApp();
-        }
+    private void initToolbar() {
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+        Tools.setActionBarColor(this, actionBar);
     }
 
-    /*
-    onCreateOptionsMenu und onOptionsItemSelected: Diese Methoden handhaben das Erstellen und
-    Verarbeiten des Optionsmenüs der Toolbar, einschließlich Optionen wie "Einstellungen",
-    "Bewerten" und "Über"
+    /**
+     * Initialisiert das Navigationsmenü (Drawer) der App.
      */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_activity_main, menu);
-        return true;
+    private void initDrawerMenu() {
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+            }
+        };
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
     }
 
     @Override
@@ -222,26 +139,28 @@ public class ActivityMain extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /*
-      Diese Methode wird aufgerufen, wenn ein Element im Navigationsmenü ausgewählt wird.
-      Abhängig von der ausgewählten Kategorie wird das entsprechende Fragment (Kategorie) angezeigt.
-       */
+    /**
+     * Behandelt die Auswahl eines Elements im Navigationsmenü.
+     *
+     * @param id    Die ID des ausgewählten Elements.
+     * @param title Der Titel des ausgewählten Elements.
+     * @return true, wenn die Auswahl erfolgreich verarbeitet wurde, andernfalls false.
+     */
     public boolean onItemSelected(int id, String title) {
-        // Handle navigation view item clicks here.
-        fragment = null;
         Bundle bundle = new Bundle();
-        //sub menu
-        /* IMPORTANT : cat[index_array], index is start from 0
-         */
         if (id == R.id.profile) {
             Intent openNewsInfosIntent = new Intent(this, ProfileActivity.class);
             startActivity(openNewsInfosIntent);
-        }else if (id == R.id.nav_all) {
-            //All Places
+        } else if (id == R.id.maps_menue) {
+            Intent openMapIntent = new Intent(getApplicationContext(), ActivityMaps.class);
+            if (((FragmentCategory) fragment).getActivityList() != null) {
+                openMapIntent.putExtra("activityList", (Serializable) ((FragmentCategory) fragment).getActivityList());
+            }
+            startActivity(openMapIntent);
+        } else if (id == R.id.nav_all) {
             fragment = new FragmentCategory();
             bundle.putInt(FragmentCategory.TAG_CATEGORY, -1);
             actionBar.setTitle(title);
-
         } else if (id == R.id.nav_ownplaces) {
             fragment = new FragmentCategory();
             bundle.putInt(FragmentCategory.TAG_CATEGORY, categories[10]);
@@ -271,13 +190,13 @@ public class ActivityMain extends AppCompatActivity {
             fragmentTransaction.replace(R.id.frame_content, fragment);
             fragmentTransaction.commit();
         }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    /*
-    Diese Methode wird verwendet, um die virtuelle Tastatur zu verstecken, wenn sie geöffnet ist.
+    /**
+     * Versteckt die virtuelle Tastatur, wenn sie geöffnet ist.
      */
     private void hideKeyboard() {
         View view = this.getCurrentFocus();
@@ -289,9 +208,9 @@ public class ActivityMain extends AppCompatActivity {
 
     private long exitTime = 0;
 
-    /*
-    Wenn die Zurück-Taste erneut gedrückt wird, wird diese Methode aufgerufen,um die App zu beenden.
-    Wenn die Zurück-Taste innerhalb von 2 Sekunden erneut gedrückt wird, wird die App beendet.
+    /**
+     * Beendet die App, wenn die Zurück-Taste erneut innerhalb von 2 Sekunden gedrückt wird.
+     * Ansonsten wird eine Benachrichtigung angezeigt.
      */
     public void doExitApp() {
         if ((System.currentTimeMillis() - exitTime) > 2000) {
@@ -302,25 +221,21 @@ public class ActivityMain extends AppCompatActivity {
         }
     }
 
-    /*
-    Diese Methoden werden verwendet, um die App-Oberfläche und die Farbgebung der ActionBar
-    bei Bedarf zu aktualisieren.
-     */
     @Override
     protected void onResume() {
+        super.onResume();
 
         if (actionBar != null) {
             Tools.setActionBarColor(this, actionBar);
-            // for system bar in lollipop
             Tools.systemBarLolipop(this);
         }
-        if (nav_header_lyt != null) {
-            nav_header_lyt.setBackgroundColor(Tools.colorBrighter(sharedPref.getThemeColorInt()));
+
+        if (navHeaderLayout != null) {
+            navHeaderLayout.setBackgroundColor(Tools.colorBrighter(sharedPref.getThemeColorInt()));
         }
-        super.onResume();
     }
 
-    static boolean active = false;
+
     @Override
     public void onStart() {
         super.onStart();
@@ -333,21 +248,23 @@ public class ActivityMain extends AppCompatActivity {
         active = false;
     }
 
-
-
-    /*
-    Diese beiden Methoden sind statische Methoden, um eine Instanz der ActivityMain zu erhalten und
-    die Animation des Floating Action Buttons zu steuern.
+    /**
+     * Gibt eine Instanz der ActivityMain zurück.
+     *
+     * @return Die Instanz der ActivityMain.
      */
     public static ActivityMain getInstance() {
-        return activityMain;
+        return menueActivityMain;
     }
 
-
+    /**
+     * Animiert den Floating Action Button (FAB) für die Erstellung eines neuen Ortes.
+     *
+     * @param hide true, wenn der FAB ausgeblendet werden soll, andernfalls false.
+     */
     public static void animateNewplace(final boolean hide) {
-        FloatingActionButton f_ab = (FloatingActionButton) activityMain.findViewById(R.id.newPlace);
+        FloatingActionButton f_ab = menueActivityMain.findViewById(R.id.newPlace);
         int moveY = hide ? (2 * f_ab.getHeight()) : 0;
         f_ab.animate().translationY(moveY).setStartDelay(100).setDuration(400).start();
     }
-
 }

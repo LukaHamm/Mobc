@@ -1,11 +1,13 @@
 package app.thecity.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.balysv.materialripple.MaterialRippleLayout;
 
@@ -14,7 +16,6 @@ import java.util.List;
 
 import app.thecity.R;
 import app.thecity.data.Constant;
-import app.thecity.model.Images;
 import app.thecity.utils.Tools;
 
 
@@ -78,6 +79,7 @@ public class AdapterImageList extends RecyclerView.Adapter<AdapterImageList.View
         Klickereignis für das "lyt_parent" (das Kachel-Layout) hinzugefügt, das den
         OnItemClickListener auslöst
      */
+    @SuppressLint("RecyclerView")
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         final String p = items.get(position);

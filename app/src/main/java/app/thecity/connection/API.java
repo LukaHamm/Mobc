@@ -1,6 +1,5 @@
 package app.thecity.connection;
 
-import java.io.InputStream;
 import java.util.List;
 
 import app.thecity.connection.callbacks.CallbackDevice;
@@ -13,16 +12,18 @@ import app.thecity.model.DeviceInfo;
 import app.thecity.model.Evaluation;
 import app.thecity.model.User;
 import app.thecity.model.UserInfo;
+import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
-import retrofit2.http.Streaming;
 
 /**
  * Schnittstellenbeschreibung für die API-Anfragen an den Server.
@@ -99,6 +100,14 @@ public interface API {
     @GET("/api/comments//activity/{id}")
     Call<List<Evaluation>> getComments(
             @Path("id") String id
+    );
+
+    @Multipart
+    @POST("api/activities/image/{id}") // Der Endpunkt, an den das Bild hochgeladen wird
+    Call<ResponseBody> uploadImage(
+            @Part MultipartBody.Part image,
+            @Path("id") String id,
+            @Header("token") String token
     );
 
 

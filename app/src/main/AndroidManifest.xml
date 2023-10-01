@@ -40,8 +40,7 @@
         <activity
             android:name=".activity.ActivityNewPlace"
             android:exported="false"
-            android:label="@string/title_activity_new_place"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_new_place" />
         <activity
             android:name=".activity.ProfileActivity"
             android:exported="false" />

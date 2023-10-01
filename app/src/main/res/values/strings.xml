@@ -8,7 +8,6 @@
     <string name="navigation_drawer_close">Navigationsschublade schließen</string>
     <string name="profile">Profil</string>
     <string name="title_nav_all">Alle Sportbereiche</string>
-    <string name="title_nav_fav">Meine Favoriten</string>
     <string name="title_nav_news">Deine News</string>
     <string name="title_nav_ownplaces">Eigene Orte</string>
     <string name="title_nav_calesthenics">Calisthenics</string>
@@ -16,6 +15,7 @@
     <string name="title_nav_outdoor">Outdoor</string>
     <string name="title_nav_outdoorGyms">Outdoor-Gyms</string>
     <string name="titel_dropdown_menue">Kategorie</string>
+    <string name="title_maps_menue">Maps Karte</string>
 
 
     <!--===  Array für die namen der Sportkategorien (siehe newPlace) ========================== -->
@@ -110,6 +110,7 @@
     <string name="no_internet">"Keine Internetverbindung"</string>
     <string name="task_running">Aufgabe läuft noch</string>
     <string name="no_item">Kein Eintrag</string>
+    <string name="newPlace_Titel">Erstelle einen neuen SecretPlace</string>
 
     <!-- Basic Action Strings -->
     <string name="OK">OK</string>
